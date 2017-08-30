@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "19446583338",
+    "firebase_url": "https://houserent-835f7.firebaseio.com",
+    "project_id": "houserent-835f7",
+    "storage_bucket": "houserent-835f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19446583338:android:7acad9a090414ae8",
+        "android_client_info": {
+          "package_name": "com.example.nuhel.houserent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "19446583338-fa3tbfgot5lfovmjf0qmgae4nj7ukjdg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nuhel.houserent",
+            "certificate_hash": "2a06dab2ac9d31fcc53f75f0178b90680e969363"
+          }
+        },
+        {
+          "client_id": "19446583338-t1fk5mi72dk11kuio52qsf10qrr1ddqb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXawCZhsXkzT1RgKoZNsYdE5aZCW-NQwI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "19446583338-t1fk5mi72dk11kuio52qsf10qrr1ddqb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
