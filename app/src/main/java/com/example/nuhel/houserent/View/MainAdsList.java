@@ -58,14 +58,22 @@ public class MainAdsList extends AppCompatActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     //Toast.makeText(MainAdsList.this, ds.getKey(), Toast.LENGTH_SHORT).show();
-                    HomeAddListDataModel model = new HomeAddListDataModel();
-                    model.setArea(ds.child("area").getValue().toString());
-                    model.setImage1(ds.child("image1").getValue().toString());
-                    model.setImage2(ds.child("image2").getValue().toString());
-                    model.setImage3(ds.child("image3").getValue().toString());
-                    model.setRoom(ds.child("room").getValue().toString());
-                    model.setType(ds.child("type").getValue().toString());
-                    homepost.add(model);
+
+                    try {
+                        HomeAddListDataModel model = new HomeAddListDataModel();
+
+                        model.setArea(ds.child("area").getValue().toString());
+                        model.setImage1(ds.child("image1").getValue().toString());
+                        model.setImage2(ds.child("image2").getValue().toString());
+                        model.setImage3(ds.child("image3").getValue().toString());
+                        model.setRoom(ds.child("room").getValue().toString());
+                        model.setType(ds.child("type").getValue().toString());
+
+                        homepost.add(model);
+                    } catch (Exception e) {
+
+                    }
+
                 }
             }
 
@@ -96,7 +104,7 @@ public class MainAdsList extends AppCompatActivity {
             public void onClick(View v) {
 
                 HashMap<String, String> map = new HashMap<String, String>();
-                DatabaseReference ref = GetFirebaseInstance.GetInstace().getReference("HomeAddList").child("0");
+                DatabaseReference ref = GetFirebaseInstance.GetInstace().getReference("HomeAddList").child("6");
                 map.put("type", "hello");
 
                 ref.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -111,8 +119,6 @@ public class MainAdsList extends AppCompatActivity {
             }
         });
 
-
-        //
 
     }
 
