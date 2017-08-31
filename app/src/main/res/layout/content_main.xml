@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,13 +9,6 @@
 
     tools:context="com.example.nuhel.houserent.View.MainActivity"
     tools:showIn="@layout/app_bar_main">
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
-
     <FrameLayout
         android:id="@+id/container_frags"
         android:layout_width="match_parent"

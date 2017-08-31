@@ -1,33 +1,18 @@
 package com.example.nuhel.houserent.View;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
-import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
-import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-
-import java.util.HashMap;
-
 
 public class MainAdsList extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private Button button;
-    private RecyclerViewAdapter recyclerViewAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +32,11 @@ public class MainAdsList extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewAdapter = new RecyclerViewAdapter(getBaseContext(), recyclerView);
+        //recyclerViewAdapter = new RecyclerViewAdapter(getBaseContext(), recyclerView);
 
 
-        button = (Button) findViewById(R.id.buttonUpdate);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        /*button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -69,7 +54,7 @@ public class MainAdsList extends AppCompatActivity {
                 });
 
             }
-        });
+        });*/
 
     }
 

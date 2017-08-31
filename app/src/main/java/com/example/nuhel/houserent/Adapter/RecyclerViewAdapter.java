@@ -28,31 +28,70 @@ import java.util.LinkedHashMap;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
 
+    private final int THREAT_SHOT = 5;
     private Context context;
     private RecyclerView recyclerView;
-
-
     private LinkedHashMap<String, HomeAddListDataModel> add_list;
     private LinkedHashMap<String, HomeAddListDataModel> add_list2;
-
     private DatabaseReference db;
     private Boolean is_first = true;
 
     public RecyclerViewAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
         this.recyclerView = recyclerView;
-
         this.db = GetFirebaseInstance.GetInstace().getReference("HomeAddList");
         this.add_list = new LinkedHashMap<>();
         this.TostTheFirbaseData();
         this.recyclerView.setAdapter(this);
+
+        init();
     }
 
+    private void init() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                RecyclerView.LayoutManager mn = recyclerView.getLayoutManager();
+                if (getItemCount() - THREAT_SHOT == add_list.size() - 1) {
+                    loadMoreData();
+
+                }
+            }
+        });
+    }
+
+    private void loadMoreData() {
+
+
+        /*db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    oldestPostId = child.getKey(); ////HERE WE ARE SAVING THE LAST POST_ID FROM URS POST
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
+
+    }
 
     private void TostTheFirbaseData() {
-
-
         db.addChildEventListener(new ChildEventListener() {
+
+
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -63,8 +102,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     add_list.clear();
                     add_list.put(key, model);
                     add_list.putAll(add_list2);
-                    notifyItemInserted(0);
-                    notifyItemRangeChanged(0, add_list.size());
+                    //  notifyItemInserted(0);
+                    // notifyItemRangeChanged(0, add_list.size());
                 }
             }
 
@@ -74,7 +113,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 HomeAddListDataModel model = getModel(ds);
                 if (model != null) {
                     add_list.put(key, model);
-                    notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
+                    //  notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
                 }
             }
 
@@ -101,23 +140,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
 
 
-        db.addValueEventListener(new ValueEventListener() {
+        db.orderByKey().limitToFirst(1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if (is_first) {
                     is_first = false;
+                    int a = (int) dataSnapshot.getChildrenCount();
+                    Toast.makeText(context, String.valueOf(dataSnapshot.getChildrenCount()), Toast.LENGTH_SHORT).show();
+
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (ds != null) {
                             try {
                                 HomeAddListDataModel model = getModel(ds);
                                 add_list.put(ds.getKey(), model);
-                                notifyItemChanged(add_list.size() - 1);
+                                //notifyItemInserted(add_list.size()-1);
+                                //notifyItemRangeChanged(add_list.size()-1, add_list.size());
                             } catch (Exception e) {
 
                             }
                         }
                     }
+                    Toast.makeText(context, String.valueOf(add_list.size()), Toast.LENGTH_SHORT).show();
+                    notifyDataSetChanged();
                 }
             }
 
@@ -133,10 +178,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private HomeAddListDataModel getModel(DataSnapshot ds) {
 
-
         HomeAddListDataModel model = null;
-
         try {
+
             String areatext = ds.child("area").getValue() == null ? "" : ds.child("area").getValue().toString();
             String roomstext = ds.child("room").getValue() == null ? "" : ds.child("room").getValue().toString();
             String typetext = ds.child("type").getValue() == null ? "" : ds.child("type").getValue().toString();
@@ -144,9 +188,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String img1 = ds.child("image1").getValue() == null ? "" : ds.child("image1").getValue().toString();
             String img2 = ds.child("image2").getValue() == null ? "" : ds.child("image2").getValue().toString();
             String img3 = ds.child("image3").getValue() == null ? "" : ds.child("image3").getValue().toString();
-
             model = new HomeAddListDataModel();
-
+            model.setPost_id(ds.getKey());
             model.setArea(areatext);
             model.setImage1(img1);
             model.setImage2(img2);

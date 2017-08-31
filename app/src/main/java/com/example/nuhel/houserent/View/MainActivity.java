@@ -1,6 +1,7 @@
 package com.example.nuhel.houserent.View;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,7 +18,11 @@ import android.view.View;
 import com.example.nuhel.houserent.R;
 
 public class MainActivity extends AppCompatActivity
+
+
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,22 +30,25 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mHandler = new Handler();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        Fragment fragment = new AdList();
+                        AdList AdListfragment = new AdList();
                         getSupportFragmentManager()
-                                .beginTransaction().replace(R.id.container_frags, fragment)
+                                .beginTransaction().replace(R.id.container_frags, AdListfragment)
                                 .commit();
                     }
                 };
+
+                if (runnable != null) {
+                    mHandler.post(runnable);
+                }
 
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
