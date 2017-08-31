@@ -27,13 +27,9 @@ import java.util.LinkedHashMap;
  */
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-
-
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
     private boolean loading = true;
-
-
     private Context context;
     private RecyclerView recyclerView;
     private LinkedHashMap<String, HomeAddListDataModel> add_list;
@@ -70,7 +66,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 .findLastVisibleItemPosition();
                         if (loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                             loading = false;
-                            loadMoreData();
+                          loadMoreData();
                         }
                     }
                 });
@@ -84,11 +80,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ChildEventListener vl = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                long aa = dataSnapshot.getChildrenCount();
-                Toast.makeText(context, "Total Data "+ aa, Toast.LENGTH_SHORT).show();
-                HomeAddListDataModel model = getModel(dataSnapshot);
+               HomeAddListDataModel model = getModel(dataSnapshot);
                 add_list.put(dataSnapshot.getKey(), model);
-
                 notifyDataSetChanged();
                 loading = true;
             }
@@ -102,7 +95,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
                 }
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
              String key = dataSnapshot.getKey();
@@ -112,12 +104,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, add_list.size());
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -128,17 +117,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             is_first=false;
 
         }else {
-           db.orderByKey().startAt(oldestPostId).limitToFirst(5).addChildEventListener(vl);
+          db.orderByKey().startAt(oldestPostId).limitToFirst(5).addChildEventListener(vl);
         }
-
     }
-
-
-
-
-
-
-
 
     private HomeAddListDataModel getModel(DataSnapshot ds) {
 
