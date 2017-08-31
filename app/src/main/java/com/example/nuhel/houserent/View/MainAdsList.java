@@ -24,7 +24,6 @@ import java.util.HashMap;
 
 public class MainAdsList extends AppCompatActivity {
 
-
     private RecyclerView recyclerView;
     private Button button;
     private RecyclerViewAdapter recyclerViewAdapter;

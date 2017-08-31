@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,8 +30,21 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Fragment fragment = new AdList();
+                        getSupportFragmentManager()
+                                .beginTransaction().add(fragment, "FrG1").show(fragment)
+                                .commit();
+                    }
+                };
+
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
             }
         });
 
@@ -85,6 +99,16 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Fragment fragment = new AdList();
+                    getSupportFragmentManager()
+                            .beginTransaction().add(fragment, "FrG1").show(fragment)
+                            .commit();
+                }
+            };
 
         } else if (id == R.id.nav_slideshow) {
 
