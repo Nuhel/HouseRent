@@ -13,11 +13,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
@@ -79,28 +80,41 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (add_list.size()!=0){
             oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
         }
-        ValueEventListener vl = new ValueEventListener() {
+        ChildEventListener vl = new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 long aa = dataSnapshot.getChildrenCount();
-                if (aa > 1) {
-                    Toast.makeText(context, String.valueOf(aa), Toast.LENGTH_SHORT).show();
-                } else {
-                    return;
-                }
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds != null) {
-                        try {
-                            HomeAddListDataModel model = getModel(ds);
-                            add_list.put(ds.getKey(), model);
-                            notifyItemInserted(add_list.size() - 1);
-                            notifyItemRangeChanged(add_list.size() - 1, add_list.size());
-                        } catch (Exception e) {
+                Toast.makeText(context, "Total Data " + aa, Toast.LENGTH_SHORT).show();
+                HomeAddListDataModel model = getModel(dataSnapshot);
+                add_list.put(dataSnapshot.getKey(), model);
 
-                        }
-                    }
-                }
+                notifyDataSetChanged();
                 loading = true;
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot ds, String s) {
+                String key = ds.getKey();
+                HomeAddListDataModel model = getModel(ds);
+                if (model != null) {
+                    add_list.put(key, model);
+                    notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String key = dataSnapshot.getKey();
+                Toast.makeText(context, key, Toast.LENGTH_SHORT).show();
+                int position = new ArrayList<String>(add_list.keySet()).indexOf(key);
+                add_list.remove(key);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, add_list.size());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -109,10 +123,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         };
         if (is_first){
-            db.limitToFirst(5).addValueEventListener(vl);
+            db.limitToFirst(3).addChildEventListener(vl);
             is_first=false;
+
         }else {
-            db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(vl);
+            db.orderByKey().startAt(oldestPostId).limitToFirst(5).addChildEventListener(vl);
         }
 
     }
