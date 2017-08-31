@@ -83,11 +83,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ChildEventListener vl = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                long aa = dataSnapshot.getChildrenCount();
-                Toast.makeText(context, "Total Data " + aa, Toast.LENGTH_SHORT).show();
                 HomeAddListDataModel model = getModel(dataSnapshot);
                 add_list.put(dataSnapshot.getKey(), model);
-
                 notifyDataSetChanged();
                 loading = true;
             }
@@ -215,8 +212,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 room.setText("Rooms: " + roomstext);
                 type.setText("Type: " + typetext);
             }
-
-
         }
     }
 }
