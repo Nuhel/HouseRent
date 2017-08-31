@@ -13,13 +13,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
@@ -77,12 +75,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private void loadMoreData() {
-        /* if (add_list.size()==0){
-             oldestPostId = "0";
-         }else {
-             oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
-         }*/
-
 
         if (add_list.size()!=0){
             oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
@@ -123,37 +115,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(vl);
         }
 
-
-
-     /*   db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                long aa = dataSnapshot.getChildrenCount();
-                if (aa > 1) {
-                    Toast.makeText(context, String.valueOf(aa), Toast.LENGTH_SHORT).show();
-                } else {
-                    return;
-                }
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds != null) {
-                        try {
-                            HomeAddListDataModel model = getModel(ds);
-                            add_list.put(ds.getKey(), model);
-                            notifyItemInserted(add_list.size() - 1);
-                            notifyItemRangeChanged(add_list.size() - 1, add_list.size());
-                        } catch (Exception e) {
-
-                        }
-                    }
-                }
-                loading = true;
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-*/
     }
 
 
