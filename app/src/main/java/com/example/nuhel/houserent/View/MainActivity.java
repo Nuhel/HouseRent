@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
                     public void run() {
                         Fragment fragment = new AdList();
                         getSupportFragmentManager()
-                                .beginTransaction().add(fragment, "FrG1").show(fragment)
+                                .beginTransaction().replace(R.id.container_frags, fragment)
                                 .commit();
                     }
                 };

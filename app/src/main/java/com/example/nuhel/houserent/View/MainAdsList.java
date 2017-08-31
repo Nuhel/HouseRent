@@ -35,9 +35,7 @@ public class MainAdsList extends AppCompatActivity {
         setContentView(R.layout.activity_main_ads_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         init();
-
     }
 
     @Override
@@ -72,7 +70,6 @@ public class MainAdsList extends AppCompatActivity {
 
             }
         });
-
 
     }
 
