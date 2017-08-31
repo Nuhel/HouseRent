@@ -1,6 +1,7 @@
 package com.example.nuhel.houserent.Adapter;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,13 +29,21 @@ import java.util.LinkedHashMap;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
 
-    private final int THREAT_SHOT = 5;
+    private int visibleThreshold = 5;
+    private int lastVisibleItem, totalItemCount;
+    private boolean loading = true;
+
+
     private Context context;
     private RecyclerView recyclerView;
     private LinkedHashMap<String, HomeAddListDataModel> add_list;
     private LinkedHashMap<String, HomeAddListDataModel> add_list2;
     private DatabaseReference db;
     private Boolean is_first = true;
+
+    private LinearLayoutManager linearLayoutManager;
+
+    private String oldestPostId;
 
     public RecyclerViewAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
@@ -49,42 +58,55 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private void init() {
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                RecyclerView.LayoutManager mn = recyclerView.getLayoutManager();
-                if (getItemCount() - THREAT_SHOT == add_list.size() - 1) {
-                    loadMoreData();
-
-                }
-            }
-        });
+        linearLayoutManager = (LinearLayoutManager) recyclerView
+                .getLayoutManager();
+        recyclerView
+                .addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView,
+                                           int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        totalItemCount = linearLayoutManager.getItemCount();
+                        lastVisibleItem = linearLayoutManager
+                                .findLastVisibleItemPosition();
+                        if (loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                            loading = false;
+                            loadMoreData();
+                        }
+                    }
+                });
     }
 
     private void loadMoreData() {
 
 
-        /*db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+        oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
+        db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    oldestPostId = child.getKey(); ////HERE WE ARE SAVING THE LAST POST_ID FROM URS POST
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (ds != null) {
+                        try {
+                            HomeAddListDataModel model = getModel(ds);
 
+                            add_list.put(ds.getKey(), model);
+                            //notifyItemInserted(add_list.size()-1);
+                            //notifyItemRangeChanged(add_list.size()-1, add_list.size());
+                        } catch (Exception e) {
+
+                        }
+                    }
                 }
+                Toast.makeText(context, String.valueOf(add_list.size()), Toast.LENGTH_SHORT).show();
+                notifyDataSetChanged();
+                loading = true;
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
     }
 
@@ -100,8 +122,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if (model != null) {
                     add_list2 = (LinkedHashMap<String, HomeAddListDataModel>) add_list.clone();
                     add_list.clear();
-                    add_list.put(key, model);
-                    add_list.putAll(add_list2);
+                    // add_list.put(key, model);
+                    // add_list.putAll(add_list2);
                     //  notifyItemInserted(0);
                     // notifyItemRangeChanged(0, add_list.size());
                 }
@@ -140,7 +162,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
 
 
-        db.orderByKey().limitToFirst(1).addValueEventListener(new ValueEventListener() {
+        db.orderByKey().limitToFirst(3).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -153,6 +175,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         if (ds != null) {
                             try {
                                 HomeAddListDataModel model = getModel(ds);
+
                                 add_list.put(ds.getKey(), model);
                                 //notifyItemInserted(add_list.size()-1);
                                 //notifyItemRangeChanged(add_list.size()-1, add_list.size());
