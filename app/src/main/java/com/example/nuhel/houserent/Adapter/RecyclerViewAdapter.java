@@ -50,14 +50,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.recyclerView = recyclerView;
         this.db = GetFirebaseInstance.GetInstace().getReference("HomeAddList");
         this.add_list = new LinkedHashMap<>();
-        this.TostTheFirbaseData();
+        loadMoreData();
         this.recyclerView.setAdapter(this);
-
         init();
     }
 
     private void init() {
-
         linearLayoutManager = (LinearLayoutManager) recyclerView
                 .getLayoutManager();
         recyclerView
@@ -79,20 +77,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private void loadMoreData() {
+        /* if (add_list.size()==0){
+             oldestPostId = "0";
+         }else {
+             oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
+         }*/
 
 
-        oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
-        db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+        if (add_list.size()!=0){
+            oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
+        }
+        ValueEventListener vl = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 long aa = dataSnapshot.getChildrenCount();
                 if (aa > 1) {
                     Toast.makeText(context, String.valueOf(aa), Toast.LENGTH_SHORT).show();
                 } else {
                     return;
                 }
-
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds != null) {
                         try {
@@ -112,95 +115,52 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        if (is_first){
+            db.limitToFirst(5).addValueEventListener(vl);
+            is_first=false;
+        }else {
+            db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(vl);
+        }
 
-    }
 
-    private void TostTheFirbaseData() {
-        db.orderByKey().limitToFirst(3).addValueEventListener(new ValueEventListener() {
+
+     /*   db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if (is_first) {
-                    is_first = false;
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds != null) {
-                            try {
-                                HomeAddListDataModel model = getModel(ds);
+                long aa = dataSnapshot.getChildrenCount();
+                if (aa > 1) {
+                    Toast.makeText(context, String.valueOf(aa), Toast.LENGTH_SHORT).show();
+                } else {
+                    return;
+                }
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (ds != null) {
+                        try {
+                            HomeAddListDataModel model = getModel(ds);
+                            add_list.put(ds.getKey(), model);
+                            notifyItemInserted(add_list.size() - 1);
+                            notifyItemRangeChanged(add_list.size() - 1, add_list.size());
+                        } catch (Exception e) {
 
-                                add_list.put(ds.getKey(), model);
-                                //notifyItemInserted(add_list.size()-1);
-                                //notifyItemRangeChanged(add_list.size()-1, add_list.size());
-                            } catch (Exception e) {
-
-                            }
                         }
                     }
-                    notifyDataSetChanged();
-                    addChildEventListener();
                 }
+                loading = true;
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
+*/
     }
 
 
-    private void addChildEventListener() {
-        db.addChildEventListener(new ChildEventListener() {
 
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                String key = dataSnapshot.getKey();
-                HomeAddListDataModel model = getModel(dataSnapshot);
-                if (model != null) {
-                    /*add_list2 = (LinkedHashMap<String, HomeAddListDataModel>) add_list.clone();
-                    add_list.clear();
-                    add_list.put(key, model);
-                    add_list.putAll(add_list2);
-                    notifyItemInserted(0);
-                    notifyItemRangeChanged(0, add_list.size());*/
-                }
-            }
 
-            @Override
-            public void onChildChanged(DataSnapshot ds, String s) {
-                String key = ds.getKey();
-                HomeAddListDataModel model = getModel(ds);
-                if (model != null) {
-                    add_list.put(key, model);
-                    notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
-                }
-            }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String key = dataSnapshot.getKey();
-                Toast.makeText(context, key, Toast.LENGTH_SHORT).show();
-                int position = new ArrayList<String>(add_list.keySet()).indexOf(key);
-                add_list.remove(key);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, add_list.size());
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 
 
     private HomeAddListDataModel getModel(DataSnapshot ds) {
