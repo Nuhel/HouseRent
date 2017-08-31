@@ -7,11 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Nuhel on 8/18/2017.
@@ -21,28 +29,156 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
     private Context context;
-    private ArrayList<HomeAddListDataModel> dataList;
+    private RecyclerView recyclerView;
 
-    public RecyclerViewAdapter(Context context, ArrayList<HomeAddListDataModel> dataList) {
+
+    private LinkedHashMap<String, HomeAddListDataModel> add_list;
+    private LinkedHashMap<String, HomeAddListDataModel> add_list2;
+
+    private DatabaseReference db;
+    private Boolean is_first = true;
+
+    public RecyclerViewAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
-        this.dataList = dataList;
+        this.recyclerView = recyclerView;
+
+        this.db = GetFirebaseInstance.GetInstace().getReference("HomeAddList");
+        this.add_list = new LinkedHashMap<>();
+        this.TostTheFirbaseData();
+        this.recyclerView.setAdapter(this);
+    }
+
+
+    private void TostTheFirbaseData() {
+
+
+        db.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                String key = dataSnapshot.getKey();
+                HomeAddListDataModel model = getModel(dataSnapshot);
+                if (model != null) {
+                    add_list2 = (LinkedHashMap<String, HomeAddListDataModel>) add_list.clone();
+                    add_list.clear();
+                    add_list.put(key, model);
+                    add_list.putAll(add_list2);
+                    notifyItemInserted(0);
+                    notifyItemRangeChanged(0, add_list.size());
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot ds, String s) {
+                String key = ds.getKey();
+                HomeAddListDataModel model = getModel(ds);
+                if (model != null) {
+                    add_list.put(key, model);
+                    notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String key = dataSnapshot.getKey();
+                Toast.makeText(context, key, Toast.LENGTH_SHORT).show();
+                int position = new ArrayList<String>(add_list.keySet()).indexOf(key);
+                add_list.remove(key);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, add_list.size());
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (is_first) {
+                    is_first = false;
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (ds != null) {
+                            try {
+                                HomeAddListDataModel model = getModel(ds);
+                                add_list.put(ds.getKey(), model);
+                                notifyItemChanged(add_list.size() - 1);
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
+    private HomeAddListDataModel getModel(DataSnapshot ds) {
+
+
+        HomeAddListDataModel model = null;
+
+        try {
+            String areatext = ds.child("area").getValue() == null ? "" : ds.child("area").getValue().toString();
+            String roomstext = ds.child("room").getValue() == null ? "" : ds.child("room").getValue().toString();
+            String typetext = ds.child("type").getValue() == null ? "" : ds.child("type").getValue().toString();
+
+            String img1 = ds.child("image1").getValue() == null ? "" : ds.child("image1").getValue().toString();
+            String img2 = ds.child("image2").getValue() == null ? "" : ds.child("image2").getValue().toString();
+            String img3 = ds.child("image3").getValue() == null ? "" : ds.child("image3").getValue().toString();
+
+            model = new HomeAddListDataModel();
+
+            model.setArea(areatext);
+            model.setImage1(img1);
+            model.setImage2(img2);
+            model.setImage3(img3);
+            model.setRoom(roomstext);
+            model.setType(typetext);
+
+
+        } catch (Exception e) {
+
+        }
+
+        return model;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v = LayoutInflater.from(context).inflate(R.layout.main_ads_list_item, null);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindData(dataList.get(position));
+
+        holder.bindData((HomeAddListDataModel) (add_list.values().toArray()[position]));
+
+
     }
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return add_list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -60,12 +196,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
         public void bindData(HomeAddListDataModel data) {
-            Glide.with(context)
-                    .load(data.getImage1())
-                    .into(imageView);
-            area.setText("Area: " + data.getArea());
-            room.setText("Rooms: " + data.getRoom());
-            type.setText("Type: " + data.getType());
+
+            if (data != null) {
+                Glide.with(context)
+                        .load(data.getImage1())
+                        .into(imageView);
+                String areatext = data.getArea() == null ? "" : data.getArea();
+                String roomstext = data.getArea() == null ? "" : data.getRoom();
+                String typetext = data.getArea() == null ? "" : data.getType();
+
+                area.setText("Area: " + areatext);
+                room.setText("Rooms: " + roomstext);
+                type.setText("Type: " + typetext);
+            }
+
 
         }
     }

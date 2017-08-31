@@ -10,30 +10,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nuhel.houserent.Adapter.HomeAddListDataModel;
 import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class MainAdsList extends AppCompatActivity {
 
-    private TextView textView;
-    private ArrayList<HomeAddListDataModel> homepost;
-    private DatabaseReference db;
+
     private RecyclerView recyclerView;
     private Button button;
+    private RecyclerViewAdapter recyclerViewAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,61 +37,21 @@ public class MainAdsList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        homepost = new ArrayList<>();
-        db = GetFirebaseInstance.GetInstace().getReference("HomeAddList");
-
         init();
-
-    }
-
-    private void TostTheFirbaseData() {
-
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                    //Toast.makeText(MainAdsList.this, ds.getKey(), Toast.LENGTH_SHORT).show();
-
-                    try {
-                        HomeAddListDataModel model = new HomeAddListDataModel();
-
-                        model.setArea(ds.child("area").getValue().toString());
-                        model.setImage1(ds.child("image1").getValue().toString());
-                        model.setImage2(ds.child("image2").getValue().toString());
-                        model.setImage3(ds.child("image3").getValue().toString());
-                        model.setRoom(ds.child("room").getValue().toString());
-                        model.setType(ds.child("type").getValue().toString());
-
-                        homepost.add(model);
-                    } catch (Exception e) {
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        TostTheFirbaseData();
     }
 
     private void init() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new RecyclerViewAdapter(getBaseContext(), homepost));
+        recyclerViewAdapter = new RecyclerViewAdapter(getBaseContext(), recyclerView);
+
 
         button = (Button) findViewById(R.id.buttonUpdate);
         button.setOnClickListener(new View.OnClickListener() {
