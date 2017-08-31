@@ -105,7 +105,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         }
                     }
                 }
-                // notifyDataSetChanged();
                 loading = true;
             }
 
@@ -118,8 +117,42 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private void TostTheFirbaseData() {
-        db.addChildEventListener(new ChildEventListener() {
+        db.orderByKey().limitToFirst(3).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
+                if (is_first) {
+                    is_first = false;
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (ds != null) {
+                            try {
+                                HomeAddListDataModel model = getModel(ds);
+
+                                add_list.put(ds.getKey(), model);
+                                //notifyItemInserted(add_list.size()-1);
+                                //notifyItemRangeChanged(add_list.size()-1, add_list.size());
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    }
+                    notifyDataSetChanged();
+                    addChildEventListener();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
+    private void addChildEventListener() {
+        db.addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -127,12 +160,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 String key = dataSnapshot.getKey();
                 HomeAddListDataModel model = getModel(dataSnapshot);
                 if (model != null) {
-                    add_list2 = (LinkedHashMap<String, HomeAddListDataModel>) add_list.clone();
+                    /*add_list2 = (LinkedHashMap<String, HomeAddListDataModel>) add_list.clone();
                     add_list.clear();
-                    // add_list.put(key, model);
-                    // add_list.putAll(add_list2);
-                    //  notifyItemInserted(0);
-                    // notifyItemRangeChanged(0, add_list.size());
+                    add_list.put(key, model);
+                    add_list.putAll(add_list2);
+                    notifyItemInserted(0);
+                    notifyItemRangeChanged(0, add_list.size());*/
                 }
             }
 
@@ -142,7 +175,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 HomeAddListDataModel model = getModel(ds);
                 if (model != null) {
                     add_list.put(key, model);
-                    //  notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
+                    notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
                 }
             }
 
@@ -167,38 +200,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             }
         });
-
-
-        db.orderByKey().limitToFirst(3).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if (is_first) {
-                    is_first = false;
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds != null) {
-                            try {
-                                HomeAddListDataModel model = getModel(ds);
-
-                                add_list.put(ds.getKey(), model);
-                                //notifyItemInserted(add_list.size()-1);
-                                //notifyItemRangeChanged(add_list.size()-1, add_list.size());
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    }
-                    notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
     }
 
 
