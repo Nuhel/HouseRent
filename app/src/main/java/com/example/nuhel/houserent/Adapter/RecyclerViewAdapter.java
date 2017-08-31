@@ -68,6 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         super.onScrolled(recyclerView, dx, dy);
                         totalItemCount = linearLayoutManager.getItemCount();
                         lastVisibleItem = linearLayoutManager
+                                .findLastVisibleItemPosition() < lastVisibleItem ? lastVisibleItem : linearLayoutManager
                                 .findLastVisibleItemPosition();
                         if (loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                             loading = false;
@@ -84,21 +85,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         db.orderByKey().startAt(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                long aa = dataSnapshot.getChildrenCount();
+                if (aa > 1) {
+                    Toast.makeText(context, String.valueOf(aa), Toast.LENGTH_SHORT).show();
+                } else {
+                    return;
+                }
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds != null) {
                         try {
                             HomeAddListDataModel model = getModel(ds);
-
                             add_list.put(ds.getKey(), model);
-                            //notifyItemInserted(add_list.size()-1);
-                            //notifyItemRangeChanged(add_list.size()-1, add_list.size());
+                            notifyItemInserted(add_list.size() - 1);
+                            notifyItemRangeChanged(add_list.size() - 1, add_list.size());
                         } catch (Exception e) {
 
                         }
                     }
                 }
-                Toast.makeText(context, String.valueOf(add_list.size()), Toast.LENGTH_SHORT).show();
-                notifyDataSetChanged();
+                // notifyDataSetChanged();
                 loading = true;
             }
 
@@ -168,9 +175,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 if (is_first) {
                     is_first = false;
-                    int a = (int) dataSnapshot.getChildrenCount();
-                    Toast.makeText(context, String.valueOf(dataSnapshot.getChildrenCount()), Toast.LENGTH_SHORT).show();
-
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (ds != null) {
                             try {
@@ -184,7 +188,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             }
                         }
                     }
-                    Toast.makeText(context, String.valueOf(add_list.size()), Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
                 }
             }
