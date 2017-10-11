@@ -49,7 +49,7 @@ public class RegistrationLoginFragment extends Fragment {
         view = view == null ? inflater.inflate(R.layout.accountmanagement, container, false) : view;
 
         viewPager = (ViewPager) view.findViewById(R.id.accountViewpager);
-        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
 
         pageIndicatorView = (PageIndicatorView) view.findViewById(R.id.pageIndicatorView);
