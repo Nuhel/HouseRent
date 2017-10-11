@@ -1,7 +1,7 @@
-package com.example.nuhel.houserent.View;
+package com.example.nuhel.houserent.View.Fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +19,7 @@ public class AdList extends Fragment {
     private View view;
     private RecyclerViewAdapter adapter;
     public AdList() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -27,19 +27,18 @@ public class AdList extends Fragment {
                              Bundle savedInstanceState) {
         view = view == null ? inflater.inflate(R.layout.activity_main_ads_list, container, false) : view;
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getContext(), recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(view.getContext(), recyclerView);
         return view;
     }
 
     public void setAdapter(RecyclerViewAdapter adapter) {
         this.adapter = adapter;
         if (this.adapter == null) {
-            Toast.makeText(getContext(), " Null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), " Null", Toast.LENGTH_SHORT).show();
         } else {
-
             if (recyclerView == null) {
-                Toast.makeText(getContext(), "R Null", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "R Null", Toast.LENGTH_SHORT).show();
             }
             // recyclerView.setAdapter(adapter);
             //this.adapter.setRecyclerView(recyclerView,this.adapter);

@@ -27,21 +27,15 @@ import java.util.LinkedHashMap;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
     private boolean loading = true;
-
-
     private Context context;
     private RecyclerView recyclerView;
     private LinkedHashMap<String, HomeAddListDataModel> add_list;
-    private LinkedHashMap<String, HomeAddListDataModel> add_list2;
     private DatabaseReference db;
     private Boolean is_first = true;
-
     private LinearLayoutManager linearLayoutManager;
-
     private String oldestPostId;
 
     public RecyclerViewAdapter(Context context, RecyclerView recyclerView) {
@@ -130,32 +124,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-
-
-
-
-
-
     private HomeAddListDataModel getModel(DataSnapshot ds) {
 
         HomeAddListDataModel model = null;
         try {
 
-            String areatext = ds.child("area").getValue() == null ? "" : ds.child("area").getValue().toString();
-            String roomstext = ds.child("room").getValue() == null ? "" : ds.child("room").getValue().toString();
-            String typetext = ds.child("type").getValue() == null ? "" : ds.child("type").getValue().toString();
+            String areaText = ds.child("area").getValue() == null ? "" : ds.child("area").getValue().toString();
+            String roomsText = ds.child("room").getValue() == null ? "" : ds.child("room").getValue().toString();
+            String typeText = ds.child("type").getValue() == null ? "" : ds.child("type").getValue().toString();
 
             String img1 = ds.child("image1").getValue() == null ? "" : ds.child("image1").getValue().toString();
             String img2 = ds.child("image2").getValue() == null ? "" : ds.child("image2").getValue().toString();
             String img3 = ds.child("image3").getValue() == null ? "" : ds.child("image3").getValue().toString();
+
             model = new HomeAddListDataModel();
             model.setPost_id(ds.getKey());
-            model.setArea(areatext);
+            model.setArea(areaText);
             model.setImage1(img1);
             model.setImage2(img2);
             model.setImage3(img3);
-            model.setRoom(roomstext);
-            model.setType(typetext);
+            model.setRoom(roomsText);
+            model.setType(typeText);
 
 
         } catch (Exception e) {
@@ -204,13 +193,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Glide.with(context)
                         .load(data.getImage1())
                         .into(imageView);
-                String areatext = data.getArea() == null ? "" : data.getArea();
-                String roomstext = data.getArea() == null ? "" : data.getRoom();
-                String typetext = data.getArea() == null ? "" : data.getType();
+                String areaText = data.getArea() == null ? "" : data.getArea();
+                String roomsText = data.getArea() == null ? "" : data.getRoom();
+                String typeText = data.getArea() == null ? "" : data.getType();
 
-                area.setText("Area: " + areatext);
-                room.setText("Rooms: " + roomstext);
-                type.setText("Type: " + typetext);
+                area.setText("Area: " + areaText);
+                room.setText("Rooms: " + roomsText);
+                type.setText("Type: " + typeText);
             }
         }
     }

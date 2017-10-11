@@ -7,6 +7,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_main2">Main2Activity</string>
 
+    <!-- Required Hint-->
+    <string name="emailRequired">Email Required</string>
+    <string name="phoneRequired">Phone Required</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

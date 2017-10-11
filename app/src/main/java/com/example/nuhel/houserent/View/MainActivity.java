@@ -1,11 +1,11 @@
 package com.example.nuhel.houserent.View;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.nuhel.houserent.R;
+import com.example.nuhel.houserent.View.Fragments.AdList;
+import com.example.nuhel.houserent.View.Fragments.UserRegisterFragment;
 
 public class MainActivity extends AppCompatActivity
 
@@ -23,32 +25,26 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static Handler mHandler;
+    private static AdList adListFragment = null;
+    private static UserRegisterFragment userRegisterFragment = null;
+    private static Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        addTollBar();
+
         mHandler = new Handler();
+
+        setAddListFrag();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        AdList AdListfragment = new AdList();
-                        getSupportFragmentManager()
-                                .beginTransaction().replace(R.id.container_frags, AdListfragment)
-                                .commit();
-                    }
-                };
 
-                if (runnable != null) {
-                    mHandler.post(runnable);
-                }
 
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -105,19 +101,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
+            setRegisterFragment();
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Fragment fragment = new AdList();
-                    getSupportFragmentManager()
-                            .beginTransaction().add(fragment, "FrG1").show(fragment)
-                            .commit();
-                }
-            };
-
+            setAddListFrag();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -131,5 +118,58 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setAddListFrag() {
+        adListFragment = adListFragment == null ? new AdList() : adListFragment;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Fragment fragment;
+                if (getFragmentManager().findFragmentByTag("addListFrag") == null) {
+                    getFragmentManager().beginTransaction().replace(R.id.container_frags, adListFragment)
+                            .commit();
+                } else {
+                    fragment = getFragmentManager().findFragmentByTag("addListFrag");
+                    getFragmentManager().beginTransaction().replace(R.id.container_frags, fragment)
+                            .commit();
+                }
+            }
+        };
+
+        if (runnable != null) {
+            mHandler.post(runnable);
+            toolbar.setTitle("Ad Lists");
+        }
+    }
+
+
+    private void setRegisterFragment() {
+        userRegisterFragment = userRegisterFragment == null ? new UserRegisterFragment() : userRegisterFragment;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Fragment fragment;
+                if (getFragmentManager().findFragmentByTag("regfrag") == null) {
+                    getFragmentManager().beginTransaction().replace(R.id.container_frags, userRegisterFragment)
+                            .commit();
+                } else {
+                    fragment = getFragmentManager().findFragmentByTag("regfrag");
+                    getFragmentManager().beginTransaction().replace(R.id.container_frags, fragment)
+                            .commit();
+                }
+            }
+        };
+
+        if (runnable != null) {
+            toolbar.setTitle("Create Account");
+            mHandler.post(runnable);
+        }
+    }
+
+
+    private void addTollBar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 }
