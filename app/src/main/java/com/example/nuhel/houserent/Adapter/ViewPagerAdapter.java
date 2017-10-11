@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.nuhel.houserent.View.Fragments.UserLoginFragment;
 import com.example.nuhel.houserent.View.Fragments.UserRegisterFragment;
 
 /**
@@ -11,13 +12,23 @@ import com.example.nuhel.houserent.View.Fragments.UserRegisterFragment;
  */
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
+
+    private UserRegisterFragment userRegisterFragment;
+    private UserLoginFragment userLoginFragment;
+
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
+        userLoginFragment = new UserLoginFragment();
+        userRegisterFragment = new UserRegisterFragment();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return new UserRegisterFragment();
+        if (position == 0) {
+            return userRegisterFragment;
+        } else {
+            return userLoginFragment;
+        }
     }
 
     @Override

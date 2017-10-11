@@ -38,7 +38,7 @@
         android:backgroundTint="#4e5d6f"
         android:ems="10"
         android:hint="Enter PassWord"
-        android:inputType="phone"
+        android:inputType="textPassword"
         android:textColor="@android:color/white" />
 
 
@@ -57,7 +57,7 @@
         android:backgroundTint="#4e5d6f"
         android:ems="10"
         android:hint="Re Enter PassWord"
-        android:inputType="phone"
+        android:inputType="textPassword"
         android:textColor="@android:color/white" />
 
 
@@ -78,7 +78,6 @@
         android:hint="@string/phoneRequired"
         android:inputType="phone"
         android:textColor="@android:color/white" />
-
 
     <!-- Email Feild -->
     <TextView
