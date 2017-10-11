@@ -1,14 +1,14 @@
 package com.example.nuhel.houserent.View.Fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
@@ -25,14 +25,11 @@ public class UserRegisterFragment extends Fragment {
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText re_enter_passwordEditText;
-    private AutoCompleteTextView ac = null;
+
+    private Button singupBtn, singinBtn;
 
     private int lastLengthOfemail = 0;
 
-    private String[] domains = {
-            "@gmail.com",
-            "@yahoo.com"
-    };
 
     public UserRegisterFragment() {
         // Required empty public constructor
@@ -41,8 +38,11 @@ public class UserRegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         view = view == null ? inflater.inflate(R.layout.user_registration_layout, container, false) : view;
         phoneEditText = (EditText) view.findViewById(R.id.phoneeditText);
+
 
         emailEditText = (EditText) view.findViewById(R.id.emailEdittext);
         emailEditText.addTextChangedListener(new TextWatcher() {

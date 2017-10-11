@@ -2,7 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@drawable/gradientbackgroundloginsingup"
+    android:orientation="vertical"
+    android:paddingLeft="40dp"
+    android:paddingTop="20dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,16 +14,64 @@
         android:gravity="right">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rightroundedshape"
-            android:text="Sing" />
+            android:id="@+id/singupbtn"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+
+            android:text="Sing Up" />
 
         <Button
+            android:id="@+id/singinbtn"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="Sing In" />
+        <!--android:background="@drawable/rightroundedshape"-->
+
+    </LinearLayout>
+
+
+    <!-- Email Feild -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rightroundedshape"
-            android:text="Sing" />
+            android:text="Sing In"
+            android:textColor="#526174"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="     or     "
+            android:textColor="#526174"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Sing Up"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+
     </LinearLayout>
+
+    <!--<include
+        layout="@layout/user_registration_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />-->
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/accountViewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>

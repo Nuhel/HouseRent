@@ -1,11 +1,11 @@
 package com.example.nuhel.houserent.View;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,7 +17,7 @@ import android.view.View;
 
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.Fragments.AdList;
-import com.example.nuhel.houserent.View.Fragments.UserRegisterFragment;
+import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
 
 public class MainActivity extends AppCompatActivity
 
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity
 
     private static Handler mHandler;
     private static AdList adListFragment = null;
-    private static UserRegisterFragment userRegisterFragment = null;
+    private static RegistrationLoginFragment userRegisterFragment = null;
     private static Toolbar toolbar;
 
     @Override
@@ -126,12 +126,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 Fragment fragment;
-                if (getFragmentManager().findFragmentByTag("addListFrag") == null) {
-                    getFragmentManager().beginTransaction().replace(R.id.container_frags, adListFragment)
+                if (getSupportFragmentManager().findFragmentByTag("addListFrag") == null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, adListFragment)
                             .commit();
                 } else {
-                    fragment = getFragmentManager().findFragmentByTag("addListFrag");
-                    getFragmentManager().beginTransaction().replace(R.id.container_frags, fragment)
+                    fragment = getSupportFragmentManager().findFragmentByTag("addListFrag");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, fragment)
                             .commit();
                 }
             }
@@ -145,17 +145,17 @@ public class MainActivity extends AppCompatActivity
 
 
     private void setRegisterFragment() {
-        userRegisterFragment = userRegisterFragment == null ? new UserRegisterFragment() : userRegisterFragment;
+        userRegisterFragment = userRegisterFragment == null ? new RegistrationLoginFragment() : userRegisterFragment;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 Fragment fragment;
                 if (getFragmentManager().findFragmentByTag("regfrag") == null) {
-                    getFragmentManager().beginTransaction().replace(R.id.container_frags, userRegisterFragment)
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, userRegisterFragment)
                             .commit();
                 } else {
-                    fragment = getFragmentManager().findFragmentByTag("regfrag");
-                    getFragmentManager().beginTransaction().replace(R.id.container_frags, fragment)
+                    fragment = getSupportFragmentManager().findFragmentByTag("regfrag");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, fragment)
                             .commit();
                 }
             }
