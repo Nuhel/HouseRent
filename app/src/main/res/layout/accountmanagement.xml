@@ -5,7 +5,7 @@
     android:background="@drawable/gradientbackgroundloginsingup"
     android:orientation="vertical"
     android:paddingLeft="40dp"
-    android:paddingTop="20dp">
+    android:paddingTop="15dp">
 
 
     <LinearLayout
@@ -14,17 +14,16 @@
         android:gravity="right">
 
         <Button
-            android:id="@+id/singupbtn"
+            android:id="@+id/signupbtn"
             android:layout_width="100dp"
             android:layout_height="40dp"
-
-            android:text="Sing Up" />
+            android:text="Sign Up" />
 
         <Button
-            android:id="@+id/singinbtn"
+            android:id="@+id/signinbtn"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:text="Sing In" />
+            android:text="Sign In" />
         <!--android:background="@drawable/rightroundedshape"-->
 
     </LinearLayout>
@@ -38,10 +37,11 @@
         android:gravity="left">
 
         <TextView
+            android:id="@+id/signupTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sing In"
-            android:textColor="#526174"
+            android:text="Sign Up"
+            android:textColor="@android:color/white"
             android:textSize="30sp" />
 
         <TextView
@@ -52,26 +52,24 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/signinTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="Sing Up"
-            android:textColor="@android:color/white"
+            android:text="Sign In"
+            android:textColor="#526174"
             android:textSize="30sp" />
 
 
     </LinearLayout>
 
-    <!--<include
-        layout="@layout/user_registration_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />-->
+    <com.rd.PageIndicatorView
+        android:id="@+id/pageIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-
-    <android.support.v4.view.ViewPager
+    <com.example.nuhel.houserent.View.ModifiedViewPager.NonSwipeableViewPager
         android:id="@+id/accountViewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
 </LinearLayout>

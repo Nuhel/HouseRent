@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.nuhel.houserent.Adapter.ViewPagerAdapter;
 import com.example.nuhel.houserent.R;
+import com.rd.PageIndicatorView;
+import com.rd.animation.type.AnimationType;
 
 /**
  * Created by Nuhel on 10/11/2017.
@@ -21,11 +24,11 @@ public class RegistrationLoginFragment extends Fragment {
 
 
     private View view;
-
-    private Button singupBtn, singinBtn;
-
-
+    private Button signupBtn, signinBtn;
     private ViewPager viewPager;
+    private TextView signinTextView, signupTextView;
+    private PageIndicatorView pageIndicatorView;
+    private ViewPagerAdapter viewPagerAdapter;
 
 
     private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
@@ -43,39 +46,58 @@ public class RegistrationLoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         view = view == null ? inflater.inflate(R.layout.accountmanagement, container, false) : view;
 
         viewPager = (ViewPager) view.findViewById(R.id.accountViewpager);
-        viewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
 
-        singupBtn = (Button) view.findViewById(R.id.singupbtn);
-        singinBtn = (Button) view.findViewById(R.id.singinbtn);
+        pageIndicatorView = (PageIndicatorView) view.findViewById(R.id.pageIndicatorView);
+        pageIndicatorView.setViewPager(viewPager);
+        pageIndicatorView.setAnimationType(AnimationType.SWAP);
+
+        signinTextView = (TextView) view.findViewById(R.id.signinTextView);
+        signupTextView = (TextView) view.findViewById(R.id.signupTextView);
+
+        signupBtn = (Button) view.findViewById(R.id.signupbtn);
+        signinBtn = (Button) view.findViewById(R.id.signinbtn);
 
         activeGradiant.setCornerRadius(20);
         deactiveGradiant.setCornerRadius(20);
 
 
-        singupBtn.setBackground(activeGradiant);
-        singinBtn.setBackground(deactiveGradiant);
+        signupBtn.setBackground(deactiveGradiant);
+        signinBtn.setBackground(activeGradiant);
 
 
-        singupBtn.setOnClickListener(new View.OnClickListener() {
+        signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                singupBtn.setBackground(activeGradiant);
-                singinBtn.setBackground(deactiveGradiant);
+                signinBtn.setBackground(activeGradiant);
+                signupBtn.setBackground(deactiveGradiant);
 
+                signupTextView.setTextColor(Color.parseColor("#ffffff"));
+                signinTextView.setTextColor(Color.parseColor("#526174"));
+
+                if (viewPager.getCurrentItem() != 0) {
+                    viewPager.setCurrentItem(0);
+                }
             }
         });
 
 
-        singinBtn.setOnClickListener(new View.OnClickListener() {
+        signinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                singinBtn.setBackground(activeGradiant);
-                singupBtn.setBackground(deactiveGradiant);
+                signupBtn.setBackground(activeGradiant);
+                signinBtn.setBackground(deactiveGradiant);
+
+                signinTextView.setTextColor(Color.parseColor("#ffffff"));
+                signupTextView.setTextColor(Color.parseColor("#526174"));
+
+                if (viewPager.getCurrentItem() != 1) {
+                    viewPager.setCurrentItem(1);
+                }
             }
         });
 

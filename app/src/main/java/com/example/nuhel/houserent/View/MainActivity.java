@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity
 
     private static Handler mHandler;
     private static AdList adListFragment = null;
-    private static RegistrationLoginFragment userRegisterFragment = null;
+    //private static RegistrationLoginFragment userRegisterFragment = null;
     private static Toolbar toolbar;
 
     @Override
@@ -145,19 +145,21 @@ public class MainActivity extends AppCompatActivity
 
 
     private void setRegisterFragment() {
-        userRegisterFragment = userRegisterFragment == null ? new RegistrationLoginFragment() : userRegisterFragment;
+        //userRegisterFragment = userRegisterFragment == null ? new RegistrationLoginFragment() : userRegisterFragment;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Fragment fragment;
-                if (getFragmentManager().findFragmentByTag("regfrag") == null) {
+                //Fragment fragment = new RegistrationLoginFragment();
+                /*if (getFragmentManager().findFragmentByTag("regfrag") == null) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, userRegisterFragment)
                             .commit();
                 } else {
                     fragment = getSupportFragmentManager().findFragmentByTag("regfrag");
                     getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, fragment)
                             .commit();
-                }
+                }*/
+                getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, new RegistrationLoginFragment())
+                        .commit();
             }
         };
 
