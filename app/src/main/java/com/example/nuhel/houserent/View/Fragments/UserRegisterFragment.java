@@ -29,21 +29,20 @@ public class UserRegisterFragment extends Fragment {
     private EditText passwordEditText;
     private EditText re_enter_passwordEditText;
 
-    private Button signupBtn;
+    private Button signUpBtn;
 
-    private int lastLengthOfemail = 0;
+    private int lastLengthOfEmail = 0;
 
-
-    private int Redius = 20;
 
     private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
-    private GradientDrawable activeGradiant = new GradientDrawable(
+    private GradientDrawable activeGradient = new GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM, activeColors);
 
     private int[] deactiveColors = {Color.parseColor("#4a5b70"), Color.parseColor("#4a5b70")};
-    private GradientDrawable deactiveGradiant = new GradientDrawable(
+    private GradientDrawable deactiveGradient = new GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM, deactiveColors);
 
+    private int radius = 20;
 
     public UserRegisterFragment() {
         // Required empty public constructor
@@ -72,27 +71,30 @@ public class UserRegisterFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 autoCompliteEmailForm();
 
                 if (isRequiredGiven()) {
-                    signupBtn.setActivated(true);
-                    signupBtn.setBackground(activeGradiant);
+                    signUpBtn.setActivated(true);
+                    signUpBtn.setBackground(activeGradient);
                 } else {
-                    signupBtn.setActivated(false);
-                    signupBtn.setBackground(deactiveGradiant);
+                    signUpBtn.setActivated(false);
+                    signUpBtn.setBackground(deactiveGradient);
                 }
             }
         });
 
-        activeGradiant.setCornerRadius(Redius);
-        deactiveGradiant.setCornerRadius(Redius);
 
-        signupBtn = (Button) view.findViewById(R.id.signupbtn);
-        signupBtn.setBackground(deactiveGradiant);
+        activeGradient.setCornerRadius(radius);
+        deactiveGradient.setCornerRadius(radius);
 
+        signUpBtn = (Button) view.findViewById(R.id.signupbtn);
+        signUpBtn.setBackground(deactiveGradient);
         phoneEditText = (EditText) view.findViewById(R.id.phoneeditText);
 
+        passwordEditText = (EditText) view.findViewById(R.id.passeditText);
+        re_enter_passwordEditText = (EditText) view.findViewById(R.id.repasseditText);
+
+        usernameEditText = (EditText) view.findViewById(R.id.loginUserNmaeorEmailEdittext);
 
         return view;
     }
@@ -100,7 +102,7 @@ public class UserRegisterFragment extends Fragment {
     private void autoCompliteEmailForm() {
         String text = emailEditText.getText().toString();
         int length = text.length();
-        if (lastLengthOfemail < length) {
+        if (lastLengthOfEmail < length) {
             if (length > 1) {
                 text = text.substring(length - 2);
                 text = text.toLowerCase();
@@ -118,18 +120,26 @@ public class UserRegisterFragment extends Fragment {
                 }
             }
         }
-        lastLengthOfemail = length;
+        lastLengthOfEmail = length;
     }
 
-    private boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    private boolean isEmailValid() {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText().toString()).matches();
     }
 
-    private boolean isPhoneValid(CharSequence email) {
-        return Patterns.PHONE.matcher(email).matches();
+    private boolean isPhoneNumValid() {
+        return Patterns.PHONE.matcher(phoneEditText.getText().toString()).matches();
+    }
+
+    private boolean isUserNameOk() {
+        return usernameEditText.getText().length() > 5;
+    }
+
+    private boolean isPassWordOk() {
+        return passwordEditText.getText().length() > 6 && passwordEditText.getText().toString().equals(re_enter_passwordEditText.getText().toString());
     }
 
     private boolean isRequiredGiven() {
-        return isEmailValid(emailEditText.getText().toString()) && isPhoneValid(phoneEditText.getText().toString());
+        return isEmailValid() && isPhoneNumValid() && isPassWordOk();
     }
 }

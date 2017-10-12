@@ -33,11 +33,11 @@ public class RegistrationLoginFragment extends Fragment {
 
 
     private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
-    private GradientDrawable activeGradiant = new GradientDrawable(
+    private GradientDrawable activeGradient = new GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM, activeColors);
 
     private int[] deactiveColors = {Color.parseColor("#4a5b70"), Color.parseColor("#4a5b70")};
-    private GradientDrawable deactiveGradiant = new GradientDrawable(
+    private GradientDrawable deactiveGradient = new GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM, deactiveColors);
 
     public RegistrationLoginFragment() {
@@ -63,19 +63,19 @@ public class RegistrationLoginFragment extends Fragment {
         signupBtn = (Button) view.findViewById(R.id.signupbtn);
         signinBtn = (Button) view.findViewById(R.id.signinbtn);
 
-        activeGradiant.setCornerRadius(Redius);
-        deactiveGradiant.setCornerRadius(Redius);
+        activeGradient.setCornerRadius(Redius);
+        deactiveGradient.setCornerRadius(Redius);
 
 
-        signupBtn.setBackground(deactiveGradiant);
-        signinBtn.setBackground(activeGradiant);
+        signupBtn.setBackground(deactiveGradient);
+        signinBtn.setBackground(activeGradient);
 
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signinBtn.setBackground(activeGradiant);
-                signupBtn.setBackground(deactiveGradiant);
+                signinBtn.setBackground(activeGradient);
+                signupBtn.setBackground(deactiveGradient);
 
                 signupTextView.setTextColor(Color.parseColor("#ffffff"));
                 signinTextView.setTextColor(Color.parseColor("#526174"));
@@ -90,8 +90,8 @@ public class RegistrationLoginFragment extends Fragment {
         signinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signupBtn.setBackground(activeGradiant);
-                signinBtn.setBackground(deactiveGradiant);
+                signupBtn.setBackground(activeGradient);
+                signinBtn.setBackground(deactiveGradient);
 
                 signinTextView.setTextColor(Color.parseColor("#ffffff"));
                 signupTextView.setTextColor(Color.parseColor("#526174"));
