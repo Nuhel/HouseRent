@@ -52,49 +52,9 @@ public class UserRegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        initViews(inflater, container);
 
-        view = view == null ? inflater.inflate(R.layout.user_registration_layout, container, false) : view;
-        phoneEditText = (EditText) view.findViewById(R.id.phoneeditText);
-
-
-        emailEditText = (EditText) view.findViewById(R.id.emailEdittext);
-        emailEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                autoCompliteEmailForm();
-
-                if (isRequiredGiven()) {
-                    signUpBtn.setActivated(true);
-                    signUpBtn.setBackground(activeGradient);
-                } else {
-                    signUpBtn.setActivated(false);
-                    signUpBtn.setBackground(deactiveGradient);
-                }
-            }
-        });
-
-
-        activeGradient.setCornerRadius(radius);
-        deactiveGradient.setCornerRadius(radius);
-
-        signUpBtn = (Button) view.findViewById(R.id.signupbtn);
-        signUpBtn.setBackground(deactiveGradient);
-        phoneEditText = (EditText) view.findViewById(R.id.phoneeditText);
-
-        passwordEditText = (EditText) view.findViewById(R.id.passeditText);
-        re_enter_passwordEditText = (EditText) view.findViewById(R.id.repasseditText);
-
-        usernameEditText = (EditText) view.findViewById(R.id.loginUserNmaeorEmailEdittext);
+        setTextChangeListener();
 
         return view;
     }
@@ -124,22 +84,203 @@ public class UserRegisterFragment extends Fragment {
     }
 
     private boolean isEmailValid() {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText().toString()).matches();
+        boolean isOk = Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText().toString()).matches();
+        if (isOk) {
+            emailEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ricon, 0);
+        } else {
+            if (emailEditText.getText().length() > 0) {
+                emailEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.wicon, 0);
+            } else {
+                emailEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+        }
+        return isOk;
     }
 
     private boolean isPhoneNumValid() {
-        return Patterns.PHONE.matcher(phoneEditText.getText().toString()).matches();
+        boolean isOk = Patterns.PHONE.matcher(phoneEditText.getText().toString()).matches();
+        if (isOk) {
+            phoneEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ricon, 0);
+        } else {
+            if (phoneEditText.getText().length() > 0) {
+                phoneEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.wicon, 0);
+            } else {
+                phoneEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+        }
+        return isOk;
     }
 
     private boolean isUserNameOk() {
-        return usernameEditText.getText().length() > 5;
+        boolean isOk = usernameEditText.getText().length() > 5;
+        if (isOk) {
+            usernameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ricon, 0);
+        } else {
+            if (usernameEditText.getText().length() > 0) {
+                usernameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.wicon, 0);
+            } else {
+                usernameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+        }
+        return isOk;
     }
 
     private boolean isPassWordOk() {
-        return passwordEditText.getText().length() > 6 && passwordEditText.getText().toString().equals(re_enter_passwordEditText.getText().toString());
+
+        boolean isPassOk, isRePassOk;
+
+        isPassOk = passwordEditText.getText().length() > 6;
+        isRePassOk = passwordEditText.getText().toString().equals(re_enter_passwordEditText.getText().toString()) && isPassOk;
+
+        if (isPassOk) {
+            passwordEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ricon, 0);
+        } else {
+            if (passwordEditText.getText().length() > 0) {
+                passwordEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.wicon, 0);
+            } else {
+                passwordEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+        }
+
+        if (isRePassOk) {
+            re_enter_passwordEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ricon, 0);
+        } else {
+            if (re_enter_passwordEditText.getText().length() > 0) {
+                re_enter_passwordEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.wicon, 0);
+            } else {
+                re_enter_passwordEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+        }
+
+        return isPassOk && isRePassOk;
     }
 
-    private boolean isRequiredGiven() {
-        return isEmailValid() && isPhoneNumValid() && isPassWordOk();
+    private void setUpRegisreButton() {
+        boolean isEmailValid = isEmailValid();
+        boolean isPhoneNumValid = isPhoneNumValid();
+        boolean isPassWordOk = isPassWordOk();
+        boolean isUserNameOk = isUserNameOk();
+
+
+        if (isEmailValid && isPhoneNumValid && isPassWordOk && isUserNameOk) {
+            signUpBtn.setActivated(true);
+            signUpBtn.setBackground(activeGradient);
+        } else {
+            signUpBtn.setActivated(false);
+            signUpBtn.setBackground(deactiveGradient);
+        }
+
+    }
+
+    private void initViews(LayoutInflater inflater, ViewGroup container) {
+        view = view == null ? inflater.inflate(R.layout.user_registration_layout, container, false) : view;
+
+        usernameEditText = (EditText) view.findViewById(R.id.nameEdittext);
+
+        passwordEditText = (EditText) view.findViewById(R.id.passeditText);
+
+        re_enter_passwordEditText = (EditText) view.findViewById(R.id.repasseditText);
+
+        phoneEditText = (EditText) view.findViewById(R.id.phoneeditText);
+
+        emailEditText = (EditText) view.findViewById(R.id.emailEdittext);
+
+        signUpBtn = (Button) view.findViewById(R.id.signupbtn);
+        activeGradient.setCornerRadius(radius);
+        deactiveGradient.setCornerRadius(radius);
+
+        signUpBtn.setBackground(deactiveGradient);
+
+    }
+
+    private void setTextChangeListener() {
+        usernameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setUpRegisreButton();
+            }
+        });
+
+
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setUpRegisreButton();
+
+            }
+        });
+
+        re_enter_passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setUpRegisreButton();
+
+            }
+        });
+
+        phoneEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setUpRegisreButton();
+
+            }
+        });
+
+        emailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                autoCompliteEmailForm();
+                setUpRegisreButton();
+
+            }
+        });
     }
 }
