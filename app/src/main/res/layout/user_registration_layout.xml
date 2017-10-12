@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#4e5d6f"
             android:ems="10"
-            android:hint="Enter Your User Name"
+            android:hint="Required (Min 6)"
             android:inputType="textPersonName"
             android:textColor="#858f9b" />
 
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#4e5d6f"
             android:ems="10"
-            android:hint="Enter PassWord"
+            android:hint="Required (Min 6)"
             android:inputType="textPassword"
             android:textColor="@android:color/white" />
 
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#4e5d6f"
             android:ems="10"
-            android:hint="Re Enter PassWord"
+            android:hint="Required"
             android:inputType="textPassword"
             android:textColor="@android:color/white" />
 
@@ -113,7 +113,7 @@
                 android:id="@+id/signupbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="Register" />
         </LinearLayout>
 
     </LinearLayout>
