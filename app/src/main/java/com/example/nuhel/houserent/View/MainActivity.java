@@ -18,6 +18,7 @@ import android.view.View;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.Fragments.AdList;
 import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity
     private static AdList adListFragment = null;
     private static Toolbar toolbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,11 @@ public class MainActivity extends AppCompatActivity
         addTollBar();
 
         mHandler = new Handler();
+
+
+        // [START initialize_auth]
+
+        // [END initialize_auth]
 
         setAddListFrag();
 
@@ -162,5 +169,19 @@ public class MainActivity extends AppCompatActivity
     private void addTollBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        /*FirebaseUser currentUser = GetFirebaseAuthInstance.getFirebaseAuthInstance();
+        updateUI(currentUser);*/
+    }
+
+
+    private void updateUI(FirebaseUser user) {
+
     }
 }

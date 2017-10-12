@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
 import com.example.nuhel.houserent.R;
@@ -166,7 +167,7 @@ public class UserRegisterFragment extends Fragment {
             signUpBtn.setActivated(true);
             signUpBtn.setBackground(activeGradient);
         } else {
-            signUpBtn.setActivated(false);
+            //signUpBtn.setActivated(false);
             signUpBtn.setBackground(deactiveGradient);
         }
 
@@ -190,6 +191,18 @@ public class UserRegisterFragment extends Fragment {
         deactiveGradient.setCornerRadius(radius);
 
         signUpBtn.setBackground(deactiveGradient);
+
+        signUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    //Toast.makeText(view.getContext(), GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext()).toString(), Toast.LENGTH_SHORT).show();
+
+                } catch (Exception e) {
+                    Toast.makeText(view.getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
