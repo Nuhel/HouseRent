@@ -1,5 +1,5 @@
 package com.example.nuhel.houserent.View.Fragments;
-
+//uttom kumar saha
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -23,9 +23,7 @@ public class UserLoginFragment extends Fragment {
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText re_enter_passwordEditText;
-
     private Button singupBtn, singinBtn;
-
     private int lastLengthOfemail = 0;
 
 

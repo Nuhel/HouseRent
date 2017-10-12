@@ -1,10 +1,13 @@
 package com.example.nuhel.houserent.View.Fragments;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +29,20 @@ public class UserRegisterFragment extends Fragment {
     private EditText passwordEditText;
     private EditText re_enter_passwordEditText;
 
-    private Button singupBtn, singinBtn;
+    private Button signupBtn;
 
     private int lastLengthOfemail = 0;
+
+
+    private int Redius = 20;
+
+    private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
+    private GradientDrawable activeGradiant = new GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM, activeColors);
+
+    private int[] deactiveColors = {Color.parseColor("#4a5b70"), Color.parseColor("#4a5b70")};
+    private GradientDrawable deactiveGradiant = new GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM, deactiveColors);
 
 
     public UserRegisterFragment() {
@@ -60,8 +74,25 @@ public class UserRegisterFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 
                 autoCompliteEmailForm();
+
+                if (isRequiredGiven()) {
+                    signupBtn.setActivated(true);
+                    signupBtn.setBackground(activeGradiant);
+                } else {
+                    signupBtn.setActivated(false);
+                    signupBtn.setBackground(deactiveGradiant);
+                }
             }
         });
+
+        activeGradiant.setCornerRadius(Redius);
+        deactiveGradiant.setCornerRadius(Redius);
+
+        signupBtn = (Button) view.findViewById(R.id.signupbtn);
+        signupBtn.setBackground(deactiveGradiant);
+
+        phoneEditText = (EditText) view.findViewById(R.id.phoneeditText);
+
 
         return view;
     }
@@ -90,5 +121,15 @@ public class UserRegisterFragment extends Fragment {
         lastLengthOfemail = length;
     }
 
+    private boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 
+    private boolean isPhoneValid(CharSequence email) {
+        return Patterns.PHONE.matcher(email).matches();
+    }
+
+    private boolean isRequiredGiven() {
+        return isEmailValid(emailEditText.getText().toString()) && isPhoneValid(phoneEditText.getText().toString());
+    }
 }

@@ -29,6 +29,7 @@ public class RegistrationLoginFragment extends Fragment {
     private TextView signinTextView, signupTextView;
     private PageIndicatorView pageIndicatorView;
     private ViewPagerAdapter viewPagerAdapter;
+    private int Redius = 20;
 
 
     private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
@@ -62,8 +63,8 @@ public class RegistrationLoginFragment extends Fragment {
         signupBtn = (Button) view.findViewById(R.id.signupbtn);
         signinBtn = (Button) view.findViewById(R.id.signinbtn);
 
-        activeGradiant.setCornerRadius(20);
-        deactiveGradiant.setCornerRadius(20);
+        activeGradiant.setCornerRadius(Redius);
+        deactiveGradiant.setCornerRadius(Redius);
 
 
         signupBtn.setBackground(deactiveGradiant);
