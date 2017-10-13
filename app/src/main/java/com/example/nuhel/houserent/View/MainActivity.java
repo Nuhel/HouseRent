@@ -15,19 +15,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.nuhel.houserent.Controller.TryInterface;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.Fragments.AdList;
 import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.Serializable;
 public class MainActivity extends AppCompatActivity
 
 
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, TryInterface, Serializable {
 
     private static Handler mHandler;
     private static AdList adListFragment = null;
     private static Toolbar toolbar;
+
+    private static RegistrationLoginFragment registrationLoginFragment;
+    private static Serializable serializable;
 
 
     @Override
@@ -37,12 +42,8 @@ public class MainActivity extends AppCompatActivity
 
         addTollBar();
 
+        serializable = this;
         mHandler = new Handler();
-
-
-        // [START initialize_auth]
-
-        // [END initialize_auth]
 
         setAddListFrag();
 
@@ -154,7 +155,8 @@ public class MainActivity extends AppCompatActivity
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, new RegistrationLoginFragment())
+                registrationLoginFragment = RegistrationLoginFragment.newInstance(serializable);
+                getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, registrationLoginFragment)
                         .commit();
             }
         };
@@ -164,7 +166,6 @@ public class MainActivity extends AppCompatActivity
             mHandler.post(runnable);
         }
     }
-
 
     private void addTollBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -180,4 +181,11 @@ public class MainActivity extends AppCompatActivity
     private void updateUI(FirebaseUser user) {
 
     }
+
+    @Override
+    public void makeToast() {
+        setAddListFrag();
+        //Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
+    }
+
 }

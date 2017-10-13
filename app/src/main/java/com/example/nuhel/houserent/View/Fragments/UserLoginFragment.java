@@ -12,8 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
+import com.example.nuhel.houserent.Controller.TryInterface;
 import com.example.nuhel.houserent.R;
 import com.roger.catloadinglibrary.CatLoadingView;
+
+import java.io.Serializable;
 
 public class UserLoginFragment extends Fragment {
 
@@ -24,17 +27,28 @@ public class UserLoginFragment extends Fragment {
     private Button signinBtn;
     private int lastLengthOfemail = 0;
     private CatLoadingView mView;
-
-
+    private TryInterface tryInterface;
 
     public UserLoginFragment() {
         // Required empty public constructor
+    }
+
+    public static UserLoginFragment newInstance(Serializable serializable) {
+        UserLoginFragment userLoginFragment = new UserLoginFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("s", serializable);
+        userLoginFragment.setArguments(bundle);
+        return userLoginFragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = view == null ? inflater.inflate(R.layout.user_login_layout, container, false) : view;
+
+        tryInterface = (TryInterface) getArguments().getSerializable("s");
+
+
         emailEditText = (EditText) view.findViewById(R.id.userloginEmailEdittext);
         passwordEditText = (EditText) view.findViewById(R.id.userloginpasseditText);
 
@@ -64,9 +78,7 @@ public class UserLoginFragment extends Fragment {
                 if (!email.equals("") && !pass.equals("")) {
                     mView = new CatLoadingView();
                     mView.show(getFragmentManager(), "Loading.........");
-                    GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext(), email, pass, mView);
-
-
+                    GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext(), email, pass, mView, tryInterface);
                 }
 
             }

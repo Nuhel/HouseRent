@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.example.nuhel.houserent.View.Fragments.UserLoginFragment;
 import com.example.nuhel.houserent.View.Fragments.UserRegisterFragment;
 
+import java.io.Serializable;
+
 /**
  * Created by Nuhel on 10/11/2017.
  */
@@ -16,9 +18,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     private UserRegisterFragment userRegisterFragment;
     private UserLoginFragment userLoginFragment;
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    public ViewPagerAdapter(FragmentManager fm, Serializable serializable) {
         super(fm);
-        userLoginFragment = new UserLoginFragment();
+        userLoginFragment = UserLoginFragment.newInstance(serializable);
         userRegisterFragment = new UserRegisterFragment();
     }
 

@@ -26,7 +26,7 @@ public class GetFirebaseAuthInstance {
     static FirebaseUser user;
     private static CatLoadingView cat;
 
-    public static FirebaseUser getFirebaseAuthInstance(final Context context, String email, String pass, final CatLoadingView mView) {
+    public static FirebaseUser getFirebaseAuthInstance(final Context context, String email, String pass, final CatLoadingView mView, final TryInterface tryInterface) {
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
@@ -37,6 +37,7 @@ public class GetFirebaseAuthInstance {
                             user = mAuth.getCurrentUser();
                             String userEmail = mAuth.getCurrentUser().getEmail().toString();
                             Toast.makeText(context, "Sucsesfully LogedIn\nWelcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                            tryInterface.makeToast();
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(context, "Cannot Sign in. Please check the form and try again.", Toast.LENGTH_LONG).show();

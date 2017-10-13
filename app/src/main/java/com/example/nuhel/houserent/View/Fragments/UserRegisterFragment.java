@@ -319,7 +319,6 @@ public class UserRegisterFragment extends Fragment {
                             user = mAuth.getCurrentUser();
                             profileChangeRequest = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(displayName).build();
-
                             user.updateProfile(profileChangeRequest);
                             mView.dismiss();
 
