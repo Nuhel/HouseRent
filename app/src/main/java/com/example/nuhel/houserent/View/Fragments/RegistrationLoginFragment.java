@@ -106,5 +106,4 @@ public class RegistrationLoginFragment extends Fragment {
         return view;
     }
 
-
 }

@@ -41,7 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
         this.recyclerView = recyclerView;
-        this.db = GetFirebaseInstance.GetInstace().getReference("HomeAddList");
+        this.db = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         this.add_list = new LinkedHashMap<>();
         loadMoreData();
         this.recyclerView.setAdapter(this);

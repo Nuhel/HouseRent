@@ -100,5 +100,4 @@ public class UserLoginFragment extends Fragment {
         lastLengthOfemail = length;
     }
 
-
 }

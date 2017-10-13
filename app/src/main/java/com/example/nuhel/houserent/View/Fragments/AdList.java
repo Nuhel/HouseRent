@@ -45,8 +45,4 @@ public class AdList extends Fragment {
             //this.adapter.setRecyclerView(recyclerView,this.adapter);
         }
     }
-
-
-
-
 }

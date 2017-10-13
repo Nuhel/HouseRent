@@ -9,7 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class GetFirebaseInstance {
     private static FirebaseDatabase firebaseDatabase;
 
-    public static FirebaseDatabase GetInstace() {
+    public static FirebaseDatabase GetInstance() {
         if (firebaseDatabase == null) {
             firebaseDatabase = FirebaseDatabase.getInstance();
             firebaseDatabase.setPersistenceEnabled(true);

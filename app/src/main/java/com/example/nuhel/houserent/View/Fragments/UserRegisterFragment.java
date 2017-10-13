@@ -1,10 +1,11 @@
 package com.example.nuhel.houserent.View.Fragments;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -13,36 +14,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
+import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 public class UserRegisterFragment extends Fragment {
 
-
-    private RecyclerView recyclerView;
+    private static FirebaseUser user;
+    private static UserProfileChangeRequest profileChangeRequest;
+    private static FirebaseAuth mAuth;
+    //IDeclaring view
     private View view;
-    private RecyclerViewAdapter adapter;
     private EditText emailEditText;
     private EditText phoneEditText;
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText re_enter_passwordEditText;
-
-    private Button signUpBtn;
-
+    //IDeclaring signUpButton
+    private Button signUpButton;
     private int lastLengthOfEmail = 0;
-
-
     private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
     private GradientDrawable activeGradient = new GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM, activeColors);
-
     private int[] deactiveColors = {Color.parseColor("#4a5b70"), Color.parseColor("#4a5b70")};
     private GradientDrawable deactiveGradient = new GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM, deactiveColors);
-
     private int radius = 20;
+    private CatLoadingView mView;
 
     public UserRegisterFragment() {
         // Required empty public constructor
@@ -51,7 +57,6 @@ public class UserRegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         initViews(inflater, container);
 
         setTextChangeListener();
@@ -163,11 +168,11 @@ public class UserRegisterFragment extends Fragment {
 
 
         if (isEmailValid && isPhoneNumValid && isPassWordOk && isUserNameOk) {
-            signUpBtn.setActivated(true);
-            signUpBtn.setBackground(activeGradient);
+            signUpButton.setActivated(true);
+            signUpButton.setBackground(activeGradient);
         } else {
             //signUpBtn.setActivated(false);
-            signUpBtn.setBackground(deactiveGradient);
+            signUpButton.setBackground(deactiveGradient);
         }
 
     }
@@ -185,16 +190,16 @@ public class UserRegisterFragment extends Fragment {
 
         emailEditText = (EditText) view.findViewById(R.id.emailEdittext);
 
-        signUpBtn = (Button) view.findViewById(R.id.signupbtn);
+        signUpButton = (Button) view.findViewById(R.id.signupbtn);
         activeGradient.setCornerRadius(radius);
         deactiveGradient.setCornerRadius(radius);
 
-        signUpBtn.setBackground(deactiveGradient);
+        signUpButton.setBackground(deactiveGradient);
 
-        signUpBtn.setOnClickListener(new View.OnClickListener() {
+        signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                signUp();
             }
         });
 
@@ -289,5 +294,42 @@ public class UserRegisterFragment extends Fragment {
 
             }
         });
+    }
+
+    private void signUp() {
+
+        mView = new CatLoadingView();
+        mView.show(getFragmentManager(), "Loading.........");
+        String email = emailEditText.getText().toString();
+        final String displayName = usernameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        String phoneNUmber;
+
+        mAuth = GetFirebaseAuthInstance.getmAuth();
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Toast.makeText(view.getContext(), "Authentication",
+                                    Toast.LENGTH_SHORT).show();
+
+                            user = mAuth.getCurrentUser();
+                            profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(displayName).build();
+
+                            user.updateProfile(profileChangeRequest);
+                            mView.dismiss();
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+
+                        }
+
+                        // ...
+                    }
+                });
     }
 }

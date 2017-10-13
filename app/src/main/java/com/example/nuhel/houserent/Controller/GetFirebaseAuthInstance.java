@@ -20,7 +20,7 @@ public class GetFirebaseAuthInstance {
 
     // [START declare_auth]
 
-    static FirebaseAuth mAuth;
+    static FirebaseAuth mAuth = null;
     // [END declare_auth]
 
     static FirebaseUser user;
@@ -35,20 +35,21 @@ public class GetFirebaseAuthInstance {
                         mView.dismiss();
                         if (task.isSuccessful()) {
                             user = mAuth.getCurrentUser();
-                            Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
-                                Toast.makeText(context, mAuth.getCurrentUser().getEmail().toString(), Toast.LENGTH_SHORT).show();
-
+                            String userEmail = mAuth.getCurrentUser().getEmail().toString();
+                            Toast.makeText(context, "Sucsesfully LogedIn\nWelcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(context, "Cannot Sign in. Please check the form and try again.", Toast.LENGTH_LONG).show();
 
                         }
-
-                        // ...
                     }
                 });
-// [END sign_in_with_email]
         return user;
+    }
+
+    public static FirebaseAuth getmAuth() {
+        mAuth = mAuth == null ? FirebaseAuth.getInstance() : mAuth;
+        return mAuth;
     }
 
 }
