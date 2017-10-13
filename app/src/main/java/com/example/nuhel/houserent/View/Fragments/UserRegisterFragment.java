@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
+import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.R;
 
 public class UserRegisterFragment extends Fragment {
@@ -196,6 +197,7 @@ public class UserRegisterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
+                    GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext());
                     //Toast.makeText(view.getContext(), GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext()).toString(), Toast.LENGTH_SHORT).show();
 
                 } catch (Exception e) {
