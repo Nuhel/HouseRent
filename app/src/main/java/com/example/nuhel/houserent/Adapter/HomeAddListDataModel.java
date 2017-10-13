@@ -15,6 +15,7 @@ public class HomeAddListDataModel {
     private String Type;
     private String Post_id;
 
+
     public HomeAddListDataModel() {
     }
 

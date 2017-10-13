@@ -13,10 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
-import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.R;
 
 public class UserRegisterFragment extends Fragment {
@@ -196,13 +194,7 @@ public class UserRegisterFragment extends Fragment {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext());
-                    //Toast.makeText(view.getContext(), GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext()).toString(), Toast.LENGTH_SHORT).show();
 
-                } catch (Exception e) {
-                    Toast.makeText(view.getContext(), e.toString(), Toast.LENGTH_SHORT).show();
-                }
             }
         });
 

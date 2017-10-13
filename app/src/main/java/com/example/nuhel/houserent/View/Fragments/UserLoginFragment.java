@@ -1,30 +1,30 @@
 package com.example.nuhel.houserent.View.Fragments;
 //uttom kumar saha
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
+import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.R;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 public class UserLoginFragment extends Fragment {
 
 
-    private RecyclerView recyclerView;
     private View view;
-    private RecyclerViewAdapter adapter;
     private EditText emailEditText;
-    private EditText phoneEditText;
-    private EditText usernameEditText;
     private EditText passwordEditText;
-    private EditText re_enter_passwordEditText;
-    private Button singupBtn, singinBtn;
+    private Button signinBtn;
     private int lastLengthOfemail = 0;
+    private CatLoadingView mView;
+
 
 
     public UserLoginFragment() {
@@ -32,15 +32,13 @@ public class UserLoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = view == null ? inflater.inflate(R.layout.user_login_layout, container, false) : view;
-        phoneEditText = (EditText) view.findViewById(R.id.phoneeditText);
+        emailEditText = (EditText) view.findViewById(R.id.userloginEmailEdittext);
+        passwordEditText = (EditText) view.findViewById(R.id.userloginpasseditText);
 
-
-        /*emailEditText = (EditText) view.findViewById(R.id.emailEdittext);
+        signinBtn = (Button) view.findViewById(R.id.userloginsigninbtn);
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -54,10 +52,26 @@ public class UserLoginFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 autoCompliteEmailForm();
             }
-        });*/
+        });
+        signinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = emailEditText.getText().toString();
+                String pass = passwordEditText.getText().toString();
+
+                if (!email.equals("") && !pass.equals("")) {
+                    mView = new CatLoadingView();
+                    mView.show(getFragmentManager(), "Loading.........");
+                    GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext(), email, pass, mView);
+
+
+                }
+
+            }
+        });
+
 
         return view;
     }

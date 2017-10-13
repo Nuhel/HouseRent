@@ -8,17 +8,17 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="User Name or Email"
+        android:text="Email"
         android:textColor="@android:color/white"
         android:textSize="15sp" />
 
     <EditText
-        android:id="@+id/loginUserNmaeorEmailEdittext"
+        android:id="@+id/userloginEmailEdittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#4e5d6f"
         android:ems="10"
-        android:hint="Enter Your Full Name"
+        android:hint="Enter Email"
         android:inputType="textPersonName"
         android:textColor="#858f9b" />
 
@@ -31,7 +31,7 @@
         android:textSize="15sp" />
 
     <EditText
-        android:id="@+id/loginpasseditText"
+        android:id="@+id/userloginpasseditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#4e5d6f"
@@ -46,9 +46,9 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/userloginsigninbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="SignIn" />
     </LinearLayout>
 </LinearLayout>
