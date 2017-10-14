@@ -188,7 +188,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
         public void bindData(HomeAddListDataModel data) {
-
             if (data != null) {
                 Glide.with(context)
                         .load(data.getImage1())

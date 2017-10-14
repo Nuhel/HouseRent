@@ -1,7 +1,8 @@
 package com.example.nuhel.houserent.View.Fragments;
-//uttom kumar saha
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,33 +11,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
-import com.example.nuhel.houserent.Controller.TryInterface;
 import com.example.nuhel.houserent.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.roger.catloadinglibrary.CatLoadingView;
-
-import java.io.Serializable;
 
 public class UserLoginFragment extends Fragment {
 
 
+    private static FirebaseAuth mAuth = null;
+    private static FirebaseUser user;
     private View view;
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button signinBtn;
     private int lastLengthOfemail = 0;
     private CatLoadingView mView;
-    private TryInterface tryInterface;
+    private FragmentControllerAfterUserLog_Reg fragmentControllerAfterUserLogReg;
 
     public UserLoginFragment() {
         // Required empty public constructor
     }
 
-    public static UserLoginFragment newInstance(Serializable serializable) {
+    public static UserLoginFragment newInstance(Bundle bundle) {
         UserLoginFragment userLoginFragment = new UserLoginFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("s", serializable);
         userLoginFragment.setArguments(bundle);
         return userLoginFragment;
     }
@@ -46,8 +51,7 @@ public class UserLoginFragment extends Fragment {
 
         view = view == null ? inflater.inflate(R.layout.user_login_layout, container, false) : view;
 
-        tryInterface = (TryInterface) getArguments().getSerializable("s");
-
+        fragmentControllerAfterUserLogReg = (FragmentControllerAfterUserLog_Reg) getArguments().getSerializable("serializable");
 
         emailEditText = (EditText) view.findViewById(R.id.userloginEmailEdittext);
         passwordEditText = (EditText) view.findViewById(R.id.userloginpasseditText);
@@ -78,7 +82,25 @@ public class UserLoginFragment extends Fragment {
                 if (!email.equals("") && !pass.equals("")) {
                     mView = new CatLoadingView();
                     mView.show(getFragmentManager(), "Loading.........");
-                    GetFirebaseAuthInstance.getFirebaseAuthInstance(view.getContext(), email, pass, mView, tryInterface);
+                    mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
+
+                    mAuth.signInWithEmailAndPassword(email, pass)
+                            .addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    mView.dismiss();
+                                    if (task.isSuccessful()) {
+                                        user = mAuth.getCurrentUser();
+                                        String userEmail = mAuth.getCurrentUser().getEmail().toString();
+                                        Toast.makeText(view.getContext(), "Sucsesfully LogedIn\nWelcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                                        fragmentControllerAfterUserLogReg.setFrag();
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Toast.makeText(view.getContext(), "Cannot Sign in. Please check the form and try again.", Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+                            });
                 }
 
             }

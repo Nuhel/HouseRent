@@ -15,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.nuhel.houserent.Controller.TryInterface;
+import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.Fragments.AdList;
 import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class MainActivity extends AppCompatActivity
 
 
-        implements NavigationView.OnNavigationItemSelectedListener, TryInterface, Serializable {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentControllerAfterUserLog_Reg, Serializable {
 
     private static Handler mHandler;
     private static AdList adListFragment = null;
@@ -155,7 +155,9 @@ public class MainActivity extends AppCompatActivity
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                registrationLoginFragment = RegistrationLoginFragment.newInstance(serializable);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("serializable", serializable);
+                registrationLoginFragment = RegistrationLoginFragment.newInstance(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, registrationLoginFragment)
                         .commit();
             }
@@ -183,9 +185,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void makeToast() {
+    public void setFrag() {
         setAddListFrag();
-        //Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
     }
 
 }

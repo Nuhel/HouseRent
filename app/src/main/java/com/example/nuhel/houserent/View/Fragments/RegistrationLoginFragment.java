@@ -15,8 +15,6 @@ import com.example.nuhel.houserent.Adapter.ViewPagerAdapter;
 import com.example.nuhel.houserent.R;
 import com.rd.PageIndicatorView;
 import com.rd.animation.type.AnimationType;
-
-import java.io.Serializable;
 /**
  * Created by Nuhel on 10/11/2017.
  */
@@ -45,9 +43,7 @@ public class RegistrationLoginFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static RegistrationLoginFragment newInstance(Serializable SerializableObj) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("nn", SerializableObj);
+    public static RegistrationLoginFragment newInstance(Bundle bundle) {
         RegistrationLoginFragment registrationLoginFragment = new RegistrationLoginFragment();
         registrationLoginFragment.setArguments(bundle);
         return registrationLoginFragment;
@@ -59,7 +55,7 @@ public class RegistrationLoginFragment extends Fragment {
         view = view == null ? inflater.inflate(R.layout.accountmanagement, container, false) : view;
 
         viewPager = (ViewPager) view.findViewById(R.id.accountViewpager);
-        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getArguments().getSerializable("nn"));
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getArguments());
         viewPager.setAdapter(viewPagerAdapter);
 
         pageIndicatorView = (PageIndicatorView) view.findViewById(R.id.pageIndicatorView);

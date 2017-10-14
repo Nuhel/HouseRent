@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.roger.catloadinglibrary.CatLoadingView;
+
+import java.io.Serializable;
 
 public class UserRegisterFragment extends Fragment {
 
@@ -50,17 +53,27 @@ public class UserRegisterFragment extends Fragment {
     private int radius = 20;
     private CatLoadingView mView;
 
+    private FragmentControllerAfterUserLog_Reg fragmentControllerAfterUserLogReg;
+
     public UserRegisterFragment() {
         // Required empty public constructor
+    }
+
+
+    public static UserRegisterFragment newInstance(Bundle bundle) {
+        Serializable serializable;
+        UserRegisterFragment userRegisterFragment = new UserRegisterFragment();
+        userRegisterFragment.setArguments(bundle);
+        return userRegisterFragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        fragmentControllerAfterUserLogReg = (FragmentControllerAfterUserLog_Reg) getArguments().getSerializable("serializable");
         initViews(inflater, container);
-
         setTextChangeListener();
-
         return view;
     }
 
@@ -171,7 +184,7 @@ public class UserRegisterFragment extends Fragment {
             signUpButton.setActivated(true);
             signUpButton.setBackground(activeGradient);
         } else {
-            //signUpBtn.setActivated(false);
+            signUpButton.setActivated(false);
             signUpButton.setBackground(deactiveGradient);
         }
 
@@ -195,6 +208,7 @@ public class UserRegisterFragment extends Fragment {
         deactiveGradient.setCornerRadius(radius);
 
         signUpButton.setBackground(deactiveGradient);
+        signUpButton.setActivated(false);
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -305,7 +319,7 @@ public class UserRegisterFragment extends Fragment {
         String password = passwordEditText.getText().toString();
         String phoneNUmber;
 
-        mAuth = GetFirebaseAuthInstance.getmAuth();
+        mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<AuthResult>() {
@@ -327,7 +341,6 @@ public class UserRegisterFragment extends Fragment {
 
                         }
 
-                        // ...
                     }
                 });
     }
