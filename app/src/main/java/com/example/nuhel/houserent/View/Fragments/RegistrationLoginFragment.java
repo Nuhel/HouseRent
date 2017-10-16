@@ -52,21 +52,21 @@ public class RegistrationLoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = view == null ? inflater.inflate(R.layout.accountmanagement, container, false) : view;
+        view = view == null ? inflater.inflate(R.layout.account_management, container, false) : view;
 
-        viewPager = (ViewPager) view.findViewById(R.id.accountViewpager);
+        viewPager = view.findViewById(R.id.accountViewpager);
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getArguments());
         viewPager.setAdapter(viewPagerAdapter);
 
-        pageIndicatorView = (PageIndicatorView) view.findViewById(R.id.pageIndicatorView);
+        pageIndicatorView = view.findViewById(R.id.pageIndicatorView);
         pageIndicatorView.setViewPager(viewPager);
         pageIndicatorView.setAnimationType(AnimationType.SWAP);
 
-        signinTextView = (TextView) view.findViewById(R.id.signinTextView);
-        signupTextView = (TextView) view.findViewById(R.id.signupTextView);
+        signinTextView = view.findViewById(R.id.signinTextView);
+        signupTextView = view.findViewById(R.id.signupTextView);
 
-        signupBtn = (Button) view.findViewById(R.id.signupbtn);
-        signinBtn = (Button) view.findViewById(R.id.signinbtn);
+        signupBtn = view.findViewById(R.id.signupbtn);
+        signinBtn = view.findViewById(R.id.signinbtn);
 
         activeGradient.setCornerRadius(Redius);
         deactiveGradient.setCornerRadius(Redius);

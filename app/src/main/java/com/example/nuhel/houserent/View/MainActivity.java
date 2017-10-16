@@ -1,5 +1,6 @@
 package com.example.nuhel.houserent.View;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -16,12 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
+import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.Fragments.AdList;
 import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.nuhel.houserent.View.Fragments.UserProfileManageFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
+
 public class MainActivity extends AppCompatActivity
 
 
@@ -30,10 +34,10 @@ public class MainActivity extends AppCompatActivity
     private static Handler mHandler;
     private static AdList adListFragment = null;
     private static Toolbar toolbar;
-
     private static RegistrationLoginFragment registrationLoginFragment;
     private static Serializable serializable;
-
+    private static DrawerLayout drawer;
+    private static FirebaseAuth mAuth = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,7 @@ public class MainActivity extends AppCompatActivity
 
         setAddListFrag();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,19 +63,17 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -152,14 +154,26 @@ public class MainActivity extends AppCompatActivity
 
 
     private void setRegisterFragment() {
+        final Context context = getBaseContext();
+        mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
+
+
+        // Toast.makeText(context,mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("serializable", serializable);
-                registrationLoginFragment = RegistrationLoginFragment.newInstance(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, registrationLoginFragment)
-                        .commit();
+
+                if (mAuth.getCurrentUser() == null) {
+                    registrationLoginFragment = RegistrationLoginFragment.newInstance(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, registrationLoginFragment)
+                            .commit();
+                } else {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, UserProfileManageFragment.newInstance(bundle))
+                            .commit();
+                }
             }
         };
 
@@ -170,18 +184,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addTollBar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
-
 
     @Override
     public void onStart() {
         super.onStart();
-    }
-
-    private void updateUI(FirebaseUser user) {
-
     }
 
     @Override

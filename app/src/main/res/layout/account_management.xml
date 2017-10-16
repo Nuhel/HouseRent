@@ -29,6 +29,17 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="5dp">
+
+        <com.rd.PageIndicatorView
+            android:id="@+id/pageIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <!-- Email Feild -->
 
@@ -63,10 +74,6 @@
 
     </LinearLayout>
 
-    <com.rd.PageIndicatorView
-        android:id="@+id/pageIndicatorView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <com.example.nuhel.houserent.View.ModifiedViewPager.NonSwipeableViewPager
         android:id="@+id/accountViewpager"

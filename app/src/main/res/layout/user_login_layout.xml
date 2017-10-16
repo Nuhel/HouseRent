@@ -50,5 +50,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SignIn" />
+
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/userPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

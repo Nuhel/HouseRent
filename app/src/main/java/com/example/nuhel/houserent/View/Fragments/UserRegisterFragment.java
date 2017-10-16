@@ -1,8 +1,10 @@
 package com.example.nuhel.houserent.View.Fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -25,9 +27,17 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.iceteck.silicompressorr.SiliCompressor;
 import com.roger.catloadinglibrary.CatLoadingView;
+import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+
+import id.zelory.compressor.Compressor;
+
+import static android.app.Activity.RESULT_OK;
 
 public class UserRegisterFragment extends Fragment {
 
@@ -54,6 +64,8 @@ public class UserRegisterFragment extends Fragment {
     private CatLoadingView mView;
 
     private FragmentControllerAfterUserLog_Reg fragmentControllerAfterUserLogReg;
+
+    private Uri resultUri;
 
     public UserRegisterFragment() {
         // Required empty public constructor
@@ -193,17 +205,17 @@ public class UserRegisterFragment extends Fragment {
     private void initViews(LayoutInflater inflater, ViewGroup container) {
         view = view == null ? inflater.inflate(R.layout.user_registration_layout, container, false) : view;
 
-        usernameEditText = (EditText) view.findViewById(R.id.nameEdittext);
+        usernameEditText = view.findViewById(R.id.nameEdittext);
 
-        passwordEditText = (EditText) view.findViewById(R.id.passeditText);
+        passwordEditText = view.findViewById(R.id.passeditText);
 
-        re_enter_passwordEditText = (EditText) view.findViewById(R.id.repasseditText);
+        re_enter_passwordEditText = view.findViewById(R.id.repasseditText);
 
-        phoneEditText = (EditText) view.findViewById(R.id.phoneeditText);
+        phoneEditText = view.findViewById(R.id.phoneeditText);
 
-        emailEditText = (EditText) view.findViewById(R.id.emailEdittext);
+        emailEditText = view.findViewById(R.id.emailEdittext);
 
-        signUpButton = (Button) view.findViewById(R.id.signupbtn);
+        signUpButton = view.findViewById(R.id.signupbtn);
         activeGradient.setCornerRadius(radius);
         deactiveGradient.setCornerRadius(radius);
 
@@ -310,7 +322,14 @@ public class UserRegisterFragment extends Fragment {
         });
     }
 
+
     private void signUp() {
+        CropImage.activity()
+                .start(getContext(), this);
+    }
+
+
+    private void signUp2() {
 
         mView = new CatLoadingView();
         mView.show(getFragmentManager(), "Loading.........");
@@ -320,6 +339,7 @@ public class UserRegisterFragment extends Fragment {
         String phoneNUmber;
 
         mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
+
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<AuthResult>() {
@@ -332,9 +352,20 @@ public class UserRegisterFragment extends Fragment {
 
                             user = mAuth.getCurrentUser();
                             profileChangeRequest = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(displayName).build();
-                            user.updateProfile(profileChangeRequest);
-                            mView.dismiss();
+                                    .setDisplayName(displayName).setPhotoUri(resultUri).build();
+                            user.updateProfile(profileChangeRequest).addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        mView.dismiss();
+                                        Toast.makeText(view.getContext(), "Done", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        mView.dismiss();
+                                        Toast.makeText(view.getContext(), "Fail", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -343,5 +374,39 @@ public class UserRegisterFragment extends Fragment {
 
                     }
                 });
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                resultUri = result.getUri();
+
+                String filePath = SiliCompressor.with(view.getContext()).compress(resultUri.toString(), new File(resultUri.getPath()));
+
+                //Toast.makeText(view.getContext(), filePath+"\n"+resultUri.toString(), Toast.LENGTH_SHORT).show();
+
+                File thumb_bitmap = null;
+                try {
+                    thumb_bitmap = new Compressor(view.getContext())
+                            .setQuality(75)
+                            .setMaxWidth(200)
+                            .setMaxHeight(200)
+                            .compressToFile(new File(resultUri.getPath()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (thumb_bitmap != null) {
+                    resultUri = Uri.fromFile(thumb_bitmap);
+                }
+
+                signUp2();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
     }
 }

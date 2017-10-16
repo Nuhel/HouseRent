@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.R;
@@ -28,6 +30,7 @@ public class UserLoginFragment extends Fragment {
 
     private static FirebaseAuth mAuth = null;
     private static FirebaseUser user;
+    ImageView imageView;
     private View view;
     private EditText emailEditText;
     private EditText passwordEditText;
@@ -53,10 +56,12 @@ public class UserLoginFragment extends Fragment {
 
         fragmentControllerAfterUserLogReg = (FragmentControllerAfterUserLog_Reg) getArguments().getSerializable("serializable");
 
-        emailEditText = (EditText) view.findViewById(R.id.userloginEmailEdittext);
-        passwordEditText = (EditText) view.findViewById(R.id.userloginpasseditText);
+        emailEditText = view.findViewById(R.id.userloginEmailEdittext);
+        passwordEditText = view.findViewById(R.id.userloginpasseditText);
 
-        signinBtn = (Button) view.findViewById(R.id.userloginsigninbtn);
+        imageView = view.findViewById(R.id.userPhoto);
+
+        signinBtn = view.findViewById(R.id.userloginsigninbtn);
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -93,7 +98,10 @@ public class UserLoginFragment extends Fragment {
                                         user = mAuth.getCurrentUser();
                                         String userEmail = mAuth.getCurrentUser().getEmail().toString();
                                         Toast.makeText(view.getContext(), "Sucsesfully LogedIn\nWelcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-                                        fragmentControllerAfterUserLogReg.setFrag();
+                                        //fragmentControllerAfterUserLogReg.setFrag();
+
+                                        Glide.with(view.getContext()).load(user.getPhotoUrl()).into(imageView);
+
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Toast.makeText(view.getContext(), "Cannot Sign in. Please check the form and try again.", Toast.LENGTH_LONG).show();
