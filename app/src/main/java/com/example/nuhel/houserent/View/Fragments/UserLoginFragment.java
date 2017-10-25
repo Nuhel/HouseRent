@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 public class UserLoginFragment extends Fragment {
@@ -30,7 +30,7 @@ public class UserLoginFragment extends Fragment {
 
     private static FirebaseAuth mAuth = null;
     private static FirebaseUser user;
-    ImageView imageView;
+    private CircularImageView imageView;
     private View view;
     private EditText emailEditText;
     private EditText passwordEditText;
@@ -101,6 +101,7 @@ public class UserLoginFragment extends Fragment {
                                         //fragmentControllerAfterUserLogReg.setFrag();
 
                                         Glide.with(view.getContext()).load(user.getPhotoUrl()).into(imageView);
+                                        fragmentControllerAfterUserLogReg.setFrag();
 
                                     } else {
                                         // If sign in fails, display a message to the user.

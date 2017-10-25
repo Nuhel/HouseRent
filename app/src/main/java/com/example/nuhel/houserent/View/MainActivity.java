@@ -15,7 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.R;
@@ -23,12 +25,11 @@ import com.example.nuhel.houserent.View.Fragments.AdList;
 import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
 import com.example.nuhel.houserent.View.Fragments.UserProfileManageFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity
-
-
         implements NavigationView.OnNavigationItemSelectedListener, FragmentControllerAfterUserLog_Reg, Serializable {
 
     private static Handler mHandler;
@@ -39,12 +40,16 @@ public class MainActivity extends AppCompatActivity
     private static DrawerLayout drawer;
     private static FirebaseAuth mAuth = null;
 
+    private static CircularImageView nav_userPhoto;
+    private static TextView nav_username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
         addTollBar();
+
 
         serializable = this;
         mHandler = new Handler();
@@ -70,6 +75,10 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        nav_userPhoto = navigationView.getHeaderView(0).findViewById(R.id.nav_userphoto);
+        nav_username = navigationView.getHeaderView(0).findViewById(R.id.nav_username);
+        setuserdisplay();
+
     }
 
     @Override
@@ -155,10 +164,7 @@ public class MainActivity extends AppCompatActivity
 
     private void setRegisterFragment() {
         final Context context = getBaseContext();
-        mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
 
-
-        // Toast.makeText(context,mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
 
         Runnable runnable = new Runnable() {
             @Override
@@ -173,6 +179,7 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, UserProfileManageFragment.newInstance(bundle))
                             .commit();
+
                 }
             }
         };
@@ -196,6 +203,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setFrag() {
         setAddListFrag();
+        setuserdisplay();
+
     }
+
+
+    private void setuserdisplay() {
+        if (mAuth.getCurrentUser() != null) {
+            Glide.with(getBaseContext()).load(mAuth.getCurrentUser().getPhotoUrl()).into(nav_userPhoto);
+            nav_username.setText(mAuth.getCurrentUser().getDisplayName());
+        }
+    }
+
 
 }

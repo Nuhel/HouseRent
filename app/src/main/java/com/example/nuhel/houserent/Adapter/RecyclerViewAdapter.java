@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
@@ -96,7 +95,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String key = dataSnapshot.getKey();
-                Toast.makeText(context, key, Toast.LENGTH_SHORT).show();
                 int position = new ArrayList<String>(add_list.keySet()).indexOf(key);
                 add_list.remove(key);
                 notifyItemRemoved(position);
@@ -180,10 +178,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.adsListImage);
-            area = (TextView) itemView.findViewById(R.id.adsListAreaText);
-            room = (TextView) itemView.findViewById(R.id.adsListRoomText);
-            type = (TextView) itemView.findViewById(R.id.adsListTypeText);
+            imageView = itemView.findViewById(R.id.adsListImage);
+            area = itemView.findViewById(R.id.adsListAreaText);
+            room = itemView.findViewById(R.id.adsListRoomText);
+            type = itemView.findViewById(R.id.adsListTypeText);
         }
 
 

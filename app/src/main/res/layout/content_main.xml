@@ -6,13 +6,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
     tools:context="com.example.nuhel.houserent.View.MainActivity"
     tools:showIn="@layout/app_bar_main">
+
     <FrameLayout
         android:id="@+id/container_frags"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
+        android:layout_height="match_parent"></FrameLayout>
 </LinearLayout>

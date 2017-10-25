@@ -38,6 +38,9 @@ dependencies {
     //image comprassor
     compile 'id.zelory:compressor:2.1.0'
 
+    //circular image view
+    compile 'com.mikhaellopez:circularimageview:3.0.2'
+
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
     compile 'com.android.support:cardview-v7:26.1.0'

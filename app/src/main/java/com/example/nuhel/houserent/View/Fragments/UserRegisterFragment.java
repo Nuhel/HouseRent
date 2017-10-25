@@ -385,9 +385,6 @@ public class UserRegisterFragment extends Fragment {
                 resultUri = result.getUri();
 
                 String filePath = SiliCompressor.with(view.getContext()).compress(resultUri.toString(), new File(resultUri.getPath()));
-
-                //Toast.makeText(view.getContext(), filePath+"\n"+resultUri.toString(), Toast.LENGTH_SHORT).show();
-
                 File thumb_bitmap = null;
                 try {
                     thumb_bitmap = new Compressor(view.getContext())
@@ -399,9 +396,9 @@ public class UserRegisterFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                if (thumb_bitmap != null) {
-                    resultUri = Uri.fromFile(thumb_bitmap);
-                }
+
+                resultUri = Uri.fromFile(thumb_bitmap);
+                
 
                 signUp2();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
