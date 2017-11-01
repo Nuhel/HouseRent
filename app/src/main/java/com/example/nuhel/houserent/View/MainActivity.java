@@ -20,12 +20,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
+import com.example.nuhel.houserent.CustomViews.CustmoCIV;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.Fragments.AdList;
 import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
 import com.example.nuhel.houserent.View.Fragments.UserProfileManageFragment;
 import com.google.firebase.auth.FirebaseAuth;
-import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.Serializable;
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
     private static DrawerLayout drawer;
     private static FirebaseAuth mAuth = null;
 
-    private static CircularImageView nav_userPhoto;
+    private static CustmoCIV nav_userPhoto;
     private static TextView nav_username;
 
     @Override
@@ -212,6 +212,10 @@ public class MainActivity extends AppCompatActivity
         if (mAuth.getCurrentUser() != null) {
             Glide.with(getBaseContext()).load(mAuth.getCurrentUser().getPhotoUrl()).into(nav_userPhoto);
             nav_username.setText(mAuth.getCurrentUser().getDisplayName());
+        } else {
+            int drawableResourceId = this.getResources().getIdentifier("usericon", "drawable", this.getPackageName());
+
+            Glide.with(getBaseContext()).load(drawableResourceId).into(nav_userPhoto);
         }
     }
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
@@ -189,6 +190,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if (data != null) {
                 Glide.with(context)
                         .load(data.getImage1())
+                        .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
                         .into(imageView);
                 String areaText = data.getArea() == null ? "" : data.getArea();
                 String roomsText = data.getArea() == null ? "" : data.getRoom();
