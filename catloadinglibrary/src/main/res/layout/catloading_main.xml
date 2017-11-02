@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="220dp"
+    android:layout_height="wrap_content"
+    android:background="#fde2a6"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:background="#fde2a6">
+
+        <ImageView
+            android:id="@+id/mouse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/mouse" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/cat" />
+
+            <ImageView
+                android:id="@+id/eye_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3.5dp"
+                android:layout_marginTop="12.5dp"
+                android:src="@drawable/eyes" />
+
+            <com.roger.catloadinglibrary.EyelidView
+                android:id="@+id/eyelid_left"
+                android:layout_width="24dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="3.5dp"
+                android:layout_marginTop="12.5dp"
+                android:src="@drawable/eyes" />
+
+            <ImageView
+                android:id="@+id/eye_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="28dp"
+                android:layout_marginTop="12.5dp"
+                android:src="@drawable/eyes" />
+
+            <com.roger.catloadinglibrary.EyelidView
+                android:id="@+id/eyelid_right"
+                android:layout_width="24dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="28dp"
+                android:layout_marginTop="12.5dp"
+                android:src="@drawable/eyes" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.roger.catloadinglibrary.GraduallyTextView
+            android:id="@+id/graduallyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="L O A D I N G ..."
+            android:textColor="#ffffff"
+            android:textSize="25sp" />
+    </LinearLayout>
+</LinearLayout>

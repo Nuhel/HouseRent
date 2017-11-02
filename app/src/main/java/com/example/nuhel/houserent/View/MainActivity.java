@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity
     private void setuserdisplay() {
 
         if (mAuth.getCurrentUser() != null) {
-            Glide.with(getBaseContext()).load(mAuth.getCurrentUser().getPhotoUrl()).into(nav_userPhoto);
+            Glide.with(getBaseContext()).load("http://via.placeholder.com/300.png").into(nav_userPhoto);
             nav_username.setText(mAuth.getCurrentUser().getDisplayName());
             bmb.setVisibility(View.VISIBLE);
             Toast.makeText(getBaseContext(), mAuth.getCurrentUser().getPhotoUrl().toString(), Toast.LENGTH_SHORT).show();

@@ -317,6 +317,7 @@ public class UserRegisterFragment extends Fragment {
 
 
     private void signUp() {
+
         CropImage.activity()
                 .start(getContext(), this);
     }
@@ -372,6 +373,8 @@ public class UserRegisterFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
