@@ -27,15 +27,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.iceteck.silicompressorr.SiliCompressor;
 import com.roger.catloadinglibrary.CatLoadingView;
 import com.theartofdev.edmodo.cropper.CropImage;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-
-import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -73,7 +66,7 @@ public class UserRegisterFragment extends Fragment {
 
 
     public static UserRegisterFragment newInstance(Bundle bundle) {
-        Serializable serializable;
+
         UserRegisterFragment userRegisterFragment = new UserRegisterFragment();
         userRegisterFragment.setArguments(bundle);
         return userRegisterFragment;
@@ -384,7 +377,7 @@ public class UserRegisterFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 resultUri = result.getUri();
 
-                String filePath = SiliCompressor.with(view.getContext()).compress(resultUri.toString(), new File(resultUri.getPath()));
+               /* String filePath = SiliCompressor.with(view.getContext()).compress(resultUri.toString(), new File(resultUri.getPath()));
                 File thumb_bitmap = null;
                 try {
                     thumb_bitmap = new Compressor(view.getContext())
@@ -394,10 +387,10 @@ public class UserRegisterFragment extends Fragment {
                             .compressToFile(new File(resultUri.getPath()));
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
 
 
-                resultUri = Uri.fromFile(thumb_bitmap);
+                //resultUri = Uri.fromFile(thumb_bitmap);
                 
 
                 signUp2();
