@@ -29,6 +29,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.roger.catloadinglibrary.CatLoadingView;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.io.File;
+import java.io.IOException;
+
+import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -317,9 +323,13 @@ public class UserRegisterFragment extends Fragment {
 
 
     private void signUp() {
-
         CropImage.activity()
+                .setAspectRatio(1, 1)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMinCropWindowSize(500, 500)
                 .start(getContext(), this);
+
+        //startActivity(new Intent(getContext(), OmneActivity.class));
     }
 
 
@@ -380,7 +390,6 @@ public class UserRegisterFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 resultUri = result.getUri();
 
-               /* String filePath = SiliCompressor.with(view.getContext()).compress(resultUri.toString(), new File(resultUri.getPath()));
                 File thumb_bitmap = null;
                 try {
                     thumb_bitmap = new Compressor(view.getContext())
@@ -388,15 +397,16 @@ public class UserRegisterFragment extends Fragment {
                             .setMaxWidth(200)
                             .setMaxHeight(200)
                             .compressToFile(new File(resultUri.getPath()));
+                    resultUri = Uri.fromFile(thumb_bitmap);
+
+                    Toast.makeText(getContext(), resultUri.toString(), Toast.LENGTH_SHORT).show();
+                    signUp2();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }*/
+                }
 
 
-                //resultUri = Uri.fromFile(thumb_bitmap);
-                
 
-                signUp2();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }

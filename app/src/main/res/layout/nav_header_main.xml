@@ -5,8 +5,6 @@
     android:background="@drawable/gradientbackgroundloginsingup"
     android:gravity="center"
     android:orientation="vertical">
-
-
     <RelativeLayout
         android:layout_width="90dp"
         android:layout_height="90dp">
@@ -17,12 +15,30 @@
             android:layout_height="match_parent"
             android:src="@drawable/usericon" />
 
-        <com.nightonke.boommenu.BoomMenuButton
-            android:id="@+id/nav_user_pic_management"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/nav_userphoto"
-            android:layout_alignRight="@id/nav_userphoto"></com.nightonke.boommenu.BoomMenuButton>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom|right">
+
+            <com.example.nuhel.houserent.CustomViews.CustmoCIV
+                android:id="@+id/hide1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/profile_image_edit_icon" />
+
+            <com.example.nuhel.houserent.CustomViews.CustmoCIV
+                android:id="@+id/hide2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/profile_image_edit_icon" />
+
+            <com.example.nuhel.houserent.CustomViews.CustmoCIV
+                android:id="@+id/nav_user_pic_management"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/profile_image_edit_icon" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
