@@ -1,6 +1,9 @@
 package com.example.nuhel.houserent.View;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +35,8 @@ import com.example.nuhel.houserent.View.Fragments.AdList;
 import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
 import com.example.nuhel.houserent.View.Fragments.UserProfileManageFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.Serializable;
 
@@ -80,9 +91,94 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         nav_userPhoto = navigationView.getHeaderView(0).findViewById(R.id.nav_userphoto);
         nav_username = navigationView.getHeaderView(0).findViewById(R.id.nav_username);
-
+        nav_user_pic_management = navigationView.getHeaderView(0).findViewById(R.id.nav_user_pic_management);
         hide1 = navigationView.getHeaderView(0).findViewById(R.id.hide1);
         hide2 = navigationView.getHeaderView(0).findViewById(R.id.hide2);
+
+
+        hide1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signUp();
+            }
+        });
+
+
+        nav_user_pic_management.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (hide1.getVisibility() == View.VISIBLE) {
+                    hide1.animate().cancel();
+                    hide1.animate().setListener(null);
+                    hide2.animate().cancel();
+                    hide2.animate().setListener(null);
+
+                    RotateAnimation rotate = new RotateAnimation(180, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    rotate.setDuration(1000);
+                    rotate.setInterpolator(new LinearInterpolator());
+
+
+                    AnimationSet animationSet = new AnimationSet(true);
+                    animationSet.addAnimation(rotate);
+                    animationSet.addAnimation(outToLeftAnimation());
+
+                    hide1.startAnimation(animationSet);
+                    hide1.animate()
+                            .alpha(0.0f)
+                            .setDuration(700).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            hide1.setVisibility(View.GONE);
+                        }
+                    });
+
+
+                    hide2.startAnimation(animationSet);
+                    hide2.animate()
+                            .alpha(0.0f)
+                            .setDuration(700).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            hide2.setVisibility(View.GONE);
+                        }
+                    });
+
+
+                } else {
+
+                    hide1.animate().cancel();
+                    hide1.animate().setListener(null);
+                    hide1.setVisibility(View.VISIBLE);
+
+
+                    RotateAnimation rotate = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    rotate.setDuration(1000);
+                    rotate.setInterpolator(new LinearInterpolator());
+
+
+                    AnimationSet animationSet = new AnimationSet(true);
+                    animationSet.addAnimation(rotate);
+                    animationSet.addAnimation(inFromLeftAnimation());
+
+
+                    hide1.startAnimation(animationSet);
+                    hide1.animate()
+                            .alpha(1f)
+                            .setDuration(1000).setListener(null);
+
+                    hide2.animate().cancel();
+                    hide2.animate().setListener(null);
+                    hide2.setVisibility(View.VISIBLE);
+                    hide2.startAnimation(animationSet);
+                    hide2.animate()
+                            .alpha(1f)
+                            .setDuration(1000).setListener(null);
+
+                }
+            }
+        });
 
 
 
@@ -222,6 +318,89 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
+
+    // 1)inFromRightAnimation
+
+    private Animation inFromRightAnimation() {
+
+        Animation inFromRight = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        inFromRight.setDuration(1000);
+        inFromRight.setInterpolator(new AccelerateInterpolator());
+        return inFromRight;
+    }
+
+    //2)outToLeftAnimation
+    private Animation outToLeftAnimation() {
+        Animation outtoLeft = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        outtoLeft.setDuration(1000);
+        outtoLeft.setInterpolator(new AccelerateInterpolator());
+        return outtoLeft;
+    }
+
+//3)inFromLeftAnimation
+
+    private Animation inFromLeftAnimation() {
+        Animation inFromLeft = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        inFromLeft.setDuration(1000);
+        inFromLeft.setInterpolator(new AccelerateInterpolator());
+        return inFromLeft;
+    }
+
+//4)outToRightAnimation
+
+    private Animation outToRightAnimation() {
+        Animation outtoRight = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        outtoRight.setDuration(1000);
+        outtoRight.setInterpolator(new AccelerateInterpolator());
+        return outtoRight;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "On result", Toast.LENGTH_SHORT).show();
+
+
+                Glide.with(this).load(result.getUri()).into(nav_userPhoto);
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+    }
+
+
+    private void signUp() {
+        CropImage.activity()
+                .setAspectRatio(1, 1)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMinCropWindowSize(500, 500)
+                .start(this);
+    }
+
 
 
 }

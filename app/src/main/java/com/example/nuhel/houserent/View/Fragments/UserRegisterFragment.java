@@ -1,10 +1,8 @@
 package com.example.nuhel.houserent.View.Fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -28,15 +26,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.roger.catloadinglibrary.CatLoadingView;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.io.File;
-import java.io.IOException;
-
-import id.zelory.compressor.Compressor;
-
-import static android.app.Activity.RESULT_OK;
 
 public class UserRegisterFragment extends Fragment {
 
@@ -63,8 +52,6 @@ public class UserRegisterFragment extends Fragment {
     private CatLoadingView mView;
 
     private FragmentControllerAfterUserLog_Reg fragmentControllerAfterUserLogReg;
-
-    private Uri resultUri;
 
     public UserRegisterFragment() {
         // Required empty public constructor
@@ -323,17 +310,6 @@ public class UserRegisterFragment extends Fragment {
 
 
     private void signUp() {
-        CropImage.activity()
-                .setAspectRatio(1, 1)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setMinCropWindowSize(500, 500)
-                .start(getContext(), this);
-
-        //startActivity(new Intent(getContext(), OmneActivity.class));
-    }
-
-
-    private void signUp2() {
 
         mView = new CatLoadingView();
         mView.show(getFragmentManager(), "Loading.........");
@@ -353,10 +329,9 @@ public class UserRegisterFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(view.getContext(), "Authentication",
                                     Toast.LENGTH_SHORT).show();
-
                             user = mAuth.getCurrentUser();
                             profileChangeRequest = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(displayName).setPhotoUri(resultUri).build();
+                                    .setDisplayName(displayName).build();
                             user.updateProfile(profileChangeRequest).addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -381,35 +356,5 @@ public class UserRegisterFragment extends Fragment {
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                resultUri = result.getUri();
-
-                File thumb_bitmap = null;
-                try {
-                    thumb_bitmap = new Compressor(view.getContext())
-                            .setQuality(75)
-                            .setMaxWidth(200)
-                            .setMaxHeight(200)
-                            .compressToFile(new File(resultUri.getPath()));
-                    resultUri = Uri.fromFile(thumb_bitmap);
-
-                    Toast.makeText(getContext(), resultUri.toString(), Toast.LENGTH_SHORT).show();
-                    signUp2();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-            }
-        }
-    }
 }
