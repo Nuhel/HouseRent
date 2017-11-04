@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity
     private static CustmoCIV nav_user_pic_management;
     private static CustmoCIV hide1;
     private static CustmoCIV hide2;
-    private static int vfl = 0;
     private NavigationView navigationView;
 
 
@@ -190,7 +189,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
         return true;
     }
 

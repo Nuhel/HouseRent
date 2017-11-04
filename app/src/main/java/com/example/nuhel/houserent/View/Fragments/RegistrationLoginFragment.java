@@ -30,7 +30,6 @@ public class RegistrationLoginFragment extends Fragment {
     private ViewPagerAdapter viewPagerAdapter;
     private int Redius = 20;
 
-
     private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
     private GradientDrawable activeGradient = new GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM, activeColors);
