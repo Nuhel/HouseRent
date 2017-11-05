@@ -1,4 +1,4 @@
-package com.example.nuhel.houserent.View.ModifiedViewPager;
+package com.example.nuhel.houserent.View.CustomViews;
 
 /**
  * Created by Nuhel on 10/11/2017.

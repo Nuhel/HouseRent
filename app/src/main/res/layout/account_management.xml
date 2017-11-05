@@ -75,7 +75,7 @@
     </LinearLayout>
 
 
-    <com.example.nuhel.houserent.View.ModifiedViewPager.NonSwipeableViewPager
+    <com.example.nuhel.houserent.View.CustomViews.NonSwipeableViewPager
         android:id="@+id/accountViewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
