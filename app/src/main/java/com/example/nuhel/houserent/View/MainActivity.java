@@ -4,10 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -43,7 +43,6 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -115,6 +114,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
+        hide2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteUserPhoto();
+            }
+        });
+
         nav_user_pic_management.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,7 +180,13 @@ public class MainActivity extends AppCompatActivity
             GetFirebaseInstance.GetInstance().getReference("User").child(mAuth.getCurrentUser().getUid().toString()).child("image").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    setImage((dataSnapshot.getValue().toString()), nav_userPhoto);
+                    String imagepath = dataSnapshot.getValue().toString();
+                    if (imagepath.equals("no_img")) {
+                        setImage(drawableResourceId, nav_userPhoto);
+                    } else {
+                        setImage(imagepath, nav_userPhoto);
+                    }
+
                 }
 
                 @Override
@@ -205,27 +218,24 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
 
                 Uri resultUri = result.getUri();
-                Bitmap thumb_bitmap = null;
+                File thumb_bitmap = null;
                 try {
                     thumb_bitmap = new Compressor(this)
                             .setQuality(75)
                             .setMaxWidth(200)
                             .setMaxHeight(200)
-                            .compressToBitmap(new File(resultUri.getPath()));
+                            .compressToFile(new File(resultUri.getPath()));
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                final byte[] thumb_byte = baos.toByteArray();
-                mStorageRef = FirebaseStorage.getInstance().getReference()
-                ;
+
+                mStorageRef = FirebaseStorage.getInstance().getReference();
                 //Storage Reference for main image
                 StorageReference filepath = mStorageRef.child("profile_images").child(mAuth.getCurrentUser().getUid() + ".jpg");
 
                 //Now first upload the main image
-                filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                filepath.putFile(Uri.fromFile(thumb_bitmap)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -234,7 +244,6 @@ public class MainActivity extends AppCompatActivity
                             Map map = new HashMap();
                             map.put("image", download_url);
                             mDatabase = GetFirebaseInstance.GetInstance().getReference().child("User").child(mAuth.getCurrentUser().getUid());
-                            //for map we use updatechildren
                             mDatabase.updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(Task<Void> task) {
@@ -362,6 +371,22 @@ public class MainActivity extends AppCompatActivity
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 v.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void deleteUserPhoto() {
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        //Storage Reference for main image
+        StorageReference filepath = mStorageRef.child("profile_images").child(mAuth.getCurrentUser().getUid() + ".jpg");
+
+        filepath.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Map map = new HashMap();
+                map.put("image", "no_img");
+                mDatabase = GetFirebaseInstance.GetInstance().getReference().child("User").child(mAuth.getCurrentUser().getUid());
+                mDatabase.updateChildren(map);
             }
         });
     }
