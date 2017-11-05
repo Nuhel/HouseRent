@@ -26,35 +26,34 @@ dependencies {
     })
 
     //firebase
-    compile 'com.google.firebase:firebase-database:11.4.2'
-    compile 'com.google.firebase:firebase-auth:11.4.2'
 
     //page indicator
-    compile 'com.romandanylyk:pageindicatorview:0.2.0'
 
     //image cropper
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.5.+'
 
     //image comprassor
-    compile 'id.zelory:compressor:2.1.0'
 
     //circular image view
-    compile 'com.mikhaellopez:circularimageview:3.0.2'
 
 
+    compile project(':catloadinglibrary')
+    compile 'com.google.firebase:firebase-database:11.4.2'
+    compile 'com.google.firebase:firebase-auth:11.4.2'
+    compile 'com.romandanylyk:pageindicatorview:0.2.0'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.5.+'
+    compile 'id.zelory:compressor:2.1.0'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
     compile 'com.android.support:cardview-v7:26.1.0'
-
     compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'com.android.support:support-v4:26.1.0'
-
-    testCompile 'junit:junit:4.12'
-
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
-
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.iceteck.silicompressorr:silicompressor:2.1'
-    compile project(':catloadinglibrary')
+    compile 'com.google.firebase:firebase-storage:11.4.2'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 }
+
 
 apply plugin: 'com.google.gms.google-services'

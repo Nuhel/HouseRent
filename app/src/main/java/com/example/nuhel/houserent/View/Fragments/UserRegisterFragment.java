@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
+import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +26,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 public class UserRegisterFragment extends Fragment {
@@ -316,7 +318,7 @@ public class UserRegisterFragment extends Fragment {
         String email = emailEditText.getText().toString();
         final String displayName = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        String phoneNUmber;
+        final String phoneNUmber = phoneEditText.getText().toString();
 
         mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
 
@@ -330,6 +332,9 @@ public class UserRegisterFragment extends Fragment {
                             Toast.makeText(view.getContext(), "Authentication",
                                     Toast.LENGTH_SHORT).show();
                             user = mAuth.getCurrentUser();
+                            DatabaseReference db = GetFirebaseInstance.GetInstance().getReference("User");
+                            String id = user.getUid();
+                            db.child(id).child("phone").setValue(phoneNUmber);
                             profileChangeRequest = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(displayName).build();
                             user.updateProfile(profileChangeRequest).addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<Void>() {

@@ -4,8 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -14,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,21 +29,27 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
-import com.example.nuhel.houserent.CustomViews.CustmoCIV;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.Fragments.AdList;
 import com.example.nuhel.houserent.View.Fragments.RegistrationLoginFragment;
 import com.example.nuhel.houserent.View.Fragments.UserProfileManageFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentControllerAfterUserLog_Reg, Serializable {
@@ -50,21 +61,41 @@ public class MainActivity extends AppCompatActivity
     private static Serializable serializable;
     private static FirebaseAuth mAuth = null;
 
-    private static CustmoCIV nav_userPhoto;
+    private static CircleImageView nav_userPhoto;
     private static TextView nav_username;
     private static DrawerLayout drawer;
 
 
-    private static CustmoCIV nav_user_pic_management;
-    private static CustmoCIV hide1;
-    private static CustmoCIV hide2;
+    private static CircleImageView nav_user_pic_management;
+    private static CircleImageView hide1;
+    private static CircleImageView hide2;
+    private static CircleImageView hide3;
+    private static StorageReference mStorageRef;
+    Glide GL;
     private NavigationView navigationView;
+
+    public static String encodeTobase64(Bitmap image) {
+
+
+        Bitmap immagex = image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immagex.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+        return imageEncoded;
+    }
+
+    public static Bitmap decodeBase64(String input) {
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
+
         addTollBar();
 
         serializable = this;
@@ -94,12 +125,13 @@ public class MainActivity extends AppCompatActivity
         nav_user_pic_management = navigationView.getHeaderView(0).findViewById(R.id.nav_user_pic_management);
         hide1 = navigationView.getHeaderView(0).findViewById(R.id.hide1);
         hide2 = navigationView.getHeaderView(0).findViewById(R.id.hide2);
+        hide3 = navigationView.getHeaderView(0).findViewById(R.id.nav_user_pic_management);
 
 
         hide1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signUp();
+                signUp(view);
             }
         });
 
@@ -261,7 +293,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     private void setRegisterFragment() {
         final Context context = getBaseContext();
 
@@ -304,26 +335,25 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     private void setuserdisplay() {
 
         if (mAuth.getCurrentUser() != null) {
-            Glide.with(getBaseContext()).load(mAuth.getCurrentUser().getPhotoUrl()).into(nav_userPhoto);
+            Picasso.with(this).load(mAuth.getCurrentUser().getPhotoUrl()).into(nav_userPhoto);
             nav_username.setText(mAuth.getCurrentUser().getDisplayName());
 
-            Toast.makeText(getBaseContext(), mAuth.getCurrentUser().getPhotoUrl().toString(), Toast.LENGTH_SHORT).show();
         } else {
             int drawableResourceId = this.getResources().getIdentifier("usericon", "drawable", this.getPackageName());
-            Glide.with(getBaseContext()).load(drawableResourceId).into(nav_userPhoto);
+            Picasso.with(this).load(drawableResourceId)
+                    .into(nav_userPhoto);
+            hide1.setVisibility(View.GONE);
+            hide2.setVisibility(View.GONE);
+            nav_user_pic_management.setVisibility(View.GONE);
 
         }
     }
 
-
     // 1)inFromRightAnimation
-
     private Animation inFromRightAnimation() {
-
         Animation inFromRight = new TranslateAnimation(
                 Animation.RELATIVE_TO_PARENT, +1.0f,
                 Animation.RELATIVE_TO_PARENT, 0.0f,
@@ -346,8 +376,7 @@ public class MainActivity extends AppCompatActivity
         return outtoLeft;
     }
 
-//3)inFromLeftAnimation
-
+    //3)inFromLeftAnimation
     private Animation inFromLeftAnimation() {
         Animation inFromLeft = new TranslateAnimation(
                 Animation.RELATIVE_TO_PARENT, -1.0f,
@@ -359,8 +388,7 @@ public class MainActivity extends AppCompatActivity
         return inFromLeft;
     }
 
-//4)outToRightAnimation
-
+    //4)outToRightAnimation
     private Animation outToRightAnimation() {
         Animation outtoRight = new TranslateAnimation(
                 Animation.RELATIVE_TO_PARENT, 0.0f,
@@ -372,19 +400,41 @@ public class MainActivity extends AppCompatActivity
         return outtoRight;
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "On result", Toast.LENGTH_SHORT).show();
+                Uri resultUri = result.getUri();
+                try {
+
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
+                    Glide.with(this).load(resultUri).into(nav_userPhoto);
+                    // hide1.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
 
-                Glide.with(this).load(result.getUri()).into(nav_userPhoto);
+                File thumb_image = new File(resultUri.getPath());
+                Bitmap thumb_bitmap = null;
+                try {
+                    thumb_bitmap = new Compressor(this)
+                            .setQuality(75)
+                            .setMaxWidth(200)
+                            .setMaxHeight(200)
+                            .compressToBitmap(thumb_image);
+
+                    //   hide1.setImageBitmap(thumb_bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+              /*  DatabaseReference db = GetFirebaseInstance.GetInstance().getReference("User");
+                String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
+                db.child(id).child("name").setValue("Hu");*/
+
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -392,8 +442,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-    private void signUp() {
+    private void signUp(View v) {
         CropImage.activity()
                 .setAspectRatio(1, 1)
                 .setGuidelines(CropImageView.Guidelines.ON)

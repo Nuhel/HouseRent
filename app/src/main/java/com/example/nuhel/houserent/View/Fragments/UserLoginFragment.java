@@ -22,15 +22,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.roger.catloadinglibrary.CatLoadingView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class UserLoginFragment extends Fragment {
 
 
     private static FirebaseAuth mAuth = null;
     private static FirebaseUser user;
-    private CircularImageView imageView;
+    private CircleImageView imageView;
     private View view;
     private EditText emailEditText;
     private EditText passwordEditText;
