@@ -13,9 +13,9 @@
             android:id="@+id/nav_userphoto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:src="@drawable/profile_image_edit_icon"
             app:civ_border_color="#5da6ac"
             app:civ_border_width="2dp" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,33 +23,29 @@
             android:gravity="bottom|right">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/hide1"
+                android:id="@+id/nav_user_pic_change"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/profile_image_edit_icon" />
+                android:src="@drawable/profile_image_add_icon" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/hide2"
+                android:id="@+id/nav_user_pic_delete"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/profile_image_edit_icon" />
+                android:src="@drawable/profile_image_delete_icon" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/nav_user_pic_management"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/profile_image_edit_icon" />
-
         </LinearLayout>
-
     </RelativeLayout>
-
     <TextView
         android:id="@+id/nav_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="asdsd"
         android:textColor="@android:color/holo_green_dark" />
-
 
 </LinearLayout>

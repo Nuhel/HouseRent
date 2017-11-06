@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity
         nav_userPhoto = header.findViewById(R.id.nav_userphoto);
         nav_username = header.findViewById(R.id.nav_username);
         nav_user_pic_management = header.findViewById(R.id.nav_user_pic_management);
-        hide1 = header.findViewById(R.id.hide1);
-        hide2 = header.findViewById(R.id.hide2);
+        hide1 = header.findViewById(R.id.nav_user_pic_change);
+        hide2 = header.findViewById(R.id.nav_user_pic_delete);
         hide1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity
                         .start((Activity) view.getContext());
             }
         });
-
 
         hide2.setOnClickListener(new View.OnClickListener() {
             @Override

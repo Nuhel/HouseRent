@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
+import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
 import com.google.firebase.database.ChildEventListener;
@@ -26,7 +26,7 @@ import java.util.LinkedHashMap;
  * Created by Nuhel on 8/18/2017.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecyclerViewAdapter.ViewHolder> {
 
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
@@ -39,7 +39,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private LinearLayoutManager linearLayoutManager;
     private String oldestPostId;
 
-    public RecyclerViewAdapter(Context context, RecyclerView recyclerView) {
+    public OwnPostRecyclerViewAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.db = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
@@ -72,28 +72,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private void loadMoreData() {
 
-        if (add_list.size()!=0){
+        if (add_list.size() != 0) {
             oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
         }
         ChildEventListener vl = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-
-                if (dataSnapshot.getKey().length() > 1) {
-
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Toast.makeText(context, ds.getKey(), Toast.LENGTH_SHORT).show();
-                        HomeAddListDataModel model = getModel(ds);
-                        add_list.put(dataSnapshot.getKey(), model);
-                        notifyDataSetChanged();
-                        loading = true;
-                    }
-                }
-
-
-
-
+                HomeAddListDataModel model = getModel(dataSnapshot);
+                add_list.put(dataSnapshot.getKey(), model);
+                notifyDataSetChanged();
+                loading = true;
             }
 
             @Override
@@ -125,12 +113,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             }
         };
-        if (is_first){
-            db.limitToFirst(7).addChildEventListener(vl);
-            is_first=false;
+        if (is_first) {
+            db.child(GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid()).limitToFirst(3).addChildEventListener(vl);
+            is_first = false;
 
-        }else {
-            db.orderByKey().startAt(oldestPostId).limitToFirst(5).addChildEventListener(vl);
+        } else {
+            db.child(GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid()).orderByKey().startAt(oldestPostId).limitToFirst(5).addChildEventListener(vl);
         }
 
     }
@@ -208,7 +196,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 String areaText = data.getArea() == null ? "" : data.getArea();
                 String roomsText = data.getArea() == null ? "" : data.getRoom();
                 String typeText = data.getArea() == null ? "" : data.getType();
-
                 area.setText("Area: " + areaText);
                 room.setText("Rooms: " + roomsText);
                 type.setText("Type: " + typeText);
