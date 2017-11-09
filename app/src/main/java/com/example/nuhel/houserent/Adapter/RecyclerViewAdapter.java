@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
@@ -72,28 +71,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private void loadMoreData() {
 
-        if (add_list.size()!=0){
+        if (add_list.size() != 0) {
             oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
         }
+
         ChildEventListener vl = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-
-                if (dataSnapshot.getKey().length() > 1) {
-
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Toast.makeText(context, ds.getKey(), Toast.LENGTH_SHORT).show();
-                        HomeAddListDataModel model = getModel(ds);
-                        add_list.put(dataSnapshot.getKey(), model);
-                        notifyDataSetChanged();
-                        loading = true;
-                    }
-                }
-
-
-
-
+                HomeAddListDataModel model = getModel(dataSnapshot);
+                add_list.put(dataSnapshot.getKey(), model);
+                notifyDataSetChanged();
+                loading = true;
             }
 
             @Override
@@ -125,11 +113,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             }
         };
-        if (is_first){
+        if (is_first) {
             db.limitToFirst(7).addChildEventListener(vl);
-            is_first=false;
+            is_first = false;
 
-        }else {
+        } else {
             db.orderByKey().startAt(oldestPostId).limitToFirst(5).addChildEventListener(vl);
         }
 

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
@@ -18,6 +19,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -38,46 +40,57 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
     private Boolean is_first = true;
     private LinearLayoutManager linearLayoutManager;
     private String oldestPostId;
+    private ChildEventListener vl;
+    private ValueEventListener as;
 
     public OwnPostRecyclerViewAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.db = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         this.add_list = new LinkedHashMap<>();
-        loadMoreData();
         this.recyclerView.setAdapter(this);
         init();
     }
 
+
     private void init() {
-        linearLayoutManager = (LinearLayoutManager) recyclerView
-                .getLayoutManager();
-        recyclerView
-                .addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(RecyclerView recyclerView,
-                                           int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        totalItemCount = linearLayoutManager.getItemCount();
-                        lastVisibleItem = linearLayoutManager
-                                .findLastVisibleItemPosition() < lastVisibleItem ? lastVisibleItem : linearLayoutManager
-                                .findLastVisibleItemPosition();
-                        if (loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                            loading = false;
-                            loadMoreData();
-                        }
-                    }
-                });
-    }
 
-    private void loadMoreData() {
-
-        if (add_list.size() != 0) {
-            oldestPostId = (String) add_list.keySet().toArray()[add_list.size() - 1];
-        }
-        ChildEventListener vl = new ChildEventListener() {
+        db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String key = dataSnapshot.getKey();
+                int position = new ArrayList<String>(add_list.keySet()).indexOf(key);
+                if(position>0){
+                    add_list.remove(key);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, add_list.size());
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        as = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 HomeAddListDataModel model = getModel(dataSnapshot);
                 add_list.put(dataSnapshot.getKey(), model);
                 notifyDataSetChanged();
@@ -85,13 +98,23 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
             }
 
             @Override
-            public void onChildChanged(DataSnapshot ds, String s) {
-                String key = ds.getKey();
-                HomeAddListDataModel model = getModel(ds);
-                if (model != null) {
-                    add_list.put(key, model);
-                    notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
-                }
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+
+        String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
+        GetFirebaseInstance.GetInstance().getReference("User").child(id).child("posts").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Toast.makeText(context, dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
+                db.child(dataSnapshot.getKey()).addValueEventListener(as);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -112,14 +135,9 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        };
-        if (is_first) {
-            db.child(GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid()).limitToFirst(3).addChildEventListener(vl);
-            is_first = false;
+        });
 
-        } else {
-            db.child(GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid()).orderByKey().startAt(oldestPostId).limitToFirst(5).addChildEventListener(vl);
-        }
+
 
     }
 
@@ -132,11 +150,9 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
             String areaText = ds.child("area").getValue() == null ? "" : ds.child("area").getValue().toString();
             String roomsText = ds.child("room").getValue() == null ? "" : ds.child("room").getValue().toString();
             String typeText = ds.child("type").getValue() == null ? "" : ds.child("type").getValue().toString();
-
             String img1 = ds.child("image1").getValue() == null ? "" : ds.child("image1").getValue().toString();
             String img2 = ds.child("image2").getValue() == null ? "" : ds.child("image2").getValue().toString();
             String img3 = ds.child("image3").getValue() == null ? "" : ds.child("image3").getValue().toString();
-
             model = new HomeAddListDataModel();
             model.setPost_id(ds.getKey());
             model.setArea(areaText);
@@ -202,4 +218,6 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
             }
         }
     }
+
+
 }

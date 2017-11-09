@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity
     private static TextView nav_username;
     private static DrawerLayout drawer;
 
-
     private static CircleImageView nav_user_pic_management;
     private static CircleImageView hide1;
     private static CircleImageView hide2;
@@ -185,7 +184,6 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         setImage(imagepath, nav_userPhoto);
                     }
-
                 }
 
                 @Override
@@ -239,7 +237,6 @@ public class MainActivity extends AppCompatActivity
                     public void onComplete(Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
                             final String download_url = task.getResult().getDownloadUrl().toString();
-
                             Map map = new HashMap();
                             map.put("image", download_url);
                             mDatabase = GetFirebaseInstance.GetInstance().getReference().child("User").child(mAuth.getCurrentUser().getUid());
@@ -348,6 +345,7 @@ public class MainActivity extends AppCompatActivity
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(MyAnimations.RotateRight());
         animationSet.addAnimation(MyAnimations.inFromLeftAnimation());
+
         v.startAnimation(animationSet);
         v.animate()
                 .alpha(1f)
@@ -361,7 +359,6 @@ public class MainActivity extends AppCompatActivity
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(MyAnimations.RotateLeft());
         animationSet.addAnimation(MyAnimations.outToLeftAnimation());
-
         v.startAnimation(animationSet);
         v.animate()
                 .alpha(0.0f)
