@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.nuhel.houserent.Adapter.OwnPostRecyclerViewAdapter;
 import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
@@ -35,6 +36,7 @@ public class UserProfileManageFragment extends Fragment {
     private ArrayList<String> postIds;
     private DatabaseReference my_postlist_ref;
     private DatabaseReference all_postlist_ref;
+    private String userUid;
 
     public UserProfileManageFragment() {
         // Required empty public constructor
@@ -48,6 +50,10 @@ public class UserProfileManageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+        userUid = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
+
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         initializePostIds();
         view = view == null ? inflater.inflate(R.layout.user_profile_manage, container, false) : view;
@@ -68,11 +74,12 @@ public class UserProfileManageFragment extends Fragment {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String postkey = postkeyGenerator();
                 HashMap<String, String> map1 = new HashMap<>();
                 map1.put("area", "nuh");
                 map1.put("image1", "http://www.canmorerealestate.com/assets/images/Featured-Listings/1041-Wilson-Way/Slider/1041-Wilson-Way-Canmore-houce.jpg");
-                all_postlist_ref.child("hello").setValue(map1);
-                my_postlist_ref.child("hello").setValue("f");
+                all_postlist_ref.child(postkey).setValue(map1);
+                my_postlist_ref.child(postkey).setValue("f");
             }
         });
 
@@ -85,8 +92,7 @@ public class UserProfileManageFragment extends Fragment {
 
     private void initializePostIds() {
         postIds = new ArrayList<>();
-        String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
-        my_postlist_ref = GetFirebaseInstance.GetInstance().getReference("User").child(id).child("posts");
+        my_postlist_ref = GetFirebaseInstance.GetInstance().getReference("User").child(userUid).child("posts");
         my_postlist_ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -115,6 +121,18 @@ public class UserProfileManageFragment extends Fragment {
 
             }
         });
+    }
+
+
+    private String postkeyGenerator(){
+        if(postIds.size()>0){
+            int number = Integer.parseInt(postIds.get(postIds.size()-1).split("PostNo-")[1])+1;
+            Toast.makeText(getContext(), userUid+"PostNo-"+number, Toast.LENGTH_SHORT).show();
+            return userUid+"PostNo-"+number;
+        }else{
+            Toast.makeText(getContext(), userUid+"PostNo-0", Toast.LENGTH_SHORT).show();
+            return userUid+"PostNo-0";
+        }
     }
 
 }
