@@ -38,6 +38,8 @@ public class UserProfileManageFragment extends Fragment {
     private DatabaseReference all_postlist_ref;
     private String userUid;
 
+
+
     public UserProfileManageFragment() {
         // Required empty public constructor
     }
@@ -51,9 +53,7 @@ public class UserProfileManageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
         userUid = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
-
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         initializePostIds();
         view = view == null ? inflater.inflate(R.layout.user_profile_manage, container, false) : view;
@@ -66,6 +66,7 @@ public class UserProfileManageFragment extends Fragment {
                 fragmentControllerAfterUserLogReg.setFrag();
             }
         });
+
 
 
         postButton = view.findViewById(R.id.postbutton);
@@ -83,10 +84,18 @@ public class UserProfileManageFragment extends Fragment {
             }
         });
 
+
+
+        view.findViewById(R.id.multiImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         new OwnPostRecyclerViewAdapter(view.getContext(), recyclerView);
-
         return view;
     }
 
@@ -124,14 +133,14 @@ public class UserProfileManageFragment extends Fragment {
     }
 
 
-    private String postkeyGenerator(){
-        if(postIds.size()>0){
-            int number = Integer.parseInt(postIds.get(postIds.size()-1).split("PostNo-")[1])+1;
-            Toast.makeText(getContext(), userUid+"PostNo-"+number, Toast.LENGTH_SHORT).show();
-            return userUid+"PostNo-"+number;
-        }else{
-            Toast.makeText(getContext(), userUid+"PostNo-0", Toast.LENGTH_SHORT).show();
-            return userUid+"PostNo-0";
+    private String postkeyGenerator() {
+        if (postIds.size() > 0) {
+            int number = Integer.parseInt(postIds.get(postIds.size() - 1).split("PostNo-")[1]) + 1;
+            Toast.makeText(getContext(), userUid + "PostNo-" + number, Toast.LENGTH_SHORT).show();
+            return userUid + "PostNo-" + number;
+        } else {
+            Toast.makeText(getContext(), userUid + "PostNo-0", Toast.LENGTH_SHORT).show();
+            return userUid + "PostNo-0";
         }
     }
 

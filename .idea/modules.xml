@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/HouseRent.iml" filepath="$PROJECT_DIR$/HouseRent.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/catloadinglibrary/catloadinglibrary.iml" filepath="$PROJECT_DIR$/catloadinglibrary/catloadinglibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/universal-image-loader-1.9.0/universal-image-loader-1.9.0.iml" filepath="$PROJECT_DIR$/universal-image-loader-1.9.0/universal-image-loader-1.9.0.iml" />
     </modules>
   </component>
 </project>

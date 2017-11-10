@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,11 +21,13 @@ import android.view.View;
 import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
+import com.example.nuhel.houserent.CustomImagePicker.Action;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.CustomViews.MyAnimations;
 import com.example.nuhel.houserent.View.Fragments.AdList;
@@ -40,6 +43,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -74,11 +82,14 @@ public class MainActivity extends AppCompatActivity
 
     private static int drawableResourceId;
 
+    ImageLoader imageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initImageLoader();
 
         drawableResourceId = (getBaseContext()).getResources().getIdentifier("usericon", "drawable", (getBaseContext()).getPackageName());
         mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
@@ -123,6 +134,17 @@ public class MainActivity extends AppCompatActivity
         nav_user_pic_management.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+               /* Intent i = new Intent();
+                i.setType("image*//*");
+                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                i.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(
+                        Intent.createChooser(i, "android.intent.action.SEND_MULTIPLE"),9);*/
+
+                Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
+                startActivityForResult(i, 200);
                 if (hide1.getVisibility() == View.VISIBLE) {
                     doOutAnim(hide1);
                     doOutAnim(hide2);
@@ -210,7 +232,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+        if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
+            String[] all_path = data.getStringArrayExtra("all_path");
+
+
+            for (String string : all_path) {
+                Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+            }
+
+        }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
 
@@ -256,6 +287,7 @@ public class MainActivity extends AppCompatActivity
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
+
         }
     }
 
@@ -385,5 +417,18 @@ public class MainActivity extends AppCompatActivity
                 mDatabase.updateChildren(map);
             }
         });
+    }
+
+    private void initImageLoader() {
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheOnDisc().imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .bitmapConfig(Bitmap.Config.RGB_565).build();
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
+                this).defaultDisplayImageOptions(defaultOptions).memoryCache(
+                new WeakMemoryCache());
+
+        ImageLoaderConfiguration config = builder.build();
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(config);
     }
 }

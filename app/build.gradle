@@ -25,15 +25,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    //firebase
-
-    //page indicator
-
-    //image cropper
-
-    //image comprassor
-
-    //circular image view
 
 
     compile project(':catloadinglibrary')
@@ -48,9 +39,10 @@ dependencies {
     compile 'com.android.support:cardview-v7:26.1.0'
     compile 'com.github.bumptech.glide:glide:4.3.0'
     compile 'com.android.support:support-v4:26.1.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.iceteck.silicompressorr:silicompressor:2.1'
     compile 'com.google.firebase:firebase-storage:11.4.2'
+
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 }
