@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
@@ -53,7 +52,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,13 +59,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentControllerAfterUserLog_Reg, Serializable {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentControllerAfterUserLog_Reg {
 
     private static Handler mHandler;
     private static AdList adListFragment = null;
     private static Toolbar toolbar;
     private static RegistrationLoginFragment registrationLoginFragment;
-    private static Serializable serializable;
     private static FirebaseAuth mAuth = null;
 
     private static CircleImageView nav_userPhoto;
@@ -84,6 +81,7 @@ public class MainActivity extends AppCompatActivity
 
     ImageLoader imageLoader;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,8 +93,6 @@ public class MainActivity extends AppCompatActivity
         mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
 
         addTollBar();
-
-        serializable = this;
         mHandler = new Handler();
 
         drawer = findViewById(R.id.drawer_layout);
@@ -136,13 +132,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 
 
-               /* Intent i = new Intent();
-                i.setType("image*//*");
-                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                i.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(
-                        Intent.createChooser(i, "android.intent.action.SEND_MULTIPLE"),9);*/
-
                 Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
                 startActivityForResult(i, 200);
                 if (hide1.getVisibility() == View.VISIBLE) {
@@ -162,15 +151,13 @@ public class MainActivity extends AppCompatActivity
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("serializable", serializable);
                 if (mAuth.getCurrentUser() == null) {
-                    registrationLoginFragment = RegistrationLoginFragment.newInstance(bundle);
+                    registrationLoginFragment = new RegistrationLoginFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, registrationLoginFragment)
                             .commit();
 
                 } else {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, UserProfileManageFragment.newInstance(bundle))
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, new UserProfileManageFragment())
                             .commit();
                 }
             }
@@ -187,7 +174,7 @@ public class MainActivity extends AppCompatActivity
         setupUserDisplay();
     }
 
-    @Override
+
     public void setFrag() {
         nav_user_pic_management.setVisibility(View.VISIBLE);
         setAddListFrag();
@@ -233,15 +220,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
-            String[] all_path = data.getStringArrayExtra("all_path");
-
-
-            for (String string : all_path) {
-                Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
-            }
-
-        }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
 

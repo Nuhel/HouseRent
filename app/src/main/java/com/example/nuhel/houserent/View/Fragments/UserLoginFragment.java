@@ -39,7 +39,6 @@ public class UserLoginFragment extends Fragment {
     private Button signinBtn;
     private int lastLengthOfemail = 0;
     private CatLoadingView mView;
-    private FragmentControllerAfterUserLog_Reg fragmentControllerAfterUserLogReg;
 
     public UserLoginFragment() {
         // Required empty public constructor
@@ -56,7 +55,7 @@ public class UserLoginFragment extends Fragment {
 
         view = view == null ? inflater.inflate(R.layout.user_login_layout, container, false) : view;
 
-        fragmentControllerAfterUserLogReg = (FragmentControllerAfterUserLog_Reg) getArguments().getSerializable("serializable");
+
 
         emailEditText = view.findViewById(R.id.userloginEmailEdittext);
         passwordEditText = view.findViewById(R.id.userloginpasseditText);
@@ -100,10 +99,8 @@ public class UserLoginFragment extends Fragment {
                                         user = mAuth.getCurrentUser();
                                         String userEmail = mAuth.getCurrentUser().getEmail().toString();
                                         Toast.makeText(view.getContext(), "Sucsesfully LogedIn\nWelcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-                                        //fragmentControllerAfterUserLogReg.setFrag();
-
                                         Glide.with(view.getContext()).load(user.getPhotoUrl()).into(imageView);
-                                        fragmentControllerAfterUserLogReg.setFrag();
+                                        ((FragmentControllerAfterUserLog_Reg) getActivity()).setFrag();
 
                                     } else {
                                         // If sign in fails, display a message to the user.

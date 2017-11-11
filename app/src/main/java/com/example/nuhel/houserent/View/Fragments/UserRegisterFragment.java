@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.R;
@@ -53,7 +52,6 @@ public class UserRegisterFragment extends Fragment {
     private int radius = 20;
     private CatLoadingView mView;
 
-    private FragmentControllerAfterUserLog_Reg fragmentControllerAfterUserLogReg;
 
     public UserRegisterFragment() {
         // Required empty public constructor
@@ -61,7 +59,6 @@ public class UserRegisterFragment extends Fragment {
 
 
     public static UserRegisterFragment newInstance(Bundle bundle) {
-
         UserRegisterFragment userRegisterFragment = new UserRegisterFragment();
         userRegisterFragment.setArguments(bundle);
         return userRegisterFragment;
@@ -71,7 +68,6 @@ public class UserRegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        fragmentControllerAfterUserLogReg = (FragmentControllerAfterUserLog_Reg) getArguments().getSerializable("serializable");
         initViews(inflater, container);
         setTextChangeListener();
         return view;
@@ -322,7 +318,6 @@ public class UserRegisterFragment extends Fragment {
 
         mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
 
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -350,7 +345,6 @@ public class UserRegisterFragment extends Fragment {
                                 }
                             });
 
-
                         } else {
                             // If sign in fails, display a message to the user.
 
@@ -359,7 +353,6 @@ public class UserRegisterFragment extends Fragment {
                     }
                 });
     }
-
 
 
 }

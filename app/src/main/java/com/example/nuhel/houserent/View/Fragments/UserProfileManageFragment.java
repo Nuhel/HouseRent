@@ -1,5 +1,7 @@
 package com.example.nuhel.houserent.View.Fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +17,7 @@ import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
+import com.example.nuhel.houserent.CustomImagePicker.Action;
 import com.example.nuhel.houserent.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +33,6 @@ public class UserProfileManageFragment extends Fragment {
     private RecyclerView recyclerView;
     private View view;
     private RecyclerViewAdapter adapter;
-    private FragmentControllerAfterUserLog_Reg fragmentControllerAfterUserLogReg;
     private Button logOutButton;
     private Button postButton;
     private ArrayList<String> postIds;
@@ -44,12 +46,6 @@ public class UserProfileManageFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static UserProfileManageFragment newInstance(Bundle bundle) {
-        UserProfileManageFragment userLoginFragment = new UserProfileManageFragment();
-        userLoginFragment.setArguments(bundle);
-        return userLoginFragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -57,13 +53,12 @@ public class UserProfileManageFragment extends Fragment {
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         initializePostIds();
         view = view == null ? inflater.inflate(R.layout.user_profile_manage, container, false) : view;
-        fragmentControllerAfterUserLogReg = (FragmentControllerAfterUserLog_Reg) getArguments().getSerializable("serializable");
         logOutButton = view.findViewById(R.id.logoutbutton);
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GetFirebaseAuthInstance.getFirebaseAuthInstance().signOut();
-                fragmentControllerAfterUserLogReg.setFrag();
+                ((FragmentControllerAfterUserLog_Reg) getActivity()).setFrag();
             }
         });
 
@@ -89,6 +84,8 @@ public class UserProfileManageFragment extends Fragment {
         view.findViewById(R.id.multiImage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
+                startActivityForResult(i, 200);
 
             }
         });
@@ -141,6 +138,20 @@ public class UserProfileManageFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), userUid + "PostNo-0", Toast.LENGTH_SHORT).show();
             return userUid + "PostNo-0";
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
+            String[] all_path = data.getStringArrayExtra("all_path");
+
+
+            for (String string : all_path) {
+                Toast.makeText(getContext(), string, Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 

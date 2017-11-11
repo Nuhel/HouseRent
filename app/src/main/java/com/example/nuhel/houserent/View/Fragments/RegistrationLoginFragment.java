@@ -42,12 +42,6 @@ public class RegistrationLoginFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static RegistrationLoginFragment newInstance(Bundle bundle) {
-        RegistrationLoginFragment registrationLoginFragment = new RegistrationLoginFragment();
-        registrationLoginFragment.setArguments(bundle);
-        return registrationLoginFragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
