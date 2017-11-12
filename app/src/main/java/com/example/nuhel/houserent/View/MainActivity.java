@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
+import com.example.nuhel.houserent.Controller.ProjectKeys;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.CustomViews.MyAnimations;
 import com.example.nuhel.houserent.View.Fragments.AdList;
@@ -129,7 +130,6 @@ public class MainActivity extends AppCompatActivity
         nav_user_pic_management.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (hide1.getVisibility() == View.VISIBLE) {
                     doOutAnim(hide1);
                     doOutAnim(hide2);
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity
 
                         try {
                             String imagepath = dataSnapshot.getValue().toString();
-                            if (imagepath.equals("no_img")) {
+                            if (imagepath.equals(ProjectKeys.NOIMG)) {
                                 setImage(drawableResourceId, nav_userPhoto);
                             } else {
                                 setImage(imagepath, nav_userPhoto);
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity
 
                 mStorageRef = FirebaseStorage.getInstance().getReference();
                 //Storage Reference for main image
-                StorageReference filepath = mStorageRef.child("profile_images").child(mAuth.getCurrentUser().getUid() + ".jpg");
+                StorageReference filepath = mStorageRef.child(ProjectKeys.PROFILEIMAGEDIR).child(mAuth.getCurrentUser().getUid() + ProjectKeys.JPGIMAGEFORMAT);
 
                 //Now first upload the main image
                 filepath.putFile(Uri.fromFile(thumb_bitmap)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -256,8 +256,8 @@ public class MainActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             final String download_url = task.getResult().getDownloadUrl().toString();
                             Map map = new HashMap();
-                            map.put("image", download_url);
-                            mDatabase = GetFirebaseInstance.GetInstance().getReference().child("User").child(mAuth.getCurrentUser().getUid());
+                            map.put(ProjectKeys.USERDIRPROFILEIMAGE, download_url);
+                            mDatabase = GetFirebaseInstance.GetInstance().getReference().child(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid());
                             mDatabase.updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(Task<Void> task) {
@@ -393,13 +393,13 @@ public class MainActivity extends AppCompatActivity
     private void deleteUserPhoto() {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         //Storage Reference for main image
-        StorageReference filepath = mStorageRef.child("profile_images").child(mAuth.getCurrentUser().getUid() + ".jpg");
+        StorageReference filepath = mStorageRef.child(ProjectKeys.PROFILEIMAGEDIR).child(mAuth.getCurrentUser().getUid() + ProjectKeys.JPGIMAGEFORMAT);
 
         filepath.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Map map = new HashMap();
-                map.put("image", "no_img");
+                map.put(ProjectKeys.USERDIRPROFILEIMAGE, ProjectKeys.NOIMG);
                 mDatabase = GetFirebaseInstance.GetInstance().getReference().child("User").child(mAuth.getCurrentUser().getUid());
                 mDatabase.updateChildren(map);
             }
