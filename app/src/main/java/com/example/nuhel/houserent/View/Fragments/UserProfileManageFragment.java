@@ -20,6 +20,11 @@ import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.CustomImagePicker.Action;
 import com.example.nuhel.houserent.R;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
@@ -54,6 +59,8 @@ public class UserProfileManageFragment extends Fragment {
     private String postkey;
     private ArrayList<String> downloadLinks;
 
+    private int PLACE_PICKER_REQUEST = 999;
+
 
     public UserProfileManageFragment() {
         // Required empty public constructor
@@ -66,7 +73,7 @@ public class UserProfileManageFragment extends Fragment {
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         imagePaths = new ArrayList<>();
         downloadLinks = new ArrayList<>();
-        initializePostIds();
+        //initializePostIds();
         view = view == null ? inflater.inflate(R.layout.user_profile_manage, container, false) : view;
         logOutButton = view.findViewById(R.id.logoutbutton);
         logOutButton.setOnClickListener(new View.OnClickListener() {
@@ -82,29 +89,20 @@ public class UserProfileManageFragment extends Fragment {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                downloadLinks.clear();
+                uploadImages();
             }
         });
 
+        initializePostIds();
 
         view.findViewById(R.id.multiImage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
                 startActivityForResult(i, 200);
-
             }
         });
-
-
-        view.findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadLinks.clear();
-                uploadImages();
-            }
-        });
-
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -176,8 +174,15 @@ public class UserProfileManageFragment extends Fragment {
                 imagePaths.add(Uri.fromFile(thumb_bitmap));
             }
         }
-    }
 
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, getContext());
+                String toastMsg = String.format("Place: %s", place.getLatLng());
+                Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     private void uploadImages() {
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -205,6 +210,8 @@ public class UserProfileManageFragment extends Fragment {
                     for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {
                         map1.put("image" + (looper + 1), downloadLinks.get(looper));
                     }
+                    String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
+                    map1.put("owner", id);
 
                     all_postlist_ref.child(postkey).setValue(map1);
                     my_postlist_ref.child(postkey).setValue("f");
@@ -213,6 +220,20 @@ public class UserProfileManageFragment extends Fragment {
             }
         });
 
+    }
+
+
+    private void getPlace() {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .build(getActivity());
+            startActivityForResult(intent, PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
     }
 
 }

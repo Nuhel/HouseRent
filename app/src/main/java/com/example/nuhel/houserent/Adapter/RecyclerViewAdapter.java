@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
+import com.example.nuhel.houserent.Controller.ProjectKeys;
 import com.example.nuhel.houserent.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
         this.recyclerView = recyclerView;
-        this.db = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
+        this.db = GetFirebaseInstance.GetInstance().getReference(ProjectKeys.ALLADSDIR);
         this.add_list = new LinkedHashMap<>();
         loadMoreData();
         this.recyclerView.setAdapter(this);
@@ -78,16 +79,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ChildEventListener vl = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                HomeAddListDataModel model = getModel(dataSnapshot);
+                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot);
                 add_list.put(dataSnapshot.getKey(), model);
                 notifyDataSetChanged();
                 loading = true;
             }
 
             @Override
-            public void onChildChanged(DataSnapshot ds, String s) {
-                String key = ds.getKey();
-                HomeAddListDataModel model = getModel(ds);
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                String key = dataSnapshot.getKey();
+                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot);
                 if (model != null) {
                     add_list.put(key, model);
                     notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
@@ -123,37 +124,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-
-    private HomeAddListDataModel getModel(DataSnapshot ds) {
-
-        HomeAddListDataModel model = null;
-        try {
-
-            String areaText = ds.child("area").getValue() == null ? "" : ds.child("area").getValue().toString();
-            String roomsText = ds.child("room").getValue() == null ? "" : ds.child("room").getValue().toString();
-            String typeText = ds.child("type").getValue() == null ? "" : ds.child("type").getValue().toString();
-
-            String img1 = ds.child("image1").getValue() == null ? "" : ds.child("image1").getValue().toString();
-            String img2 = ds.child("image2").getValue() == null ? "" : ds.child("image2").getValue().toString();
-            String img3 = ds.child("image3").getValue() == null ? "" : ds.child("image3").getValue().toString();
-
-            model = new HomeAddListDataModel();
-            model.setPost_id(ds.getKey());
-            model.setArea(areaText);
-            model.setImage1(img1);
-            model.setImage2(img2);
-            model.setImage3(img3);
-            model.setRoom(roomsText);
-            model.setType(typeText);
-
-
-        } catch (Exception e) {
-
-        }
-
-        return model;
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.main_ads_list_item, null);
@@ -164,7 +134,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         holder.bindData((HomeAddListDataModel) (add_list.values().toArray()[position]));
-
 
     }
 

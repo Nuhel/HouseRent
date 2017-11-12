@@ -1,76 +1,74 @@
 package com.example.nuhel.houserent.Adapter;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
+import com.example.nuhel.houserent.Controller.ProjectKeys;
 import com.example.nuhel.houserent.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-/**
- * Created by Nuhel on 8/18/2017.
- */
-
 public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecyclerViewAdapter.ViewHolder> {
 
-    private int visibleThreshold = 5;
-    private int lastVisibleItem, totalItemCount;
-    private boolean loading = true;
     private Context context;
     private RecyclerView recyclerView;
     private LinkedHashMap<String, HomeAddListDataModel> add_list;
     private DatabaseReference db;
-    private Boolean is_first = true;
-    private LinearLayoutManager linearLayoutManager;
-    private String oldestPostId;
-    private ChildEventListener vl;
-    private ValueEventListener as;
 
     public OwnPostRecyclerViewAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
         this.recyclerView = recyclerView;
-        this.db = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
+        this.db = GetFirebaseInstance.GetInstance().getReference(ProjectKeys.ALLADSDIR);
         this.add_list = new LinkedHashMap<>();
         this.recyclerView.setAdapter(this);
         init();
     }
 
-
     private void init() {
 
-        db.addChildEventListener(new ChildEventListener() {
+        String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
+
+        Query query = db.orderByChild(ProjectKeys.OWNERKEY).equalTo(id);
+
+        query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot);
+                add_list.put(dataSnapshot.getKey(), model);
+                notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                String key = dataSnapshot.getKey();
+                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot);
+                if (model != null) {
+                    add_list.put(key, model);
+                    notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String key = dataSnapshot.getKey();
                 int position = new ArrayList<String>(add_list.keySet()).indexOf(key);
-                if(position>0){
+
+                if (position >= 0) {
                     add_list.remove(key);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, add_list.size());
@@ -88,87 +86,10 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
             }
         });
 
-        as = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                HomeAddListDataModel model = getModel(dataSnapshot);
-                add_list.put(dataSnapshot.getKey(), model);
-                notifyDataSetChanged();
-                loading = true;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-
-        String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
-        GetFirebaseInstance.GetInstance().getReference("User").child(id).child("posts").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Toast.makeText(context, dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
-                db.child(dataSnapshot.getKey()).addValueEventListener(as);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String key = dataSnapshot.getKey();
-                int position = new ArrayList<String>(add_list.keySet()).indexOf(key);
-                add_list.remove(key);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, add_list.size());
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
     }
 
 
-    private HomeAddListDataModel getModel(DataSnapshot ds) {
 
-        HomeAddListDataModel model = null;
-        try {
-
-            String areaText = ds.child("area").getValue() == null ? "" : ds.child("area").getValue().toString();
-            String roomsText = ds.child("room").getValue() == null ? "" : ds.child("room").getValue().toString();
-            String typeText = ds.child("type").getValue() == null ? "" : ds.child("type").getValue().toString();
-            String img1 = ds.child("image1").getValue() == null ? "" : ds.child("image1").getValue().toString();
-            String img2 = ds.child("image2").getValue() == null ? "" : ds.child("image2").getValue().toString();
-            String img3 = ds.child("image3").getValue() == null ? "" : ds.child("image3").getValue().toString();
-            model = new HomeAddListDataModel();
-            model.setPost_id(ds.getKey());
-            model.setArea(areaText);
-            model.setImage1(img1);
-            model.setImage2(img2);
-            model.setImage3(img3);
-            model.setRoom(roomsText);
-            model.setType(typeText);
-
-
-        } catch (Exception e) {
-
-        }
-
-        return model;
-    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

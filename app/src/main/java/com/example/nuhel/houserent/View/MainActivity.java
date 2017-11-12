@@ -26,7 +26,6 @@ import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
-import com.example.nuhel.houserent.CustomImagePicker.Action;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.CustomViews.MyAnimations;
 import com.example.nuhel.houserent.View.Fragments.AdList;
@@ -131,9 +130,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-
-                Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
-                startActivityForResult(i, 200);
                 if (hide1.getVisibility() == View.VISIBLE) {
                     doOutAnim(hide1);
                     doOutAnim(hide2);
@@ -187,11 +183,23 @@ public class MainActivity extends AppCompatActivity
             GetFirebaseInstance.GetInstance().getReference("User").child(mAuth.getCurrentUser().getUid().toString()).child("image").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    String imagepath = dataSnapshot.getValue().toString();
-                    if (imagepath.equals("no_img")) {
-                        setImage(drawableResourceId, nav_userPhoto);
+
+                    if (dataSnapshot != null) {
+
+                        try {
+                            String imagepath = dataSnapshot.getValue().toString();
+                            if (imagepath.equals("no_img")) {
+                                setImage(drawableResourceId, nav_userPhoto);
+                            } else {
+                                setImage(imagepath, nav_userPhoto);
+                            }
+                        } catch (Exception e) {
+                            setImage(drawableResourceId, nav_userPhoto);
+                        }
+
+
                     } else {
-                        setImage(imagepath, nav_userPhoto);
+                        setImage(drawableResourceId, nav_userPhoto);
                     }
                 }
 
@@ -410,4 +418,5 @@ public class MainActivity extends AppCompatActivity
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
     }
+
 }
