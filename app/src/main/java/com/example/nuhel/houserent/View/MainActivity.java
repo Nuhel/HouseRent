@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
 
     private void setupUserDisplay() {
         if (mAuth.getCurrentUser() != null) {
-            GetFirebaseInstance.GetInstance().getReference("User").child(mAuth.getCurrentUser().getUid().toString()).child("image").addValueEventListener(new ValueEventListener() {
+            GetFirebaseInstance.GetInstance().getReference(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid().toString()).child(ProjectKeys.USERDIRPROFILEIMAGE).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
