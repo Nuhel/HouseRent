@@ -12,11 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.nuhel.houserent.Adapter.OwnPostRecyclerViewAdapter;
-import com.example.nuhel.houserent.Adapter.RecyclerViewAdapter;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
@@ -45,7 +43,6 @@ public class UserProfileManageFragment extends Fragment {
     private static StorageReference mStorageRef;
     private RecyclerView recyclerView;
     private View view;
-    private RecyclerViewAdapter adapter;
     private Button logOutButton;
     private Button postButton;
     private ArrayList<String> postIds;
@@ -54,8 +51,8 @@ public class UserProfileManageFragment extends Fragment {
     private String userUid;
     private ArrayList<Uri> imagePaths;
     private int cu = 0;
-    private ImageView imageView;
     private String postkey;
+    private ArrayList<String> downloadLinks;
 
 
     public UserProfileManageFragment() {
@@ -68,6 +65,7 @@ public class UserProfileManageFragment extends Fragment {
         userUid = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         imagePaths = new ArrayList<>();
+        downloadLinks = new ArrayList<>();
         initializePostIds();
         view = view == null ? inflater.inflate(R.layout.user_profile_manage, container, false) : view;
         logOutButton = view.findViewById(R.id.logoutbutton);
@@ -84,11 +82,7 @@ public class UserProfileManageFragment extends Fragment {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String, String> map1 = new HashMap<>();
-                map1.put("area", "nuh");
-                map1.put("image1", "http://www.canmorerealestate.com/assets/images/Featured-Listings/1041-Wilson-Way/Slider/1041-Wilson-Way-Canmore-houce.jpg");
-                all_postlist_ref.child(postkey).setValue(map1);
-                my_postlist_ref.child(postkey).setValue("f");
+
             }
         });
 
@@ -102,14 +96,12 @@ public class UserProfileManageFragment extends Fragment {
             }
         });
 
-        imageView = view.findViewById(R.id.imageview);
 
         view.findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                downloadLinks.clear();
                 uploadImages();
-
             }
         });
 
@@ -157,7 +149,6 @@ public class UserProfileManageFragment extends Fragment {
     private String postkeyGenerator() {
         if (postIds.size() > 0) {
             int number = Integer.parseInt(postIds.get(postIds.size() - 1).split("PostNo-")[1]) + 1;
-            Toast.makeText(getContext(), userUid + "PostNo-" + number, Toast.LENGTH_SHORT).show();
             return userUid + "PostNo-" + number;
         } else {
             Toast.makeText(getContext(), userUid + "PostNo-0", Toast.LENGTH_SHORT).show();
@@ -197,7 +188,7 @@ public class UserProfileManageFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
-
+                    downloadLinks.add(task.getResult().getDownloadUrl().toString());
                 } else {
 
                 }
@@ -207,8 +198,18 @@ public class UserProfileManageFragment extends Fragment {
                     uploadImages();
                 } else {
                     Toast.makeText(getContext(), "Task Done Uploaded", Toast.LENGTH_SHORT).show();
-                }
 
+                    HashMap<String, String> map1 = new HashMap<>();
+                    map1.put("area", "nuh");
+
+                    for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {
+                        map1.put("image" + (looper + 1), downloadLinks.get(looper));
+                    }
+
+                    all_postlist_ref.child(postkey).setValue(map1);
+                    my_postlist_ref.child(postkey).setValue("f");
+
+                }
             }
         });
 
