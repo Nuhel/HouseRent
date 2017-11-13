@@ -34,6 +34,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,8 +47,9 @@ import java.util.HashMap;
 
 import id.zelory.compressor.Compressor;
 
-public class UserProfileManageFragment extends Fragment {
+import static com.nightonke.boommenu.ButtonEnum.TextOutsideCircle;
 
+public class UserProfileManageFragment extends Fragment {
 
     private static StorageReference mStorageRef;
     private RecyclerView recyclerView;
@@ -58,7 +64,6 @@ public class UserProfileManageFragment extends Fragment {
     private int cu = 0;
     private String postkey;
     private ArrayList<String> downloadLinks;
-
     private int PLACE_PICKER_REQUEST = 999;
 
 
@@ -68,7 +73,6 @@ public class UserProfileManageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         userUid = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         imagePaths = new ArrayList<>();
@@ -107,6 +111,25 @@ public class UserProfileManageFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         new OwnPostRecyclerViewAdapter(view.getContext(), recyclerView);
+
+        BoomMenuButton bmb = view.findViewById(R.id.bmb);
+
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_1);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
+        bmb.setButtonEnum(TextOutsideCircle);
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder().listener(new OnBMClickListener() {
+                @Override
+                public void onBoomButtonClick(int index) {
+                    Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
+                }
+            })
+                    .normalImageRes(R.drawable.addposticon)
+                    .normalText("Butter Doesn't fly!");
+
+            bmb.addBuilder(builder);
+        }
+
         return view;
     }
 
@@ -117,7 +140,6 @@ public class UserProfileManageFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 postIds.add(dataSnapshot.getKey());
-                postkey = postkeyGenerator();
             }
 
             @Override
@@ -129,7 +151,7 @@ public class UserProfileManageFragment extends Fragment {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 int index = postIds.indexOf(dataSnapshot.getKey());
                 postIds.remove(index);
-                postkey = postkeyGenerator();
+
             }
 
             @Override
@@ -149,11 +171,62 @@ public class UserProfileManageFragment extends Fragment {
             int number = Integer.parseInt(postIds.get(postIds.size() - 1).split("PostNo-")[1]) + 1;
             return userUid + "PostNo-" + number;
         } else {
-            Toast.makeText(getContext(), userUid + "PostNo-0", Toast.LENGTH_SHORT).show();
             return userUid + "PostNo-0";
         }
     }
 
+
+    private void uploadImages() {
+        postkey = postkeyGenerator();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        //Storage Reference for main image
+        StorageReference filepath;
+        filepath = mStorageRef.child("post_images").child(postkey + "imgno-" + cu + ".jpeg");
+        filepath.putFile(imagePaths.get(cu)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()) {
+                    downloadLinks.add(task.getResult().getDownloadUrl().toString());
+                } else {
+
+                }
+                cu++;
+                if (cu <= imagePaths.size() - 1) {
+                    Toast.makeText(getContext(), "Task Done " + String.valueOf(cu), Toast.LENGTH_SHORT).show();
+                    uploadImages();
+                } else {
+                    Toast.makeText(getContext(), "Task Done Uploaded", Toast.LENGTH_SHORT).show();
+
+                    HashMap<String, String> map1 = new HashMap<>();
+                    map1.put("area", "nuh");
+
+                    for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {
+                        map1.put("image" + (looper + 1), downloadLinks.get(looper));
+                    }
+                    String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
+                    map1.put("owner", id);
+                    all_postlist_ref.child(postkey).setValue(map1);
+                    my_postlist_ref.child(postkey).setValue("f");
+
+                }
+            }
+        });
+
+    }
+
+
+    private void getPlace() {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .build(getActivity());
+            startActivityForResult(intent, PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -181,58 +254,6 @@ public class UserProfileManageFragment extends Fragment {
                 String toastMsg = String.format("Place: %s", place.getLatLng());
                 Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
             }
-        }
-    }
-
-    private void uploadImages() {
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        //Storage Reference for main image
-        StorageReference filepath;
-        filepath = mStorageRef.child("post_images").child(postkeyGenerator() + "imgno-" + cu + ".jpeg");
-        filepath.putFile(imagePaths.get(cu)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    downloadLinks.add(task.getResult().getDownloadUrl().toString());
-                } else {
-
-                }
-                cu++;
-                if (cu <= imagePaths.size() - 1) {
-                    Toast.makeText(getContext(), "Task Done " + String.valueOf(cu), Toast.LENGTH_SHORT).show();
-                    uploadImages();
-                } else {
-                    Toast.makeText(getContext(), "Task Done Uploaded", Toast.LENGTH_SHORT).show();
-
-                    HashMap<String, String> map1 = new HashMap<>();
-                    map1.put("area", "nuh");
-
-                    for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {
-                        map1.put("image" + (looper + 1), downloadLinks.get(looper));
-                    }
-                    String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
-                    map1.put("owner", id);
-
-                    all_postlist_ref.child(postkey).setValue(map1);
-                    my_postlist_ref.child(postkey).setValue("f");
-
-                }
-            }
-        });
-
-    }
-
-
-    private void getPlace() {
-        try {
-            Intent intent =
-                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                            .build(getActivity());
-            startActivityForResult(intent, PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
-            // TODO: Handle the error.
-        } catch (GooglePlayServicesNotAvailableException e) {
-            // TODO: Handle the error.
         }
     }
 

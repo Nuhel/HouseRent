@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity
     private static CircleImageView hide2;
     private static StorageReference mStorageRef;
     private static DatabaseReference mDatabase;
-
     private static int drawableResourceId;
 
     ImageLoader imageLoader;
@@ -231,7 +230,6 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-
                 Uri resultUri = result.getUri();
                 File thumb_bitmap = null;
                 try {

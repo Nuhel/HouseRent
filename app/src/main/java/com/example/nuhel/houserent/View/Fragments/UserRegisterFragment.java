@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
+import com.example.nuhel.houserent.Controller.ProjectKeys;
 import com.example.nuhel.houserent.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -330,6 +331,13 @@ public class UserRegisterFragment extends Fragment {
                             DatabaseReference db = GetFirebaseInstance.GetInstance().getReference("User");
                             String id = user.getUid();
                             db.child(id).child("phone").setValue(phoneNUmber);
+
+                            db.child(id).child("posts").setValue(phoneNUmber);
+
+                            db.child(id).child("posts").setValue("f");
+
+                            db.child(id).child(ProjectKeys.USERDIRPROFILEIMAGE).setValue(ProjectKeys.NOIMG);
+
                             profileChangeRequest = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(displayName).build();
                             user.updateProfile(profileChangeRequest).addOnCompleteListener((Activity) view.getContext(), new OnCompleteListener<Void>() {
@@ -346,7 +354,7 @@ public class UserRegisterFragment extends Fragment {
                             });
 
                         } else {
-                            // If sign in fails, display a message to the user.
+
 
                         }
 
