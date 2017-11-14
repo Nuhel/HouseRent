@@ -121,7 +121,7 @@ public class UserProfileManageFragment extends Fragment {
             TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder().listener(new OnBMClickListener() {
                 @Override
                 public void onBoomButtonClick(int index) {
-                    Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
+                    showdialog();
                 }
             })
                     .normalImageRes(R.drawable.addposticon)
@@ -131,6 +131,14 @@ public class UserProfileManageFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private void showdialog() {
+
+        /*View view = LayoutInflater.from(getContext()).inflate(R.layout.gallery,null);
+        PopupWindow popupWindow = new PopupWindow(view,200,200);
+        popupWindow.setTouchable(true);
+        popupWindow.showAtLocation(this.view, Gravity.CENTER,0,0);*/
     }
 
     private void initializePostIds() {
