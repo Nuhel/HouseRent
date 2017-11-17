@@ -1,6 +1,7 @@
 package com.example.nuhel.houserent.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
@@ -79,16 +81,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ChildEventListener vl = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot);
-                add_list.put(dataSnapshot.getKey(), model);
-                notifyDataSetChanged();
-                loading = true;
+
+                String key = dataSnapshot.getKey();
+                if (add_list.get(key) == null) {
+                    HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot, context);
+                    add_list.put(dataSnapshot.getKey(), model);
+                    notifyDataSetChanged();
+                    loading = true;
+                }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 String key = dataSnapshot.getKey();
-                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot);
+                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot, context);
                 if (model != null) {
                     add_list.put(key, model);
                     notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
@@ -132,8 +138,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
-        holder.bindData((HomeAddListDataModel) (add_list.values().toArray()[position]));
+        holder.bindData((HomeAddListDataModel) (add_list.values().toArray()[position]), position);
 
     }
 
@@ -142,10 +147,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return add_list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView imageView;
         private TextView area, room, type;
+        private int position;
+        private ArrayList<Uri> imageList;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -153,13 +160,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             area = itemView.findViewById(R.id.adsListAreaText);
             room = itemView.findViewById(R.id.adsListRoomText);
             type = itemView.findViewById(R.id.adsListTypeText);
+            imageView.setOnClickListener(this);
         }
 
 
-        public void bindData(HomeAddListDataModel data) {
+        public void bindData(HomeAddListDataModel data, int position) {
+            this.position = position;
+
+            imageList = data.getImagelist();
             if (data != null) {
                 Glide.with(context)
-                        .load(data.getImage1())
+                        .load(data.getImagelist().get(0))
                         .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
                         .into(imageView);
                 String areaText = data.getArea() == null ? "" : data.getArea();
@@ -170,6 +181,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 room.setText("Rooms: " + roomsText);
                 type.setText("Type: " + typeText);
             }
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            for (Uri uri : imageList) {
+                Toast.makeText(context, "" + uri.toString(), Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 }

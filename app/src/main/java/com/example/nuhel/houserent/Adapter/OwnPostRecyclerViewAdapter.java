@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
@@ -48,7 +49,7 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot);
+                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot, context);
                 add_list.put(dataSnapshot.getKey(), model);
                 notifyDataSetChanged();
             }
@@ -56,7 +57,7 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 String key = dataSnapshot.getKey();
-                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot);
+                HomeAddListDataModel model = new SnapShotToDataModelParser().getModel(dataSnapshot, context);
                 if (model != null) {
                     add_list.put(key, model);
                     notifyItemChanged(new ArrayList<String>(add_list.keySet()).indexOf(key));
@@ -89,8 +90,6 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
     }
 
 
-
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.main_ads_list_item, null);
@@ -100,7 +99,7 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        holder.bindData((HomeAddListDataModel) (add_list.values().toArray()[position]));
+        holder.bindData((HomeAddListDataModel) (add_list.values().toArray()[position]), position);
 
 
     }
@@ -110,24 +109,29 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
         return add_list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        int pos;
         private ImageView imageView;
         private TextView area, room, type;
+        private View itemView;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             imageView = itemView.findViewById(R.id.adsListImage);
             area = itemView.findViewById(R.id.adsListAreaText);
             room = itemView.findViewById(R.id.adsListRoomText);
             type = itemView.findViewById(R.id.adsListTypeText);
+            area.setOnClickListener(this);
         }
 
 
-        public void bindData(HomeAddListDataModel data) {
+        public void bindData(HomeAddListDataModel data, int position) {
             if (data != null) {
+                pos = position;
                 Glide.with(context)
-                        .load(data.getImage1())
+                        .load(data.getImagelist().get(0))
                         .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
                         .into(imageView);
                 String areaText = data.getArea() == null ? "" : data.getArea();
@@ -137,6 +141,11 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
                 room.setText("Rooms: " + roomsText);
                 type.setText("Type: " + typeText);
             }
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(itemView.getContext(), "" + pos, Toast.LENGTH_SHORT).show();
         }
     }
 

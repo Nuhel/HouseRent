@@ -1,15 +1,16 @@
 package com.example.nuhel.houserent.Adapter;
 
+import android.net.Uri;
+
+import java.util.ArrayList;
+
 /**
  * Created by Nuhel on 8/30/2017.
  */
 
 public class HomeAddListDataModel {
 
-
-    private String Image1;
-    private String Image2;
-    private String Image3;
+    private ArrayList<Uri> imagelist;
     private String Area;
     private String Room;
     private String Type;
@@ -17,6 +18,7 @@ public class HomeAddListDataModel {
 
 
     public HomeAddListDataModel() {
+        imagelist = new ArrayList<>();
     }
 
     public String getPost_id() {
@@ -27,28 +29,12 @@ public class HomeAddListDataModel {
         Post_id = post_id;
     }
 
-    public String getImage1() {
-        return Image1;
+    public ArrayList<Uri> getImagelist() {
+        return imagelist;
     }
 
-    public void setImage1(String image1) {
-        Image1 = image1;
-    }
-
-    public String getImage2() {
-        return Image2;
-    }
-
-    public void setImage2(String image2) {
-        Image2 = image2;
-    }
-
-    public String getImage3() {
-        return Image3;
-    }
-
-    public void setImage3(String image3) {
-        Image3 = image3;
+    public void setImagelist(Uri uri) {
+        this.imagelist.add(uri);
     }
 
     public String getArea() {
