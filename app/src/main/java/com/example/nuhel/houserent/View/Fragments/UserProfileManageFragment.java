@@ -263,7 +263,6 @@ public class UserProfileManageFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(getContext(), "Called", Toast.LENGTH_SHORT).show();
         imagePaths.clear();
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
             String[] links = data.getStringArrayExtra("all_path");

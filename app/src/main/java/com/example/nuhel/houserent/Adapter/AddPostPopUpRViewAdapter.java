@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.R;
@@ -39,12 +38,9 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
             if (this.data.indexOf(uri) < 0) {
                 this.data.add(uri);
                 notifyItemInserted(this.data.size());
-
             }
-
         }
         notifyItemRangeChanged(last_pos, this.data.size());
-        Toast.makeText(context, "Hello " + this.data.size(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
