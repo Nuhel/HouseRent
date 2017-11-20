@@ -8,12 +8,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.example.nuhel.houserent.Adapter.AddPostPopUpRViewAdapter;
 import com.example.nuhel.houserent.Adapter.OwnPostRecyclerViewAdapter;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
@@ -65,6 +69,7 @@ public class UserProfileManageFragment extends Fragment {
     private String postkey;
     private ArrayList<String> downloadLinks;
     private int PLACE_PICKER_REQUEST = 999;
+    private AddPostPopUpRViewAdapter addPostPopUpRViewAdapter;
 
 
     public UserProfileManageFragment() {
@@ -127,6 +132,7 @@ public class UserProfileManageFragment extends Fragment {
                     .normalImageRes(R.drawable.addposticon)
                     .normalText("Butter Doesn't fly!");
 
+
             bmb.addBuilder(builder);
         }
 
@@ -135,10 +141,29 @@ public class UserProfileManageFragment extends Fragment {
 
     private void showdialog() {
 
-        /*View view = LayoutInflater.from(getContext()).inflate(R.layout.gallery,null);
-        PopupWindow popupWindow = new PopupWindow(view,200,200);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.addpostpopup, null);
+
+        ImageButton button = view.findViewById(R.id.imageaddBtn);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
+                startActivityForResult(i, 200);
+            }
+        });
+
+        addPostPopUpRViewAdapter = new AddPostPopUpRViewAdapter(getContext());
+
+        RecyclerView recyclerView = view.findViewById(R.id.horizontal_recycler_view);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        recyclerView.setAdapter(addPostPopUpRViewAdapter);
+
+        PopupWindow popupWindow = new PopupWindow(view, 700, 700);
         popupWindow.setTouchable(true);
-        popupWindow.showAtLocation(this.view, Gravity.CENTER,0,0);*/
+        popupWindow.showAtLocation(this.view, Gravity.CENTER, 0, 0);
     }
 
     private void initializePostIds() {
@@ -238,6 +263,7 @@ public class UserProfileManageFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(getContext(), "Called", Toast.LENGTH_SHORT).show();
         imagePaths.clear();
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
             String[] links = data.getStringArrayExtra("all_path");
@@ -254,6 +280,8 @@ public class UserProfileManageFragment extends Fragment {
                 }
                 imagePaths.add(Uri.fromFile(thumb_bitmap));
             }
+
+            addPostPopUpRViewAdapter.UpdateView(imagePaths);
         }
 
         if (requestCode == PLACE_PICKER_REQUEST) {

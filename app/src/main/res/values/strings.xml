@@ -14,4 +14,30 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="map_api_key">AIzaSyCzwc24YHNy7hTLLwPaSiKSvJojNjSqA_I</string>
+
+
+    <array name="Area">
+        <item>Zindabazar</item>
+        <item>Chowhatta</item>
+        <item>ShahiEidgah</item>
+        <item>Rikabibazar</item>
+        <item>Modhu Sohid</item>
+        <item>Kajal Shah</item>
+        <item>Nobab Road</item>
+        <item>Bagbari</item>
+        <item>Shamimabad</item>
+    </array>
+    <array name="Flat">
+        <item>Flat</item>
+        <item>Duplex</item>
+
+        <item>Single_room</item>
+
+    </array>
+    <array name="Family">
+        <item>Family</item>
+        <item>Mess</item>
+        <item>Sublate</item>
+    </array>
+
 </resources>

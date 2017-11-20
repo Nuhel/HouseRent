@@ -2,4 +2,332 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"></LinearLayout>
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <Spinner
+                    style="@android:style/Widget.Holo.Light.Spinner"
+                    android:layout_width="110dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:entries="@array/Area"
+                    android:gravity="center"
+                    android:textAlignment="center">
+
+                </Spinner>
+
+                <Spinner
+                    style="@android:style/Widget.Holo.Light.Spinner"
+                    android:layout_width="110dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:entries="@array/Flat"
+                    android:gravity="center"
+                    android:textAlignment="center">
+
+                </Spinner>
+
+                <Spinner
+                    style="@android:style/Widget.Holo.Light.Spinner"
+                    android:layout_width="110dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:entries="@array/Family"
+                    android:gravity="center"
+                    android:textAlignment="center">
+
+                </Spinner>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_bedRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:text="Bedroom"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/No_bedRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="yahoo"
+                        android:inputType="number"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_kitchen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:text="Kitchen"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/no_kitchen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="yahoo"
+                        android:inputType="number"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/txt_velcony"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:text="Velcony"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/No_velcony"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="yahoo"
+                        android:inputType="number"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_bathRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:text="Bathroom"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/No_bathRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="yahoo"
+                        android:inputType="number"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_rent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:text="Rent/mon"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/edit_rent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="yahoo"
+                        android:inputType="number"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_advance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:text="Advance"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/edit_advance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="yahoo"
+                        android:inputType="number"
+                        android:shadowDx="1"
+                        android:shadowDy="-1"
+                        android:shadowRadius="2"
+                        android:textSize="15sp"
+                        android:textStyle="italic" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/title_of_the_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:hint="Add the title of Your post......."
+                android:shadowDx="1"
+                android:shadowDy="-1"
+                android:shadowRadius="2"
+                android:textSize="15sp"
+                android:textStyle="italic" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txt_add_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:text="Add Image "
+                    android:textSize="15sp"
+                    android:textStyle="italic" />
+
+                <ImageButton
+                    android:id="@+id/imageaddBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/ic_menu_add" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/horizontal_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
