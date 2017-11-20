@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.CustomImagePicker.Action;
 import com.example.nuhel.houserent.R;
+import com.example.nuhel.houserent.View.PopUps.AddPostPopUpView;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -82,9 +84,11 @@ public class UserProfileManageFragment extends Fragment {
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
         imagePaths = new ArrayList<>();
         downloadLinks = new ArrayList<>();
-        //initializePostIds();
+
         view = view == null ? inflater.inflate(R.layout.user_profile_manage, container, false) : view;
         logOutButton = view.findViewById(R.id.logoutbutton);
+        postButton = view.findViewById(R.id.postbutton);
+
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +97,6 @@ public class UserProfileManageFragment extends Fragment {
             }
         });
 
-        postButton = view.findViewById(R.id.postbutton);
 
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,10 +131,7 @@ public class UserProfileManageFragment extends Fragment {
                 public void onBoomButtonClick(int index) {
                     showdialog();
                 }
-            })
-                    .normalImageRes(R.drawable.addposticon)
-                    .normalText("Butter Doesn't fly!");
-
+            }).normalImageRes(R.drawable.addposticon).normalText("Butter Doesn't fly!");
 
             bmb.addBuilder(builder);
         }
@@ -141,9 +141,22 @@ public class UserProfileManageFragment extends Fragment {
 
     private void showdialog() {
 
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.addpostpopup, null);
+        AddPostPopUpView addPostPopUpView = new AddPostPopUpView(getContext());
 
-        ImageButton button = view.findViewById(R.id.imageaddBtn);
+        View view = addPostPopUpView.getView();
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+
+        final PopupWindow popupWindow = new PopupWindow(view, width, height);
+        popupWindow.setTouchable(true);
+        popupWindow.showAtLocation(this.view, Gravity.CENTER, 0, 0);
+
+        ImageButton button = addPostPopUpView.getGellaryPickerbtn();
+
+        ImageButton clsbtn = addPostPopUpView.getClosebtn();
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +166,15 @@ public class UserProfileManageFragment extends Fragment {
             }
         });
 
+
+        clsbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+
         addPostPopUpRViewAdapter = new AddPostPopUpRViewAdapter(getContext());
 
         RecyclerView recyclerView = view.findViewById(R.id.horizontal_recycler_view);
@@ -161,9 +183,7 @@ public class UserProfileManageFragment extends Fragment {
 
         recyclerView.setAdapter(addPostPopUpRViewAdapter);
 
-        PopupWindow popupWindow = new PopupWindow(view, 700, 700);
-        popupWindow.setTouchable(true);
-        popupWindow.showAtLocation(this.view, Gravity.CENTER, 0, 0);
+
     }
 
     private void initializePostIds() {
@@ -246,7 +266,6 @@ public class UserProfileManageFragment extends Fragment {
         });
 
     }
-
 
     private void getPlace() {
         try {
