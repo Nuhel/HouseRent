@@ -25,6 +25,8 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
     private Context context;
     private Button bt;
 
+    private ArrayList<Uri> original_imagePaths;
+
 
     public AddPostPopUpRViewAdapter(Context context) {
         this.data = new ArrayList<>();
@@ -32,15 +34,19 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
     }
 
 
-    public void UpdateView(ArrayList<Uri> data) {
-        int last_pos = this.data.size();
+    public void updateView(ArrayList<Uri> data, ArrayList<Uri> original_imagePaths) {
+
+        int old_pos = data.size();
         for (Uri uri : data) {
-            if (this.data.indexOf(uri) < 0) {
-                this.data.add(uri);
-                notifyItemInserted(this.data.size());
-            }
+            this.data.add(uri);
+            notifyItemInserted(this.data.size());
         }
-        notifyItemRangeChanged(last_pos, this.data.size());
+
+        this.original_imagePaths = original_imagePaths;
+
+        int last_pos = data.size();
+
+        notifyItemRangeChanged(old_pos, last_pos);
     }
 
     @Override
@@ -60,9 +66,8 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
             public void onClick(View v) {
                 data.remove(position);
                 notifyItemRemoved(position);
-                //this line below gives you the animation and also updates the
-                //list items after the deleted item
                 notifyItemRangeChanged(position, getItemCount());
+                original_imagePaths.remove(position);
 
             }
         });

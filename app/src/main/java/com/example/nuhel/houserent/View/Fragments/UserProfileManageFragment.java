@@ -66,7 +66,10 @@ public class UserProfileManageFragment extends Fragment {
     private DatabaseReference my_postlist_ref;
     private DatabaseReference all_postlist_ref;
     private String userUid;
-    private ArrayList<Uri> imagePaths;
+
+    private ArrayList<Uri> converted_imagePaths;
+    private ArrayList<Uri> original_imagePaths;
+
     private int cu = 0;
     private String postkey;
     private ArrayList<String> downloadLinks;
@@ -82,7 +85,9 @@ public class UserProfileManageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         userUid = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
-        imagePaths = new ArrayList<>();
+
+        original_imagePaths = new ArrayList<>();
+        converted_imagePaths = new ArrayList<>();
         downloadLinks = new ArrayList<>();
 
         view = view == null ? inflater.inflate(R.layout.user_profile_manage, container, false) : view;
@@ -235,7 +240,7 @@ public class UserProfileManageFragment extends Fragment {
         //Storage Reference for main image
         StorageReference filepath;
         filepath = mStorageRef.child("post_images").child(postkey + "imgno-" + cu + ".jpeg");
-        filepath.putFile(imagePaths.get(cu)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        filepath.putFile(converted_imagePaths.get(cu)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -244,7 +249,7 @@ public class UserProfileManageFragment extends Fragment {
 
                 }
                 cu++;
-                if (cu <= imagePaths.size() - 1) {
+                if (cu <= converted_imagePaths.size() - 1) {
                     Toast.makeText(getContext(), "Task Done " + String.valueOf(cu), Toast.LENGTH_SHORT).show();
                     uploadImages();
                 } else {
@@ -282,33 +287,48 @@ public class UserProfileManageFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        imagePaths.clear();
+
+        converted_imagePaths.clear();
+        int old_index = original_imagePaths.size();
+
+
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
             String[] links = data.getStringArrayExtra("all_path");
+
             for (int a = 0; a <= links.length - 1; a++) {
-                File thumb_bitmap = null;
-                try {
-                    thumb_bitmap = new Compressor(getContext())
-                            .setQuality(75)
-                            .setMaxWidth(200)
-                            .setMaxHeight(200)
-                            .compressToFile(new File(links[a]));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                Uri orguri = Uri.parse(links[a]);
+                if (!original_imagePaths.contains(orguri)) {
+                    original_imagePaths.add(orguri);
+
+                    File thumb_bitmap = null;
+                    try {
+                        thumb_bitmap = new Compressor(getContext())
+                                .setQuality(75)
+                                .setMaxWidth(200)
+                                .setMaxHeight(200)
+                                .compressToFile(new File(links[a]));
+
+
+                        Uri uri = Uri.fromFile(thumb_bitmap);
+                        converted_imagePaths.add(uri);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                imagePaths.add(Uri.fromFile(thumb_bitmap));
+
+                addPostPopUpRViewAdapter.updateView(converted_imagePaths, original_imagePaths);
             }
 
-            addPostPopUpRViewAdapter.UpdateView(imagePaths);
-        }
-
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, getContext());
-                String toastMsg = String.format("Place: %s", place.getLatLng());
-                Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
+            if (requestCode == PLACE_PICKER_REQUEST) {
+                if (resultCode == Activity.RESULT_OK) {
+                    Place place = PlacePicker.getPlace(data, getContext());
+                    String toastMsg = String.format("Place: %s", place.getLatLng());
+                    Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
+                }
             }
         }
+
     }
 
 }
