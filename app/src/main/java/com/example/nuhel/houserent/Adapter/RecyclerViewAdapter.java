@@ -185,11 +185,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View v) {
-
             for (Uri uri : imageList) {
                 Toast.makeText(context, "" + uri.toString(), Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 }

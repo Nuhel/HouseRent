@@ -8,23 +8,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/logoutbutton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
-
-        <Button
-            android:id="@+id/postbutton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
-
-        <Button
-            android:id="@+id/multiImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="MultiImage" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"

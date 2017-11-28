@@ -13,7 +13,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -60,8 +59,6 @@ public class UserProfileManageFragment extends Fragment {
     private static StorageReference mStorageRef;
     private RecyclerView recyclerView;
     private View view;
-    private Button logOutButton;
-    private Button postButton;
     private ArrayList<String> postIds;
     private DatabaseReference my_postlist_ref;
     private DatabaseReference all_postlist_ref;
@@ -91,35 +88,10 @@ public class UserProfileManageFragment extends Fragment {
         downloadLinks = new ArrayList<>();
 
         view = view == null ? inflater.inflate(R.layout.user_profile_manage, container, false) : view;
-        logOutButton = view.findViewById(R.id.logoutbutton);
-        postButton = view.findViewById(R.id.postbutton);
 
-        logOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GetFirebaseAuthInstance.getFirebaseAuthInstance().signOut();
-                ((FragmentControllerAfterUserLog_Reg) getActivity()).setFrag();
-            }
-        });
-
-
-        postButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadLinks.clear();
-                uploadImages();
-            }
-        });
 
         initializePostIds();
 
-        view.findViewById(R.id.multiImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
-                startActivityForResult(i, 200);
-            }
-        });
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -131,12 +103,33 @@ public class UserProfileManageFragment extends Fragment {
         bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
         bmb.setButtonEnum(TextOutsideCircle);
         for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+
+
             TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder().listener(new OnBMClickListener() {
                 @Override
                 public void onBoomButtonClick(int index) {
-                    showdialog();
+
+                    switch (index) {
+                        case 0:
+                            GetFirebaseAuthInstance.getFirebaseAuthInstance().signOut();
+                            ((FragmentControllerAfterUserLog_Reg) getActivity()).setFrag();
+                            break;
+
+                        case 1:
+                            showDialog();
+                        case 2:
+                    }
+
                 }
-            }).normalImageRes(R.drawable.addposticon).normalText("Butter Doesn't fly!");
+            });
+
+            if (i == 0) {
+                builder.normalImageRes(R.drawable.addposticon).normalText("Log Out");
+            } else if (i == 1) {
+                builder.normalImageRes(R.drawable.addposticon).normalText("Add New Post");
+            } else if (i == 2) {
+                builder.normalImageRes(R.drawable.addposticon).normalText("Change Profile \n Photo");
+            }
 
             bmb.addBuilder(builder);
         }
@@ -144,7 +137,7 @@ public class UserProfileManageFragment extends Fragment {
         return view;
     }
 
-    private void showdialog() {
+    private void showDialog() {
 
         AddPostPopUpView addPostPopUpView = new AddPostPopUpView(getContext());
 
@@ -188,7 +181,6 @@ public class UserProfileManageFragment extends Fragment {
 
         recyclerView.setAdapter(addPostPopUpRViewAdapter);
 
-
     }
 
     private void initializePostIds() {
@@ -202,7 +194,8 @@ public class UserProfileManageFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                int index = postIds.indexOf(dataSnapshot.getKey());
+                postIds.set(index, dataSnapshot.getKey());
             }
 
             @Override
@@ -237,15 +230,17 @@ public class UserProfileManageFragment extends Fragment {
     private void uploadImages() {
         postkey = postkeyGenerator();
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        //Storage Reference for main image
-        StorageReference filepath;
-        filepath = mStorageRef.child("post_images").child(postkey + "imgno-" + cu + ".jpeg");
+
+
+        StorageReference filepath = mStorageRef.child("post_images").child(postkey + "imgno-" + cu + ".jpeg");
+
         filepath.putFile(converted_imagePaths.get(cu)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
                     downloadLinks.add(task.getResult().getDownloadUrl().toString());
                 } else {
+                    Toast.makeText(getContext(), "Image Upload Failed", Toast.LENGTH_SHORT).show();
 
                 }
                 cu++;
@@ -289,16 +284,15 @@ public class UserProfileManageFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         converted_imagePaths.clear();
-        int old_index = original_imagePaths.size();
-
 
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
             String[] links = data.getStringArrayExtra("all_path");
 
             for (int a = 0; a <= links.length - 1; a++) {
                 Uri orguri = Uri.parse(links[a]);
-                if (!original_imagePaths.contains(orguri)) {
-                    original_imagePaths.add(orguri);
+
+
+                if (original_imagePaths.indexOf(orguri) < 0) {
 
                     File thumb_bitmap = null;
                     try {
@@ -310,6 +304,7 @@ public class UserProfileManageFragment extends Fragment {
 
 
                         Uri uri = Uri.fromFile(thumb_bitmap);
+                        original_imagePaths.add(orguri);
                         converted_imagePaths.add(uri);
 
                     } catch (IOException e) {
@@ -317,15 +312,17 @@ public class UserProfileManageFragment extends Fragment {
                     }
                 }
 
-                addPostPopUpRViewAdapter.updateView(converted_imagePaths, original_imagePaths);
+
             }
 
-            if (requestCode == PLACE_PICKER_REQUEST) {
-                if (resultCode == Activity.RESULT_OK) {
-                    Place place = PlacePicker.getPlace(data, getContext());
-                    String toastMsg = String.format("Place: %s", place.getLatLng());
-                    Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
-                }
+            addPostPopUpRViewAdapter.updateView(converted_imagePaths, original_imagePaths);
+
+
+        } else if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, getContext());
+                String toastMsg = String.format("Place: %s", place.getLatLng());
+                Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
             }
         }
 

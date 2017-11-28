@@ -196,7 +196,6 @@ public class MainActivity extends AppCompatActivity
                             setImage(drawableResourceId, nav_userPhoto);
                         }
 
-
                     } else {
                         setImage(drawableResourceId, nav_userPhoto);
                     }

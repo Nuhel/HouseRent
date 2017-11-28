@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpRViewAdapter.MyViewHolder> {
 
-    private ArrayList<Uri> data;
+    private ArrayList<Uri> converted_imagePaths;
     private Context context;
     private Button bt;
 
@@ -29,22 +29,22 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
 
 
     public AddPostPopUpRViewAdapter(Context context) {
-        this.data = new ArrayList<>();
+        this.converted_imagePaths = new ArrayList<>();
         this.context = context;
     }
 
 
     public void updateView(ArrayList<Uri> data, ArrayList<Uri> original_imagePaths) {
 
-        int old_pos = data.size();
+
+        int old_pos = converted_imagePaths.size();
         for (Uri uri : data) {
-            this.data.add(uri);
-            notifyItemInserted(this.data.size());
+            this.converted_imagePaths.add(uri);
         }
 
         this.original_imagePaths = original_imagePaths;
 
-        int last_pos = data.size();
+        int last_pos = converted_imagePaths.size();
 
         notifyItemRangeChanged(old_pos, last_pos);
     }
@@ -58,13 +58,14 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        Glide.with(context).load(data.get(position)).into(holder.imageView);
+
+        Glide.with(context).load(converted_imagePaths.get(position)).into(holder.imageView);
 
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
 
             public void onClick(View v) {
-                data.remove(position);
+                converted_imagePaths.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, getItemCount());
                 original_imagePaths.remove(position);
@@ -75,14 +76,14 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return converted_imagePaths.size();
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
-        ImageButton btn;
+        private ImageView imageView;
+        private ImageButton btn;
 
         public MyViewHolder(View view) {
             super(view);
