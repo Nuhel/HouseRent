@@ -1,7 +1,9 @@
 package com.example.nuhel.houserent.View.Fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,8 +15,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.example.nuhel.houserent.Adapter.AddPostPopUpRViewAdapter;
@@ -141,16 +144,31 @@ public class UserProfileManageFragment extends Fragment {
 
         AddPostPopUpView addPostPopUpView = new AddPostPopUpView(getContext());
 
-        View view = addPostPopUpView.getView();
+        View dview = addPostPopUpView.getView();
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
 
-        final PopupWindow popupWindow = new PopupWindow(view, width, height);
-        popupWindow.setTouchable(true);
-        popupWindow.showAtLocation(this.view, Gravity.CENTER, 0, 0);
+
+        final Dialog dialog2 = new Dialog(getContext());
+
+
+        dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog2.getWindow().setBackgroundDrawable(null);
+        dialog2.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog2.setContentView(dview);
+        WindowManager.LayoutParams lp = dialog2.getWindow().getAttributes();
+        Window window = dialog2.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+        lp.gravity = Gravity.CENTER;
+
+
+        dialog2.show();
 
         ImageButton button = addPostPopUpView.getGellaryPickerbtn();
 
@@ -168,14 +186,14 @@ public class UserProfileManageFragment extends Fragment {
         clsbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindow.dismiss();
+                dialog2.dismiss();
             }
         });
 
 
         addPostPopUpRViewAdapter = new AddPostPopUpRViewAdapter(getContext());
 
-        RecyclerView recyclerView = view.findViewById(R.id.horizontal_recycler_view);
+        RecyclerView recyclerView = dview.findViewById(R.id.horizontal_recycler_view);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -287,13 +305,9 @@ public class UserProfileManageFragment extends Fragment {
 
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
             String[] links = data.getStringArrayExtra("all_path");
-
             for (int a = 0; a <= links.length - 1; a++) {
                 Uri orguri = Uri.parse(links[a]);
-
-
                 if (original_imagePaths.indexOf(orguri) < 0) {
-
                     File thumb_bitmap = null;
                     try {
                         thumb_bitmap = new Compressor(getContext())
@@ -301,8 +315,6 @@ public class UserProfileManageFragment extends Fragment {
                                 .setMaxWidth(200)
                                 .setMaxHeight(200)
                                 .compressToFile(new File(links[a]));
-
-
                         Uri uri = Uri.fromFile(thumb_bitmap);
                         original_imagePaths.add(orguri);
                         converted_imagePaths.add(uri);

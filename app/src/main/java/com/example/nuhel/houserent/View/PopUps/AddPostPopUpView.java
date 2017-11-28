@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.nuhel.houserent.R;
 
@@ -43,14 +44,17 @@ public class AddPostPopUpView implements
             spinner_house_type = view.findViewById(R.id.spinner_house_type);
 
 
-            ArrayAdapter aa = new ArrayAdapter(context, android.R.layout.simple_spinner_item, country);
-            aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<String>(context,
+                            android.R.layout.simple_spinner_item, country);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             //Setting the ArrayAdapter data on the Spinner
             spinner_house_type.setOnItemSelectedListener(this);
-            spinner_house_type.setAdapter(aa);
+            spinner_house_type.setAdapter(adapter);
 
-            //spinner_rentType.setOnItemSelectedListener(this);
-            //spinner_rentType.setAdapter(aa);
+
+            spinner_rentType.setOnItemSelectedListener(this);
+            spinner_rentType.setAdapter(adapter);
         }
     }
 
@@ -69,6 +73,12 @@ public class AddPostPopUpView implements
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        if (parent.getId() == R.id.spinner_rentType) {
+            Toast.makeText(context, "Rent", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "House", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
