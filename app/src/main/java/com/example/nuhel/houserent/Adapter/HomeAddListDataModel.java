@@ -18,6 +18,7 @@ public class HomeAddListDataModel {
 
 
     public HomeAddListDataModel() {
+
         imagelist = new ArrayList<>();
     }
 

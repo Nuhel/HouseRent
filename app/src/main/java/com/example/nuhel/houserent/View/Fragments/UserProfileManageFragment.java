@@ -1,22 +1,27 @@
 package com.example.nuhel.houserent.View.Fragments;
 
-import android.app.Activity;
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -25,6 +30,7 @@ import com.example.nuhel.houserent.Adapter.OwnPostRecyclerViewAdapter;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
+import com.example.nuhel.houserent.Controller.ProjectKeys;
 import com.example.nuhel.houserent.CustomImagePicker.Action;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.PopUps.AddPostPopUpView;
@@ -35,6 +41,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,19 +54,23 @@ import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import id.zelory.compressor.Compressor;
 
+import static android.app.Activity.RESULT_OK;
 import static com.nightonke.boommenu.ButtonEnum.TextOutsideCircle;
 
 public class UserProfileManageFragment extends Fragment {
 
-    private static StorageReference mStorageRef;
+
     private RecyclerView recyclerView;
     private View view;
     private ArrayList<String> postIds;
@@ -75,6 +86,12 @@ public class UserProfileManageFragment extends Fragment {
     private ArrayList<String> downloadLinks;
     private int PLACE_PICKER_REQUEST = 999;
     private AddPostPopUpRViewAdapter addPostPopUpRViewAdapter;
+
+    private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth = null;
+
+    private StorageReference filepath;
 
 
     public UserProfileManageFragment() {
@@ -102,11 +119,10 @@ public class UserProfileManageFragment extends Fragment {
 
         BoomMenuButton bmb = view.findViewById(R.id.bmb);
 
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_1);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_4_1);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_4_1);
         bmb.setButtonEnum(TextOutsideCircle);
         for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
-
 
             TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder().listener(new OnBMClickListener() {
                 @Override
@@ -119,8 +135,15 @@ public class UserProfileManageFragment extends Fragment {
                             break;
 
                         case 1:
-                            showDialog();
+                            showConfirmDialog("Sure to delete user photo?");
+                            break;
                         case 2:
+                            showConfirmDialog("Sure to change user photo?");
+                            break;
+
+                        case 3:
+                            showMakePostDialog();
+                            break;
                     }
 
                 }
@@ -129,9 +152,11 @@ public class UserProfileManageFragment extends Fragment {
             if (i == 0) {
                 builder.normalImageRes(R.drawable.addposticon).normalText("Log Out");
             } else if (i == 1) {
-                builder.normalImageRes(R.drawable.addposticon).normalText("Add New Post");
+                builder.normalImageRes(R.drawable.addposticon).normalText("Delete Profile Picture");
             } else if (i == 2) {
-                builder.normalImageRes(R.drawable.addposticon).normalText("Change Profile \n Photo");
+                builder.normalImageRes(R.drawable.addposticon).normalText("Change Profile Photo");
+            } else {
+                builder.normalImageRes(R.drawable.addposticon).normalText("Add New Post");
             }
 
             bmb.addBuilder(builder);
@@ -140,17 +165,11 @@ public class UserProfileManageFragment extends Fragment {
         return view;
     }
 
-    private void showDialog() {
+    private void showMakePostDialog() {
 
         AddPostPopUpView addPostPopUpView = new AddPostPopUpView(getContext());
 
         View dview = addPostPopUpView.getView();
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
-        int width = displayMetrics.widthPixels;
-
 
         final Dialog dialog2 = new Dialog(getContext());
 
@@ -170,15 +189,19 @@ public class UserProfileManageFragment extends Fragment {
 
         dialog2.show();
 
-        ImageButton button = addPostPopUpView.getGellaryPickerbtn();
+        ImageButton gellaryPickerbtn = addPostPopUpView.getGellaryPickerbtn();
 
         ImageButton clsbtn = addPostPopUpView.getClosebtn();
 
-        button.setOnClickListener(new View.OnClickListener() {
+        gellaryPickerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
-                startActivityForResult(i, 200);
+
+                if (isStoragePermissionGranted()) {
+                    Intent i = new Intent(Action.ACTION_MULTIPLE_PICK);
+                    startActivityForResult(i, 200);
+                }
+
             }
         });
 
@@ -187,6 +210,16 @@ public class UserProfileManageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dialog2.dismiss();
+            }
+        });
+
+
+        Button postbtn = addPostPopUpView.getPostButton();
+
+        postbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImages(addPostPopUpRViewAdapter.getconverted_imagePaths());
             }
         });
 
@@ -235,7 +268,7 @@ public class UserProfileManageFragment extends Fragment {
         });
     }
 
-    private String postkeyGenerator() {
+    private String postKeyGenerator() {
         if (postIds.size() > 0) {
             int number = Integer.parseInt(postIds.get(postIds.size() - 1).split("PostNo-")[1]) + 1;
             return userUid + "PostNo-" + number;
@@ -245,14 +278,14 @@ public class UserProfileManageFragment extends Fragment {
     }
 
 
-    private void uploadImages() {
-        postkey = postkeyGenerator();
+    private void uploadImages(ArrayList<Uri> converted_imagePaths) {
+        final ArrayList<Uri> uplopad_images = converted_imagePaths;
+        postkey = postKeyGenerator();
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
 
         StorageReference filepath = mStorageRef.child("post_images").child(postkey + "imgno-" + cu + ".jpeg");
 
-        filepath.putFile(converted_imagePaths.get(cu)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        filepath.putFile(uplopad_images.get(cu)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -262,9 +295,9 @@ public class UserProfileManageFragment extends Fragment {
 
                 }
                 cu++;
-                if (cu <= converted_imagePaths.size() - 1) {
+                if (cu <= uplopad_images.size() - 1) {
                     Toast.makeText(getContext(), "Task Done " + String.valueOf(cu), Toast.LENGTH_SHORT).show();
-                    uploadImages();
+                    uploadImages(uplopad_images);
                 } else {
                     Toast.makeText(getContext(), "Task Done Uploaded", Toast.LENGTH_SHORT).show();
 
@@ -301,43 +334,172 @@ public class UserProfileManageFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        converted_imagePaths.clear();
-
-        if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
-            String[] links = data.getStringArrayExtra("all_path");
-            for (int a = 0; a <= links.length - 1; a++) {
-                Uri orguri = Uri.parse(links[a]);
-                if (original_imagePaths.indexOf(orguri) < 0) {
-                    File thumb_bitmap = null;
-                    try {
-                        thumb_bitmap = new Compressor(getContext())
-                                .setQuality(75)
-                                .setMaxWidth(200)
-                                .setMaxHeight(200)
-                                .compressToFile(new File(links[a]));
-                        Uri uri = Uri.fromFile(thumb_bitmap);
+        if (requestCode == 200) {
+            converted_imagePaths.clear();
+            if (resultCode == RESULT_OK) {
+                String[] links = data.getStringArrayExtra("all_path");
+                for (int a = 0; a <= links.length - 1; a++) {
+                    Uri orguri = Uri.parse(links[a]);
+                    if (original_imagePaths.indexOf(orguri) < 0) {
                         original_imagePaths.add(orguri);
-                        converted_imagePaths.add(uri);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        converted_imagePaths.add(getCompressedFileUri(orguri));
                     }
                 }
 
-
+                addPostPopUpRViewAdapter.updateView(converted_imagePaths, original_imagePaths);
             }
-
-            addPostPopUpRViewAdapter.updateView(converted_imagePaths, original_imagePaths);
 
 
         } else if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, getContext());
                 String toastMsg = String.format("Place: %s", place.getLatLng());
                 Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                updateUserPhoto(getCompressedFileUri(result.getUri()));
+            } else {
+                Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
             }
         }
 
     }
 
+    private Uri getCompressedFileUri(Uri path) {
+        File thumb_bitmap = null;
+        try {
+            thumb_bitmap = new Compressor(getContext())
+                    .setQuality(75)
+                    .setMaxWidth(200)
+                    .setMaxHeight(200)
+                    .compressToFile(new File(path.getPath()));
+            Uri uri = Uri.fromFile(thumb_bitmap);
+            return uri;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private void deleteUserPhoto() {
+
+        Toast.makeText(getContext(), "Deleting Profile photo\nYou Will Notify Shortly", Toast.LENGTH_SHORT).show();
+        mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mDatabase = GetFirebaseInstance.GetInstance().getReference().child(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid());
+        filepath = mStorageRef.child(ProjectKeys.PROFILEIMAGEDIR).child(mAuth.getCurrentUser().getUid() + ProjectKeys.JPGIMAGEFORMAT);
+
+        filepath.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Map map = new HashMap();
+                map.put(ProjectKeys.USERDIRPROFILEIMAGE, ProjectKeys.NOIMG);
+                mDatabase = GetFirebaseInstance.GetInstance().getReference().child("User").child(mAuth.getCurrentUser().getUid());
+                mDatabase.updateChildren(map);
+                Toast.makeText(getContext(), "Prfile Photo deleted succesfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+    private void updateUserPhoto(Uri imageUri) {
+        mAuth = GetFirebaseAuthInstance.getFirebaseAuthInstance();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mDatabase = GetFirebaseInstance.GetInstance().getReference().child(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid());
+        filepath = mStorageRef.child(ProjectKeys.PROFILEIMAGEDIR).child(mAuth.getCurrentUser().getUid() + ProjectKeys.JPGIMAGEFORMAT);
+        Toast.makeText(getContext(), "Updating Profile Photo\nPlease Wait", Toast.LENGTH_SHORT).show();
+        filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()) {
+                    final String download_url = task.getResult().getDownloadUrl().toString();
+                    Map map = new HashMap();
+                    map.put(ProjectKeys.USERDIRPROFILEIMAGE, download_url);
+                    mDatabase = GetFirebaseInstance.GetInstance().getReference().child(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid());
+                    mDatabase.updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getContext(), "Profile Photo Updated", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "Profile Photo Upload Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    private void showConfirmDialog(String title) {
+
+        int flag = 0;
+
+        if (title.contains("delete")) {
+            flag = 0;
+        } else if (title.contains("change")) {
+            flag = 1;
+        }
+
+        final int fl = flag;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(title)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (fl == 0) {
+                            deleteUserPhoto();
+                        } else if (fl == 1) {
+
+                            CropImage.activity()
+                                    .setAspectRatio(1, 1)
+                                    .setGuidelines(CropImageView.Guidelines.ON)
+                                    .setMinCropWindowSize(500, 500)
+                                    .start(getActivity());
+
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if ((getActivity()).checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+        }
+    }
 }

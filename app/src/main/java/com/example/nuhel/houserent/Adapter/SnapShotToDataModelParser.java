@@ -34,6 +34,7 @@ public class SnapShotToDataModelParser {
 
             model.setRoom(roomsText);
             model.setType(typeText);
+            model.setPost_id(ds.getKey());
 
         } catch (Exception e) {
 

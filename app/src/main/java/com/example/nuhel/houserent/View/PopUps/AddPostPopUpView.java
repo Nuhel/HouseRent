@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ public class AddPostPopUpView implements
     private Spinner spinner_house_type;
     private Spinner spinner3;
 
+    private Button post_ad_button;
+
     public AddPostPopUpView(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -43,6 +46,8 @@ public class AddPostPopUpView implements
             spinner_rentType = view.findViewById(R.id.spinner_rentType);
             spinner_house_type = view.findViewById(R.id.spinner_house_type);
 
+            post_ad_button = view.findViewById(R.id.post_ad_button);
+
 
             ArrayAdapter<String> adapter =
                     new ArrayAdapter<String>(context,
@@ -57,6 +62,12 @@ public class AddPostPopUpView implements
             spinner_rentType.setAdapter(adapter);
         }
     }
+
+
+    public Button getPostButton() {
+        return post_ad_button;
+    }
+
 
 
     public ImageButton getGellaryPickerbtn() {

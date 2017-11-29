@@ -247,6 +247,12 @@
 
             </HorizontalScrollView>
 
+            <Button
+                android:id="@+id/post_ad_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Post" />
+
 
         </LinearLayout>
     </ScrollView>

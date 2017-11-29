@@ -169,10 +169,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             imageList = data.getImagelist();
             if (data != null) {
-                Glide.with(context)
-                        .load(data.getImagelist().get(0))
-                        .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
-                        .into(imageView);
+
+                if (imageList.size() > 0) {
+                    Glide.with(context)
+                            .load(imageList.get(0))
+                            .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
+                            .into(imageView);
+                }
+
                 String areaText = data.getArea() == null ? "" : data.getArea();
                 String roomsText = data.getArea() == null ? "" : data.getRoom();
                 String typeText = data.getArea() == null ? "" : data.getType();

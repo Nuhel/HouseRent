@@ -78,7 +78,9 @@ public class MainActivity extends AppCompatActivity
     private static DatabaseReference mDatabase;
     private static int drawableResourceId;
 
-    ImageLoader imageLoader;
+    private ImageLoader imageLoader;
+
+    private Menu menu;
 
 
     @Override
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
+        menu = navigationView.getMenu();
 
         nav_userPhoto = header.findViewById(R.id.nav_userphoto);
         nav_username = header.findViewById(R.id.nav_username);
@@ -182,9 +185,7 @@ public class MainActivity extends AppCompatActivity
             GetFirebaseInstance.GetInstance().getReference(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid().toString()).child(ProjectKeys.USERDIRPROFILEIMAGE).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                     if (dataSnapshot != null) {
-
                         try {
                             String imagepath = dataSnapshot.getValue().toString();
                             if (imagepath.equals(ProjectKeys.NOIMG)) {
@@ -284,6 +285,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
@@ -332,6 +334,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setAddListFrag() {
+
+        if (menu != null) {
+            menu.getItem(0).setChecked(true);
+        }
+
+
         adListFragment = adListFragment == null ? new AdList() : adListFragment;
         Runnable runnable = new Runnable() {
             @Override

@@ -49,6 +49,10 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
         notifyItemRangeChanged(old_pos, last_pos);
     }
 
+    public ArrayList<Uri> getconverted_imagePaths() {
+        return converted_imagePaths;
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_rec_view_list, parent, false);
