@@ -1,7 +1,9 @@
 package com.example.nuhel.houserent.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,13 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.Controller.ProjectKeys;
 import com.example.nuhel.houserent.R;
+import com.example.nuhel.houserent.View.AdDescActivity;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -153,6 +155,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private TextView area, room, type;
         private int position;
         private ArrayList<Uri> imageList;
+        private HomeAddListDataModel model;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -167,6 +170,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public void bindData(HomeAddListDataModel data, int position) {
             this.position = position;
 
+            model = data;
             imageList = data.getImagelist();
             if (data != null) {
 
@@ -189,9 +193,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View v) {
-            for (Uri uri : imageList) {
-                Toast.makeText(context, "" + uri.toString(), Toast.LENGTH_SHORT).show();
-            }
+
+            Intent intent = new Intent(context, AdDescActivity.class);
+            Bundle b = new Bundle();
+            b.putParcelable("dataa", model);
+            intent.putExtras(b);
+            context.startActivity(intent);
+
+
         }
     }
 }

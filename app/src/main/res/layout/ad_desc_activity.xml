@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.nuhel.houserent.View.AdDescActivity">
+
+    <com.ihsanbal.wiv.AspectRatioLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:aspect_ratio="1"
+        app:dimension_to_adjust="height">
+
+        <com.ihsanbal.wiv.MediaView
+            android:id="@+id/media.view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="14dp"
+            app:background_color="@android:color/white"
+            app:corner_radii="15dp"
+            app:divider_size="2dp" />
+
+    </com.ihsanbal.wiv.AspectRatioLayout>
+
+</LinearLayout>
