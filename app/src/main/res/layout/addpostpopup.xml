@@ -7,7 +7,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="18dp"
         android:background="@android:color/white">
 
@@ -25,7 +25,6 @@
                 android:textSize="15sp"
                 android:textStyle="italic" />
 
-
             <EditText
                 android:id="@+id/desc_of_post"
                 android:layout_width="match_parent"
@@ -40,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <Spinner
                     android:id="@+id/spinner_rentType"
                     style="@android:style/Widget.Holo.Light.Spinner"
@@ -66,17 +66,7 @@
 
                 </Spinner>
 
-                <Spinner
-                    style="@android:style/Widget.Holo.Light.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textAlignment="center">
 
-                </Spinner>
             </LinearLayout>
 
             <LinearLayout
@@ -246,6 +236,27 @@
                 </LinearLayout>
 
             </HorizontalScrollView>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/map"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp" />
+
+                <Button
+                    android:id="@+id/search_place"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="Search Place" />
+
+            </RelativeLayout>
+
 
             <Button
                 android:id="@+id/post_ad_button"

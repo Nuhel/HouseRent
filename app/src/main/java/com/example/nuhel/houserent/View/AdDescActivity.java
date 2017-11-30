@@ -2,8 +2,9 @@ package com.example.nuhel.houserent.View;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.view.View;
 
 import com.example.nuhel.houserent.Adapter.HomeAddListDataModel;
 import com.example.nuhel.houserent.R;
@@ -27,16 +28,20 @@ public class AdDescActivity extends AppCompatActivity {
             m = b.getParcelable("dataa");
         }
 
-        if (m != null)
-            Toast.makeText(this, "" + m.getArea(), Toast.LENGTH_SHORT).show();
         MediaView mediaView = findViewById(R.id.media_view);
+
+        mediaView.setOnMediaClickListener(new MediaView.OnMediaClickListener() {
+            @Override
+            public void onMediaClick(View view, int index) {
+                Snackbar.make(view, "onClickIndex :" + index, Snackbar.LENGTH_LONG).show();
+            }
+        });
 
         ArrayList<Uri> imageList = m.getImagelist();
 
 
         ArrayList<String> medias = new ArrayList<>();
         for (Uri uri : imageList) {
-            Toast.makeText(getBaseContext(), "" + uri.toString(), Toast.LENGTH_SHORT).show();
             medias.add(uri.toString());
         }
         mediaView.setMedias(medias);

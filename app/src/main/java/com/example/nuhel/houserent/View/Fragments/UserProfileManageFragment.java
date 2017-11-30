@@ -93,6 +93,8 @@ public class UserProfileManageFragment extends Fragment {
 
     private StorageReference filepath;
 
+    private AddPostPopUpView addPostPopUpView;
+
 
     public UserProfileManageFragment() {
         // Required empty public constructor
@@ -100,6 +102,8 @@ public class UserProfileManageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
         userUid = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
 
@@ -167,9 +171,9 @@ public class UserProfileManageFragment extends Fragment {
 
     private void showMakePostDialog() {
 
-        AddPostPopUpView addPostPopUpView = new AddPostPopUpView(getContext());
+        addPostPopUpView = new AddPostPopUpView(getContext(), getActivity().getSupportFragmentManager());
 
-        View dview = addPostPopUpView.getView();
+        final View dview = addPostPopUpView.getView();
 
         final Dialog dialog2 = new Dialog(getContext());
 
@@ -206,10 +210,22 @@ public class UserProfileManageFragment extends Fragment {
         });
 
 
+        addPostPopUpView.getSearchButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPlace();
+            }
+        });
+
+
         clsbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                dialog2.cancel();
                 dialog2.dismiss();
+                addPostPopUpView = null;
+
             }
         });
 
@@ -355,6 +371,12 @@ public class UserProfileManageFragment extends Fragment {
                 Place place = PlacePicker.getPlace(data, getContext());
                 String toastMsg = String.format("Place: %s", place.getLatLng());
                 Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
+
+
+                if (addPostPopUpView != null) {
+
+                    addPostPopUpView.updateMap(place.getLatLng(), place.getName().toString());
+                }
             }
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
@@ -476,6 +498,7 @@ public class UserProfileManageFragment extends Fragment {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+
 
     }
 
