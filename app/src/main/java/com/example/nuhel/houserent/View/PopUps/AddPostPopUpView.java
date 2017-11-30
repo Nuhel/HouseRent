@@ -1,13 +1,7 @@
 package com.example.nuhel.houserent.View.PopUps;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +15,6 @@ import com.example.nuhel.houserent.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -35,7 +28,7 @@ public class AddPostPopUpView implements
         AdapterView.OnItemSelectedListener, OnMapReadyCallback {
 
     String[] country = {"India", "USA", "China", "Japan", "Other",};
-    private ImageButton closebtn;
+
     private ImageButton gellaryPicker;
     private LayoutInflater inflater;
     private View view;
@@ -65,7 +58,7 @@ public class AddPostPopUpView implements
         if (view == null) {
             view = inflater.inflate(R.layout.addpostpopup, null);
             gellaryPicker = view.findViewById(R.id.imageaddBtn);
-            closebtn = view.findViewById(R.id.popUpClose);
+            //closebtn = view.findViewById(R.id.popUpClose);
 
             spinner_rentType = view.findViewById(R.id.spinner_rentType);
             spinner_house_type = view.findViewById(R.id.spinner_house_type);
@@ -86,7 +79,7 @@ public class AddPostPopUpView implements
             spinner_rentType.setAdapter(adapter);
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
                     SupportMapFragment mapFragment = (SupportMapFragment) manager
@@ -104,7 +97,7 @@ public class AddPostPopUpView implements
                 mapFragment.getMapAsync(this);
 
             }
-
+*/
 
             search_place = view.findViewById(R.id.search_place);
 
@@ -129,9 +122,6 @@ public class AddPostPopUpView implements
         return gellaryPicker;
     }
 
-    public ImageButton getClosebtn() {
-        return closebtn;
-    }
 
     public View getView() {
         return view;
@@ -156,13 +146,9 @@ public class AddPostPopUpView implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
-
         LatLng latLng = new LatLng(24.8998373f, 91.826884f);
         updateMap(latLng, "Sylhet");
-
-
         Toast.makeText(context, "On map ready", Toast.LENGTH_SHORT).show();
     }
 
