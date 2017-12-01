@@ -3,6 +3,8 @@ package com.example.nuhel.houserent.View;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nuhel.houserent.Adapter.AddPostPopUpRViewAdapter;
@@ -71,6 +74,14 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
     private int cu = 0;
     private String postkey;
 
+    private TextView place_nameShow;
+
+
+    private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
+    private GradientDrawable activeGradient = new GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM, activeColors);
+    private int Redius = 20;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +124,7 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
 
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(getBaseContext(),
-                        android.R.layout.simple_spinner_item, houseType);
+                        R.layout.spinner_base, houseType);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         spinner_house_type.setOnItemSelectedListener(this);
@@ -122,12 +133,16 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
 
         ArrayAdapter<String> adapter2 =
                 new ArrayAdapter<String>(getBaseContext(),
-                        android.R.layout.simple_spinner_item, rentType);
+                        R.layout.spinner_base, rentType);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_rentType.setOnItemSelectedListener(this);
         spinner_rentType.setAdapter(adapter2);
 
         addPostPopUpRViewAdapter = new AddPostPopUpRViewAdapter(getBaseContext());
+
+
+        place_nameShow = findViewById(R.id.place_nameShow);
+
 
         RecyclerView recyclerView = findViewById(R.id.horizontal_recycler_view);
 
@@ -143,6 +158,10 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                 uploadImages(addPostPopUpRViewAdapter.getconverted_imagePaths());
             }
         });
+
+
+        activeGradient.setCornerRadius(Redius);
+        postbtn.setBackground(activeGradient);
 
     }
 
@@ -218,6 +237,7 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                 Place place = PlacePicker.getPlace(data, getBaseContext());
                 String toastMsg = String.format("Place: %s", place.getLatLng());
                 Toast.makeText(getBaseContext(), toastMsg, Toast.LENGTH_LONG).show();
+                place_nameShow.setText("Add Place : " + place.getName());
 
             }
         }
