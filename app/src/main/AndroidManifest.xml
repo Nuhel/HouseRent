@@ -49,7 +49,9 @@
             android:value="AIzaSyAWzjjXYD3SvyHmiNEe9GsB53r6ymfQ9H8" />
 
         <activity android:name=".View.AdDescActivity" />
-        <activity android:name=".View.AddPostActivity"></activity>
+        <activity
+            android:name=".View.AddPostActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

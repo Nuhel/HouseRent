@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -51,6 +52,7 @@ import id.zelory.compressor.Compressor;
 
 public class AddPostActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    private static Toolbar toolbar;
     String[] houseType = {"Duplex", "Flat", "Unit", "Sublate"};
     String[] rentType = {"Bachelor", "Family", "Anys"};
     private ImageButton gellaryPicker;
@@ -63,7 +65,6 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
     private DatabaseReference my_postlist_ref;
     private DatabaseReference all_postlist_ref;
     private Button search_place;
-
     private int PLACE_PICKER_REQUEST = 999;
     private ArrayList<Uri> converted_imagePaths;
     private ArrayList<Uri> original_imagePaths;
@@ -86,6 +87,9 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addpostpopup);
+
+        toolbar = findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
 
         userUid = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
@@ -162,6 +166,9 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
 
         activeGradient.setCornerRadius(Redius);
         postbtn.setBackground(activeGradient);
+        toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
+
 
     }
 
