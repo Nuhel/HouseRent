@@ -210,7 +210,6 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
                                 deletePost();
                             } else if (fl == 1) {
 
-
                             }
                         }
                     })
@@ -222,7 +221,6 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
                     });
             AlertDialog alert = builder.create();
             alert.show();
-
         }
 
 
@@ -240,17 +238,12 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         // Uh-oh, an error occurred!
-
                     }
                 });
             }
-
-
             GetFirebaseInstance.GetInstance().getReference(ProjectKeys.ALLADSDIR).child(post_id).removeValue();
-
         }
 
     }
-
 
 }

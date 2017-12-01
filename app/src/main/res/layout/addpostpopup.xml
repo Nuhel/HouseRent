@@ -7,11 +7,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
-        android:layout_weight="4"
-        android:background="@android:color/white">
+        android:layout_marginRight="18dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +42,6 @@
 
                 <Spinner
                     android:id="@+id/spinner_rentType"
-                    style="@android:style/Widget.Holo.Light.Spinner"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="2dp"
@@ -57,7 +54,6 @@
 
                 <Spinner
                     android:id="@+id/spinner_house_type"
-                    style="@android:style/Widget.Holo.Light.Spinner"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="2dp"
@@ -216,7 +212,7 @@
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:scrollbars="horizontal">
 
                 <LinearLayout
@@ -224,17 +220,18 @@
                     android:layout_height="fill_parent"
                     android:orientation="horizontal">
 
+                    <ImageButton
+                        android:id="@+id/imageaddBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:drawable/ic_menu_add" />
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/horizontal_recycler_view"
                         android:layout_width="wrap_content"
                         android:layout_height="150dp" />
 
 
-                    <ImageButton
-                        android:id="@+id/imageaddBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:drawable/ic_menu_add" />
                 </LinearLayout>
 
             </HorizontalScrollView>
@@ -242,18 +239,13 @@
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
-        android:layout_weight="3">
+        android:orientation="horizontal">
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/map"
-            class="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
 
         <Button
             android:id="@+id/search_place"
@@ -262,15 +254,14 @@
             android:layout_alignParentRight="true"
             android:text="Search Place" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/post_ad_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
-        android:layout_weight="1"
         android:text="Post" />
 
 

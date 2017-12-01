@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,14 +29,6 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
@@ -55,31 +46,26 @@ import java.util.HashMap;
 
 import id.zelory.compressor.Compressor;
 
-public class AddPostActivity extends AppCompatActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
+public class AddPostActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    String[] country = {"India", "USA", "China", "Japan", "Other",};
+    String[] houseType = {"Duplex", "Flat", "Unit", "Sublate"};
+    String[] rentType = {"Bachelor", "Family", "Anys"};
     private ImageButton gellaryPicker;
     private Spinner spinner_rentType;
     private Spinner spinner_house_type;
-    private Spinner spinner3;
     private ArrayList<String> postIds;
     private Button post_ad_button;
     private String userUid;
     private ArrayList<String> downloadLinks;
     private DatabaseReference my_postlist_ref;
     private DatabaseReference all_postlist_ref;
-
-    private GoogleMap mMap;
     private Button search_place;
 
-    private Marker marker;
     private int PLACE_PICKER_REQUEST = 999;
-
     private ArrayList<Uri> converted_imagePaths;
     private ArrayList<Uri> original_imagePaths;
 
     private AddPostPopUpRViewAdapter addPostPopUpRViewAdapter;
-
     private StorageReference mStorageRef;
 
     private int cu = 0;
@@ -127,35 +113,19 @@ public class AddPostActivity extends AppCompatActivity implements OnMapReadyCall
 
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(getBaseContext(),
-                        android.R.layout.simple_spinner_item, country);
+                        android.R.layout.simple_spinner_item, houseType);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         spinner_house_type.setOnItemSelectedListener(this);
         spinner_house_type.setAdapter(adapter);
 
 
+        ArrayAdapter<String> adapter2 =
+                new ArrayAdapter<String>(getBaseContext(),
+                        android.R.layout.simple_spinner_item, rentType);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_rentType.setOnItemSelectedListener(this);
-        spinner_rentType.setAdapter(adapter);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.map);
-                mapFragment.getMapAsync(this);
-
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
-
-
-        } else {
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-
-        }
-
+        spinner_rentType.setAdapter(adapter2);
 
         addPostPopUpRViewAdapter = new AddPostPopUpRViewAdapter(getBaseContext());
 
@@ -192,14 +162,6 @@ public class AddPostActivity extends AppCompatActivity implements OnMapReadyCall
 
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        LatLng latLng = new LatLng(24.8998373f, 91.826884f);
-        updateMap(latLng, "Sylhet");
-        Toast.makeText(getBaseContext(), "On map ready", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         if (parent.getId() == R.id.spinner_rentType) {
@@ -216,17 +178,6 @@ public class AddPostActivity extends AppCompatActivity implements OnMapReadyCall
 
     }
 
-    public void updateMap(LatLng latLng, String name) {
-        if (marker != null) {
-            marker.remove();
-        }
-
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(name)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-    }
 
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -268,11 +219,6 @@ public class AddPostActivity extends AppCompatActivity implements OnMapReadyCall
                 String toastMsg = String.format("Place: %s", place.getLatLng());
                 Toast.makeText(getBaseContext(), toastMsg, Toast.LENGTH_LONG).show();
 
-
-                if (mMap != null) {
-
-                    updateMap(place.getLatLng(), place.getName().toString());
-                }
             }
         }
 

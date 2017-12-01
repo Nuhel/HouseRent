@@ -83,9 +83,7 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
         return converted_imagePaths.size();
     }
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
         private ImageView imageView;
         private ImageButton btn;
 
