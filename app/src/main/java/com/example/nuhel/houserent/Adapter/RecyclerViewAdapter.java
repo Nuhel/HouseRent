@@ -134,7 +134,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.main_ads_list_item, null);
+        View v = LayoutInflater.from(context).inflate(R.layout.main_ads_list_item, null, false);
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        v.setLayoutParams(lp);
         return new ViewHolder(v);
     }
 
@@ -171,8 +173,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             this.position = position;
 
             model = data;
-            imageList = data.getImagelist();
+
             if (data != null) {
+                imageList = data.getImagelist();
 
                 if (imageList.size() > 0) {
                     Glide.with(context)

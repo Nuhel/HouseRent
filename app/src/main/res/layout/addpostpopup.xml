@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradientbackgroundloginsingup"
     android:orientation="vertical"
     tools:context="com.example.nuhel.houserent.View.AddPostActivity">
-
 
     <include
         android:id="@+id/app_bar"
@@ -16,6 +15,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/app_bar"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp">
 
@@ -25,7 +25,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/title_of_the_post"
+                android:id="@+id/titlet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Add the title of Your post......."
@@ -118,7 +118,7 @@
                     android:textStyle="italic" />
 
                 <EditText
-                    android:id="@+id/No_bedRoom"
+                    android:id="@+id/no_bedRoom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -169,7 +169,7 @@
                     android:textStyle="italic" />
 
                 <EditText
-                    android:id="@+id/No_velcony"
+                    android:id="@+id/no_velcony"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -195,7 +195,7 @@
                     android:textStyle="italic" />
 
                 <EditText
-                    android:id="@+id/No_bathRoom"
+                    android:id="@+id/no_bathRoom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -259,10 +259,10 @@
             </LinearLayout>
 
 
-            <HorizontalScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="horizontal">
+                android:layout_marginBottom="55dp">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -296,7 +296,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="150dp" />
                 </LinearLayout>
-            </HorizontalScrollView>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -304,9 +304,10 @@
     <Button
         android:id="@+id/post_ad_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
         android:text="Post" />
 
-</LinearLayout>
+</RelativeLayout>

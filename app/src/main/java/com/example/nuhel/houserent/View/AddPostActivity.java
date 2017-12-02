@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -74,8 +75,8 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
 
     private int cu = 0;
     private String postkey;
-
     private TextView place_nameShow;
+    private Button postButton;
 
 
     private int[] activeColors = {Color.parseColor("#6adcc8"), Color.parseColor("#5dcfc0"), Color.parseColor("#50c3b8")};
@@ -83,23 +84,67 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             GradientDrawable.Orientation.TOP_BOTTOM, activeColors);
     private int Redius = 20;
 
+
+    private EditText ted;
+    private EditText ded;
+    private EditText bed;
+    private EditText ked;
+    private EditText ved;
+    private EditText baed;
+    private EditText red;
+    private EditText aed;
+
+    private Place place;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addpostpopup);
-
-        toolbar = findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-
         userUid = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
         all_postlist_ref = GetFirebaseInstance.GetInstance().getReference("HomeAddList");
+
+        initViews();
+        setSupportActionBar(toolbar);
+        initActions();
+        initializePostIds();
+
+        RecyclerView recyclerView = findViewById(R.id.horizontal_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(addPostPopUpRViewAdapter);
+
+
+    }
+
+    private void initViews() {
+
+
+        ted = findViewById(R.id.titlet);
+        ded = findViewById(R.id.desc_of_post);
+        bed = findViewById(R.id.no_bedRoom);
+        ked = findViewById(R.id.no_kitchen);
+        ved = findViewById(R.id.no_velcony);
+        baed = findViewById(R.id.no_bathRoom);
+        red = findViewById(R.id.edit_rent);
+        aed = findViewById(R.id.edit_advance);
 
         original_imagePaths = new ArrayList<>();
         converted_imagePaths = new ArrayList<>();
         downloadLinks = new ArrayList<>();
-
+        toolbar = findViewById(R.id.app_bar);
         gellaryPicker = findViewById(R.id.imageaddBtn);
+        search_place = findViewById(R.id.search_place);
+        spinner_rentType = findViewById(R.id.spinner_rentType);
+        spinner_house_type = findViewById(R.id.spinner_house_type);
+        post_ad_button = findViewById(R.id.post_ad_button);
+        place_nameShow = findViewById(R.id.place_nameShow);
+        postButton = findViewById(R.id.post_ad_button);
+        activeGradient.setCornerRadius(Redius);
+        postButton.setBackground(activeGradient);
+        addPostPopUpRViewAdapter = new AddPostPopUpRViewAdapter(getBaseContext());
+    }
 
+
+    private void initActions() {
         gellaryPicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,21 +154,12 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                 }
             }
         });
-
-        initializePostIds();
-
-        findViewById(R.id.search_place).setOnClickListener(new View.OnClickListener() {
+        search_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getPlace();
             }
         });
-
-
-        spinner_rentType = findViewById(R.id.spinner_rentType);
-        spinner_house_type = findViewById(R.id.spinner_house_type);
-
-        post_ad_button = findViewById(R.id.post_ad_button);
 
 
         ArrayAdapter<String> adapter =
@@ -141,35 +177,12 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_rentType.setOnItemSelectedListener(this);
         spinner_rentType.setAdapter(adapter2);
-
-        addPostPopUpRViewAdapter = new AddPostPopUpRViewAdapter(getBaseContext());
-
-
-        place_nameShow = findViewById(R.id.place_nameShow);
-
-
-        RecyclerView recyclerView = findViewById(R.id.horizontal_recycler_view);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false));
-
-        recyclerView.setAdapter(addPostPopUpRViewAdapter);
-
-        Button postbtn = findViewById(R.id.post_ad_button);
-
-        postbtn.setOnClickListener(new View.OnClickListener() {
+        postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 uploadImages(addPostPopUpRViewAdapter.getconverted_imagePaths());
             }
         });
-
-
-        activeGradient.setCornerRadius(Redius);
-        postbtn.setBackground(activeGradient);
-        toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
-
-
     }
 
 
@@ -245,6 +258,7 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                 String toastMsg = String.format("Place: %s", place.getLatLng());
                 Toast.makeText(getBaseContext(), toastMsg, Toast.LENGTH_LONG).show();
                 place_nameShow.setText("Add Place : " + place.getName());
+                this.place = place;
 
             }
         }
@@ -272,6 +286,76 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
 
     private void uploadImages(ArrayList<Uri> converted_imagePaths) {
         final ArrayList<Uri> uplopad_images = converted_imagePaths;
+
+        final String title = ted.getText().toString();
+        final String desc = ded.getText().toString();
+        final String bedroom = bed.getText().toString();
+        final String kitchen = ked.getText().toString();
+        final String bathroom = baed.getText().toString();
+        String rent = red.getText().toString();
+        String houseType2;
+        String rentTypes2;
+        String area2;
+
+        String lat2;
+        String lan2;
+        final String advance = aed.getText().toString();
+
+        if (place == null)
+            return;
+        else {
+            houseType2 = spinner_house_type.getSelectedItem().toString();
+            rentTypes2 = spinner_rentType.getSelectedItem().toString();
+            area2 = place.getName().toString();
+
+            lat2 = String.valueOf(place.getLatLng().latitude);
+            lan2 = String.valueOf(place.getLatLng().longitude);
+        }
+
+        final String houseType = houseType2;
+        final String rentTypes = rentTypes2;
+        final String area = area2;
+
+        final String lat = lat2;
+        final String lan = lan2;
+
+
+        if (converted_imagePaths.size() == 0) {
+            Toast.makeText(this, "Please select minimum one image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        if (title.length() == 0) {
+            Toast.makeText(this, "You must provide a title", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (desc.length() == 0) {
+            Toast.makeText(this, "You must provide description", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (bedroom.length() == 0) {
+            Toast.makeText(this, "You must provide number of bedroom", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (kitchen.length() == 0) {
+            Toast.makeText(this, "You must provide number of kitchen", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (bathroom.length() == 0) {
+            Toast.makeText(this, "You must provide number of bathroom", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (rent.length() == 0) {
+            Toast.makeText(this, "You must provide your rent", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (advance.length() == 0) {
+            Toast.makeText(this, "You must provide amount of advance", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         postkey = postKeyGenerator();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -294,7 +378,17 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                     Toast.makeText(getBaseContext(), "Task Done Uploaded", Toast.LENGTH_SHORT).show();
 
                     HashMap<String, String> map1 = new HashMap<>();
-                    map1.put("area", "nuh");
+                    map1.put("title", title);
+                    map1.put("desc", desc);
+                    map1.put("bedroom", bedroom);
+                    map1.put("kitchen", kitchen);
+                    map1.put("bathroom", bathroom);
+                    map1.put("advance", advance);
+                    map1.put("type", houseType);
+                    map1.put("rentType", rentTypes);
+                    map1.put("area", area);
+                    map1.put("lat", lat);
+                    map1.put("lan", lan);
 
                     for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {
                         map1.put("image" + (looper + 1), downloadLinks.get(looper));
