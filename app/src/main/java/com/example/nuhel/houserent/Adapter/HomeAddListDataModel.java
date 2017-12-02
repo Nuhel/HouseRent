@@ -24,10 +24,18 @@ public class HomeAddListDataModel implements Parcelable {
         }
     };
     private ArrayList<Uri> imagelist;
-    private String Area;
-    private String Room;
-    private String Type;
+    private String area;
+    private String type;
     private String Post_id;
+    private String title;
+    private String desc;
+    private String bedroom;
+    private String kitchen;
+    private String bathroom;
+    private String lat;
+    private String lan;
+    private String housetype;
+    private String rentType;
 
     public HomeAddListDataModel() {
 
@@ -36,19 +44,107 @@ public class HomeAddListDataModel implements Parcelable {
 
     protected HomeAddListDataModel(Parcel in) {
         imagelist = in.createTypedArrayList(Uri.CREATOR);
-        Area = in.readString();
-        Room = in.readString();
-        Type = in.readString();
+        area = in.readString();
+        type = in.readString();
         Post_id = in.readString();
+        title = in.readString();
+        desc = in.readString();
+        bedroom = in.readString();
+        kitchen = in.readString();
+        bathroom = in.readString();
+        lat = in.readString();
+        lan = in.readString();
+        housetype = in.readString();
+        rentType = in.readString();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getBedroom() {
+        return bedroom;
+    }
+
+    public void setBedroom(String bedroom) {
+        this.bedroom = bedroom;
+    }
+
+    public String getKitchen() {
+        return kitchen;
+    }
+
+    public void setKitchen(String kitchen) {
+        this.kitchen = kitchen;
+    }
+
+    public String getBathroom() {
+        return bathroom;
+    }
+
+    public void setBathroom(String bathroom) {
+        this.bathroom = bathroom;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLan() {
+        return lan;
+    }
+
+    public void setLan(String lan) {
+        this.lan = lan;
+    }
+
+    public String getHousetype() {
+        return housetype;
+    }
+
+    public void setHousetype(String housetype) {
+        this.housetype = housetype;
+    }
+
+    public String getRentType() {
+        return rentType;
+    }
+
+    public void setRentType(String rentType) {
+        this.rentType = rentType;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(imagelist);
-        dest.writeString(Area);
-        dest.writeString(Room);
-        dest.writeString(Type);
+        dest.writeString(area);
+        dest.writeString(type);
         dest.writeString(Post_id);
+        dest.writeString(title);
+        dest.writeString(desc);
+        dest.writeString(bedroom);
+        dest.writeString(kitchen);
+        dest.writeString(bathroom);
+        dest.writeString(lat);
+        dest.writeString(lan);
+        dest.writeString(housetype);
+        dest.writeString(rentType);
     }
 
     @Override
@@ -73,26 +169,19 @@ public class HomeAddListDataModel implements Parcelable {
     }
 
     public String getArea() {
-        return Area;
+        return area;
     }
 
     public void setArea(String area) {
-        Area = area;
+        this.area = area;
     }
 
-    public String getRoom() {
-        return Room;
-    }
-
-    public void setRoom(String room) {
-        Room = room;
-    }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        Type = type;
+        type = type;
     }
 }

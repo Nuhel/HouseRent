@@ -292,7 +292,8 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
         final String bedroom = bed.getText().toString();
         final String kitchen = ked.getText().toString();
         final String bathroom = baed.getText().toString();
-        String rent = red.getText().toString();
+
+        final String rent = red.getText().toString();
         String houseType2;
         String rentTypes2;
         String area2;
@@ -355,7 +356,6 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             return;
         }
 
-
         postkey = postKeyGenerator();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -389,15 +389,15 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                     map1.put("area", area);
                     map1.put("lat", lat);
                     map1.put("lan", lan);
+                    map1.put("rent", rent);
+
+                    String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
+                    map1.put("owner", id);
 
                     for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {
                         map1.put("image" + (looper + 1), downloadLinks.get(looper));
                     }
-                    String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
-                    map1.put("owner", id);
                     all_postlist_ref.child(postkey).setValue(map1);
-                    my_postlist_ref.child(postkey).setValue("f");
-
                 }
             }
         });

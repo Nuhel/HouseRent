@@ -19,11 +19,18 @@ public class SnapShotToDataModelParser {
             String areaText = ds.child(ProjectKeys.AREARKEY).getValue() == null ? "" : ds.child(ProjectKeys.AREARKEY).getValue().toString();
             String roomsText = ds.child(ProjectKeys.ROOMKEY).getValue() == null ? "" : ds.child(ProjectKeys.ROOMKEY).getValue().toString();
             String typeText = ds.child(ProjectKeys.TYPEKEY).getValue() == null ? "" : ds.child(ProjectKeys.TYPEKEY).getValue().toString();
+            String title = ds.child("title").getValue() == null ? "" : ds.child("title").getValue().toString();
+            String kitchen = ds.child("kitchen").getValue() == null ? "" : ds.child("kitchen").getValue().toString();
+            String bathrooms = ds.child("bathroom").getValue() == null ? "" : ds.child("bathroom").getValue().toString();
+            String advance = ds.child("advance").getValue() == null ? "" : ds.child("advance").getValue().toString();
+            String rentType = ds.child("rentType").getValue() == null ? "" : ds.child("rentType").getValue().toString();
+            String rent = ds.child("rent").getValue() == null ? "" : ds.child("rent").getValue().toString();
+            String lat = ds.child("lat").getValue() == null ? "" : ds.child("lat").getValue().toString();
+            String lan = ds.child("lan").getValue() == null ? "" : ds.child("lan").getValue().toString();
 
             model = new HomeAddListDataModel();
             model.setPost_id(ds.getKey());
             model.setArea(areaText);
-
 
             for (DataSnapshot d : ds.getChildren()) {
                 String key = d.getKey();
@@ -32,7 +39,7 @@ public class SnapShotToDataModelParser {
                 }
             }
 
-            model.setRoom(roomsText);
+            model.setBedroom(roomsText);
             model.setType(typeText);
             model.setPost_id(ds.getKey());
 

@@ -185,7 +185,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
 
                 String areaText = data.getArea() == null ? "" : data.getArea();
-                String roomsText = data.getArea() == null ? "" : data.getRoom();
+                String roomsText = data.getArea() == null ? "" : data.getBedroom();
                 String typeText = data.getArea() == null ? "" : data.getType();
 
                 area.setText("Area: " + areaText);

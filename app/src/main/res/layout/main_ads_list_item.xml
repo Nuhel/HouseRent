@@ -31,31 +31,34 @@
 
 
         <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/adsListAreaText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Area: Sylhet" />
+            <TextView
+                android:id="@+id/adsListAreaText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Area: Sylhet"
+                android:textColor="#ffffff" />
 
-                <TextView
-                    android:id="@+id/adsListRoomText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Room: 10" />
+            <TextView
+                android:id="@+id/adsListRoomText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Room: 10"
+                android:textColor="#ffffff" />
 
-                <TextView
-                    android:id="@+id/adsListTypeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Type: Flat" />
+            <TextView
+                android:id="@+id/adsListTypeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Type: Flat"
+                android:textColor="#ffffff" />
         </LinearLayout>
     </LinearLayout>
 
