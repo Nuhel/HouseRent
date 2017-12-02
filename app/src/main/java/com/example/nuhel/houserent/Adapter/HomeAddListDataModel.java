@@ -36,6 +36,8 @@ public class HomeAddListDataModel implements Parcelable {
     private String lan;
     private String housetype;
     private String rentType;
+    private String rent;
+    private String advance;
 
     public HomeAddListDataModel() {
 
@@ -56,6 +58,24 @@ public class HomeAddListDataModel implements Parcelable {
         lan = in.readString();
         housetype = in.readString();
         rentType = in.readString();
+        advance = in.readString();
+        rent = in.readString();
+    }
+
+    public String getRent() {
+        return rent;
+    }
+
+    public void setRent(String rent) {
+        this.rent = rent;
+    }
+
+    public String getAdvance() {
+        return advance;
+    }
+
+    public void setAdvance(String advance) {
+        this.advance = advance;
     }
 
     public String getTitle() {
@@ -145,6 +165,8 @@ public class HomeAddListDataModel implements Parcelable {
         dest.writeString(lan);
         dest.writeString(housetype);
         dest.writeString(rentType);
+        dest.writeString(advance);
+        dest.writeString(rent);
     }
 
     @Override
@@ -182,6 +204,6 @@ public class HomeAddListDataModel implements Parcelable {
     }
 
     public void setType(String type) {
-        type = type;
+        this.type = type;
     }
 }

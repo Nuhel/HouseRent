@@ -161,7 +161,6 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(getBaseContext(),
                         R.layout.spinner_base, houseType);
@@ -184,7 +183,6 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             }
         });
     }
-
 
     private void getPlace() {
         try {
@@ -217,7 +215,6 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
-
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -231,7 +228,6 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             return true;
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -326,7 +322,6 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             return;
         }
 
-
         if (title.length() == 0) {
             Toast.makeText(this, "You must provide a title", Toast.LENGTH_SHORT).show();
             return;
@@ -376,7 +371,6 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                     uploadImages(uplopad_images);
                 } else {
                     Toast.makeText(getBaseContext(), "Task Done Uploaded", Toast.LENGTH_SHORT).show();
-
                     HashMap<String, String> map1 = new HashMap<>();
                     map1.put("title", title);
                     map1.put("desc", desc);
@@ -390,20 +384,17 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                     map1.put("lat", lat);
                     map1.put("lan", lan);
                     map1.put("rent", rent);
-
                     String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
                     map1.put("owner", id);
-
                     for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {
                         map1.put("image" + (looper + 1), downloadLinks.get(looper));
                     }
                     all_postlist_ref.child(postkey).setValue(map1);
+                    Toast.makeText(AddPostActivity.this, "" + houseType, Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
-
 
     private void initializePostIds() {
         postIds = new ArrayList<>();
