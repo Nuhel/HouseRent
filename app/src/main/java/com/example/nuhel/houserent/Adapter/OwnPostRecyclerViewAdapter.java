@@ -163,7 +163,7 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
 
 
                 String areaText = data.getArea() == null ? "" : data.getArea();
-                String roomsText = data.getArea() == null ? "" : data.getRoom();
+                String roomsText = data.getArea() == null ? "" : data.getBedroom();
                 String typeText = data.getArea() == null ? "" : data.getType();
                 post_id = data.getPost_id() == null ? "" : data.getPost_id();
 
