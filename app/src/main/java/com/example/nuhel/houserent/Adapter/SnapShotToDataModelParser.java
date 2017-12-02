@@ -17,7 +17,7 @@ public class SnapShotToDataModelParser {
         HomeAddListDataModel model = null;
         try {
             String areaText = ds.child(ProjectKeys.AREARKEY).getValue() == null ? "" : ds.child(ProjectKeys.AREARKEY).getValue().toString();
-            String roomsText = ds.child(ProjectKeys.ROOMKEY).getValue() == null ? "" : ds.child(ProjectKeys.ROOMKEY).getValue().toString();
+            String roomsText = ds.child("bedroom").getValue() == null ? "" : ds.child("bedroom").getValue().toString();
             String typeText = ds.child("type").getValue() == null ? "" : ds.child("type").getValue().toString();
             String title = ds.child("title").getValue() == null ? "" : ds.child("title").getValue().toString();
             String kitchen = ds.child("kitchen").getValue() == null ? "" : ds.child("kitchen").getValue().toString();
@@ -34,7 +34,7 @@ public class SnapShotToDataModelParser {
             model.setArea(areaText);
             model.setBedroom(roomsText);
             model.setType(typeText);
-            model.setType(title);
+            model.setTitle(title);
             model.setKitchen(kitchen);
             model.setBathroom(bathrooms);
             model.setAdvance(advance);
@@ -43,15 +43,12 @@ public class SnapShotToDataModelParser {
             model.setLat(lat);
             model.setLan(lan);
 
-
-
             for (DataSnapshot d : ds.getChildren()) {
                 String key = d.getKey();
                 if (key.contains("image")) {
                     model.setImagelist(Uri.parse(d.getValue().toString()));
                 }
             }
-
 
         } catch (Exception e) {
 

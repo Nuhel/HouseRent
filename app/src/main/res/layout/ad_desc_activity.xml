@@ -9,10 +9,9 @@
     <com.ihsanbal.wiv.AspectRatioLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:background="#cf4444"
         app:aspect_ratio="1"
         app:dimension_to_adjust="height">
-
         <com.ihsanbal.wiv.MediaView
             android:id="@+id/media.view"
             android:layout_width="match_parent"
@@ -21,7 +20,6 @@
             app:background_color="@android:color/white"
             app:corner_radii="15dp"
             app:divider_size="2dp" />
-
     </com.ihsanbal.wiv.AspectRatioLayout>
 
 </LinearLayout>

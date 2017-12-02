@@ -43,6 +43,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,8 +94,9 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
     private EditText baed;
     private EditText red;
     private EditText aed;
-
     private Place place;
+
+    private CatLoadingView mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -354,6 +356,9 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
         postkey = postKeyGenerator();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
+        mView = new CatLoadingView();
+        mView.show(getSupportFragmentManager(), "Uploading..");
+
         StorageReference filepath = mStorageRef.child("post_images").child(postkey + "imgno-" + cu + ".jpeg");
 
         filepath.putFile(uplopad_images.get(cu)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -390,7 +395,9 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                         map1.put("image" + (looper + 1), downloadLinks.get(looper));
                     }
                     all_postlist_ref.child(postkey).setValue(map1);
-                    Toast.makeText(AddPostActivity.this, "" + houseType, Toast.LENGTH_SHORT).show();
+                    my_postlist_ref.child(postkey).setValue("f");
+                    mView.dismiss();
+                    finish();
                 }
             }
         });

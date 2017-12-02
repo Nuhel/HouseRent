@@ -38,8 +38,6 @@ public class AdDescActivity extends AppCompatActivity {
         });
 
         ArrayList<Uri> imageList = m.getImagelist();
-
-
         ArrayList<String> medias = new ArrayList<>();
         for (Uri uri : imageList) {
             medias.add(uri.toString());

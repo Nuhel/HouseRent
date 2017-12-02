@@ -129,7 +129,6 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
         private String post_id;
 
         private CircleImageView deleteIcon;
-        private CircleImageView editIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -138,12 +137,9 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
             area = itemView.findViewById(R.id.adsListAreaText);
             room = itemView.findViewById(R.id.adsListRoomText);
             type = itemView.findViewById(R.id.adsListTypeText);
-
             deleteIcon = itemView.findViewById(R.id.deleteIcon);
-            editIcon = itemView.findViewById(R.id.editIcon);
 
             deleteIcon.setOnClickListener(this);
-            editIcon.setOnClickListener(this);
 
         }
 
@@ -182,10 +178,6 @@ public class OwnPostRecyclerViewAdapter extends RecyclerView.Adapter<OwnPostRecy
 
                     showConfirmDialog("Sure to delete post?");
 
-                    break;
-
-                case R.id.editIcon:
-                    Toast.makeText(context, "Edit" + post_id, Toast.LENGTH_SHORT).show();
                     break;
             }
         }
