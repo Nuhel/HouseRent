@@ -181,6 +181,8 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mView = new CatLoadingView();
+                mView.show(getSupportFragmentManager(), "Uploading..");
                 uploadImages(addPostPopUpRViewAdapter.getconverted_imagePaths());
             }
         });
@@ -300,8 +302,11 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
         String lan2;
         final String advance = aed.getText().toString();
 
-        if (place == null)
+        if (place == null) {
+            mView.dismiss();
             return;
+        }
+
         else {
             houseType2 = spinner_house_type.getSelectedItem().toString();
             rentTypes2 = spinner_rentType.getSelectedItem().toString();
@@ -321,43 +326,48 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
 
         if (converted_imagePaths.size() == 0) {
             Toast.makeText(this, "Please select minimum one image", Toast.LENGTH_SHORT).show();
+            mView.dismiss();
             return;
         }
 
         if (title.length() == 0) {
             Toast.makeText(this, "You must provide a title", Toast.LENGTH_SHORT).show();
+            mView.dismiss();
             return;
         }
         if (desc.length() == 0) {
             Toast.makeText(this, "You must provide description", Toast.LENGTH_SHORT).show();
+            mView.dismiss();
             return;
         }
         if (bedroom.length() == 0) {
             Toast.makeText(this, "You must provide number of bedroom", Toast.LENGTH_SHORT).show();
+            mView.dismiss();
             return;
         }
         if (kitchen.length() == 0) {
             Toast.makeText(this, "You must provide number of kitchen", Toast.LENGTH_SHORT).show();
+            mView.dismiss();
             return;
         }
         if (bathroom.length() == 0) {
             Toast.makeText(this, "You must provide number of bathroom", Toast.LENGTH_SHORT).show();
+            mView.dismiss();
             return;
         }
         if (rent.length() == 0) {
             Toast.makeText(this, "You must provide your rent", Toast.LENGTH_SHORT).show();
+            mView.dismiss();
             return;
         }
         if (advance.length() == 0) {
             Toast.makeText(this, "You must provide amount of advance", Toast.LENGTH_SHORT).show();
+            mView.dismiss();
             return;
         }
 
         postkey = postKeyGenerator();
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        mView = new CatLoadingView();
-        mView.show(getSupportFragmentManager(), "Uploading..");
 
         StorageReference filepath = mStorageRef.child("post_images").child(postkey + "imgno-" + cu + ".jpeg");
 

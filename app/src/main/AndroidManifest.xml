@@ -51,7 +51,10 @@
         <activity android:name=".View.AdDescActivity" />
         <activity
             android:name=".View.AddPostActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".View.MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

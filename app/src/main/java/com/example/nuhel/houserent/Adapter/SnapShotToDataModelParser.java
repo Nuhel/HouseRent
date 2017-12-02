@@ -27,6 +27,7 @@ public class SnapShotToDataModelParser {
             String rent = ds.child("rent").getValue() == null ? "" : ds.child("rent").getValue().toString();
             String lat = ds.child("lat").getValue() == null ? "" : ds.child("lat").getValue().toString();
             String lan = ds.child("lan").getValue() == null ? "" : ds.child("lan").getValue().toString();
+            String desc = ds.child("desc").getValue() == null ? "" : ds.child("desc").getValue().toString();
 
             model = new HomeAddListDataModel();
 
@@ -42,6 +43,7 @@ public class SnapShotToDataModelParser {
             model.setRent(rent);
             model.setLat(lat);
             model.setLan(lan);
+            model.setDesc(desc);
 
             for (DataSnapshot d : ds.getChildren()) {
                 String key = d.getKey();

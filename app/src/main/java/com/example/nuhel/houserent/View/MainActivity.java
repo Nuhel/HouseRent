@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         menu = navigationView.getMenu();
 
+
+        menu.getItem(3).setIcon(R.drawable.exiticon);
+
         nav_userPhoto = header.findViewById(R.id.nav_userphoto);
         nav_username = header.findViewById(R.id.nav_username);
         nav_user_pic_management = header.findViewById(R.id.nav_user_pic_management);
@@ -153,15 +156,21 @@ public class MainActivity extends AppCompatActivity
                     registrationLoginFragment = new RegistrationLoginFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, registrationLoginFragment)
                             .commit();
+                    menu.getItem(1).setTitle("Signin/Signup");
+                    menu.getItem(1).setIcon(R.drawable.loginicon);
+
 
                 } else {
+
+                    toolbar.setTitle("Manage Account");
                     getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, new UserProfileManageFragment())
                             .commit();
+                    menu.getItem(1).setIcon(R.drawable.profilemanage);
                 }
             }
         };
         if (runnable != null) {
-            toolbar.setTitle("Create Account");
+
             mHandler.post(runnable);
         }
     }
@@ -182,6 +191,8 @@ public class MainActivity extends AppCompatActivity
 
     private void setupUserDisplay() {
         if (mAuth.getCurrentUser() != null) {
+            menu.getItem(1).setTitle("Manage Account");
+            menu.getItem(1).setIcon(R.drawable.profilemanage);
             GetFirebaseInstance.GetInstance().getReference(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid().toString()).child(ProjectKeys.USERDIRPROFILEIMAGE).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -198,6 +209,8 @@ public class MainActivity extends AppCompatActivity
                         }
 
                     } else {
+                        menu.getItem(1).setTitle("SignIn/SignUp");
+                        menu.getItem(1).setIcon(R.drawable.loginicon);
                         setImage(drawableResourceId, nav_userPhoto);
                     }
                 }
@@ -226,8 +239,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -320,12 +331,6 @@ public class MainActivity extends AppCompatActivity
             setAddListFrag();
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         drawer = findViewById(R.id.drawer_layout);
@@ -334,11 +339,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setAddListFrag() {
-
         if (menu != null) {
             menu.getItem(0).setChecked(true);
         }
-
 
         adListFragment = adListFragment == null ? new AdList() : adListFragment;
         Runnable runnable = new Runnable() {
@@ -346,6 +349,7 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 getSupportFragmentManager().beginTransaction().replace(R.id.container_frags, new AdList())
                         .commit();
+                setTitle("Ad List");
             }
         };
 

@@ -38,6 +38,7 @@ public class HomeAddListDataModel implements Parcelable {
     private String rentType;
     private String rent;
     private String advance;
+    private String velcony;
 
     public HomeAddListDataModel() {
 
@@ -60,6 +61,15 @@ public class HomeAddListDataModel implements Parcelable {
         rentType = in.readString();
         advance = in.readString();
         rent = in.readString();
+        velcony = in.readString();
+    }
+
+    public String getVelcony() {
+        return velcony;
+    }
+
+    public void setVelcony(String velcony) {
+        this.velcony = velcony;
     }
 
     public String getRent() {
@@ -167,6 +177,7 @@ public class HomeAddListDataModel implements Parcelable {
         dest.writeString(rentType);
         dest.writeString(advance);
         dest.writeString(rent);
+        dest.writeString(velcony);
     }
 
     @Override
