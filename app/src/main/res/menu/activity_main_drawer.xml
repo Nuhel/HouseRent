@@ -15,10 +15,12 @@
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="About Us" />
+            android:title="Excel Backup" />
+
         <item
             android:id="@+id/exit"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Exit" />
+
     </group>
 </menu>

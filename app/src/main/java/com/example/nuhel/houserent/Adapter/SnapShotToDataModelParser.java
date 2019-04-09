@@ -29,6 +29,9 @@ public class SnapShotToDataModelParser {
             String lan = ds.child("lan").getValue() == null ? "" : ds.child("lan").getValue().toString();
             String desc = ds.child("desc").getValue() == null ? "" : ds.child("desc").getValue().toString();
 
+            String phone = ds.child("phone").getValue() == null ? "" : ds.child("phone").getValue().toString();
+            String email = ds.child("email").getValue() == null ? "" : ds.child("email").getValue().toString();
+
             model = new HomeAddListDataModel();
 
             model.setPost_id(ds.getKey());
@@ -44,6 +47,8 @@ public class SnapShotToDataModelParser {
             model.setLat(lat);
             model.setLan(lan);
             model.setDesc(desc);
+            model.setPhone(phone);
+            model.setEmail(email);
 
             for (DataSnapshot d : ds.getChildren()) {
                 String key = d.getKey();

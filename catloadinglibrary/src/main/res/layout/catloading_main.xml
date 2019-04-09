@@ -60,8 +60,8 @@
                 android:layout_marginTop="12.5dp"
                 android:src="@drawable/eyes" />
         </RelativeLayout>
-    </RelativeLayout>
 
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,5 +74,7 @@
             android:text="L O A D I N G ..."
             android:textColor="#ffffff"
             android:textSize="25sp" />
+
     </LinearLayout>
+
 </LinearLayout>

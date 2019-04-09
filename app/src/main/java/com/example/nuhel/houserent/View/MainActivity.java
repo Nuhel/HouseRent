@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,18 +16,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationSet;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.nuhel.houserent.Adapter.HomeAddListDataModel;
 import com.example.nuhel.houserent.Controller.FragmentControllerAfterUserLog_Reg;
 import com.example.nuhel.houserent.Controller.GetFirebaseAuthInstance;
 import com.example.nuhel.houserent.Controller.GetFirebaseInstance;
 import com.example.nuhel.houserent.Controller.ProjectKeys;
+import com.example.nuhel.houserent.ExcelBackUp;
 import com.example.nuhel.houserent.R;
 import com.example.nuhel.houserent.View.CustomViews.MyAnimations;
 import com.example.nuhel.houserent.View.Fragments.AdList;
@@ -53,6 +58,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -81,6 +87,8 @@ public class MainActivity extends AppCompatActivity
     private ImageLoader imageLoader;
 
     private Menu menu;
+
+
 
 
     @Override
@@ -265,7 +273,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onComplete(Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-                            final String download_url = task.getResult().getDownloadUrl().toString();
+                            final String download_url = task.getResult().toString();
                             Map map = new HashMap();
                             map.put(ProjectKeys.USERDIRPROFILEIMAGE, download_url);
                             mDatabase = GetFirebaseInstance.GetInstance().getReference().child(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid());
@@ -298,7 +306,30 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        /*getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.searchId);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Search");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (TextUtils.isEmpty(s)) {
+                    //addAnimation
+                    adListFragment.searchView("");
+                } else {
+                    //
+                    adListFragment.searchView(s);
+                }
+                return false;
+            }
+        });*/
 
         return true;
     }
@@ -312,9 +343,6 @@ public class MainActivity extends AppCompatActivity
 
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -330,7 +358,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             setAddListFrag();
         } else if (id == R.id.nav_slideshow) {
-
+            Intent intent = new Intent(MainActivity.this, ExcelBackUp.class);
+            startActivity(intent);
+        } else if (id == R.id.exit) {
+            MainActivity.this.finishActivity(0);
+            System.exit(0);
         }
 
         drawer = findViewById(R.id.drawer_layout);
@@ -430,4 +462,9 @@ public class MainActivity extends AppCompatActivity
         imageLoader.init(config);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    }
 }

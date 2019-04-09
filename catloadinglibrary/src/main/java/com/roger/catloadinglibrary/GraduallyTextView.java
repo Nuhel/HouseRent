@@ -1,6 +1,7 @@
 package com.roger.catloadinglibrary;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 /**
  * Created by Administrator on 2016/3/30.
  */
+@SuppressLint("AppCompatCustomView")
 public class GraduallyTextView extends EditText {
 
     private CharSequence text;

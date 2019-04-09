@@ -94,6 +94,10 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
     private EditText baed;
     private EditText red;
     private EditText aed;
+
+    private EditText phone;
+    private EditText email;
+
     private Place place;
 
     private CatLoadingView mView;
@@ -128,6 +132,10 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
         baed = findViewById(R.id.no_bathRoom);
         red = findViewById(R.id.edit_rent);
         aed = findViewById(R.id.edit_advance);
+        phone = findViewById(R.id.edit_phone);
+        email = findViewById(R.id.edit_email);
+
+
 
         original_imagePaths = new ArrayList<>();
         converted_imagePaths = new ArrayList<>();
@@ -293,6 +301,10 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
         final String kitchen = ked.getText().toString();
         final String bathroom = baed.getText().toString();
 
+        final String phones = phone.getText().toString();
+
+        final String emails = email.getText().toString();
+
         final String rent = red.getText().toString();
         String houseType2;
         String rentTypes2;
@@ -375,7 +387,7 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
-                    downloadLinks.add(task.getResult().getDownloadUrl().toString());
+                    downloadLinks.add(task.getResult().toString());
                 } else {
                     Toast.makeText(getBaseContext(), "Image Upload Failed", Toast.LENGTH_SHORT).show();
 
@@ -399,6 +411,8 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                     map1.put("lat", lat);
                     map1.put("lan", lan);
                     map1.put("rent", rent);
+                    map1.put("phone", phones);
+                    map1.put("email", emails);
                     String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
                     map1.put("owner", id);
                     for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {

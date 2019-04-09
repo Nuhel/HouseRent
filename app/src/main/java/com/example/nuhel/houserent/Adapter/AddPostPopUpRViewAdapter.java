@@ -92,7 +92,5 @@ public class AddPostPopUpRViewAdapter extends RecyclerView.Adapter<AddPostPopUpR
             imageView = view.findViewById(R.id.imageview);
             btn = view.findViewById(R.id.dltBtn);
         }
-
     }
-
 }

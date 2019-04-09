@@ -182,7 +182,7 @@ public class UserProfileManageFragment extends Fragment {
             @Override
             public void onComplete(Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
-                    final String download_url = task.getResult().getDownloadUrl().toString();
+                    final String download_url = task.getResult().toString();
                     Map map = new HashMap();
                     map.put(ProjectKeys.USERDIRPROFILEIMAGE, download_url);
                     mDatabase = GetFirebaseInstance.GetInstance().getReference().child(ProjectKeys.USERDIR).child(mAuth.getCurrentUser().getUid());
