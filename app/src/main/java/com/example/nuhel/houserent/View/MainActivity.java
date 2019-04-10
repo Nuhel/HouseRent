@@ -358,8 +358,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             setAddListFrag();
         } else if (id == R.id.nav_slideshow) {
-            Intent intent = new Intent(MainActivity.this, ExcelBackUp.class);
-            startActivity(intent);
+            //Intent intent = new Intent(MainActivity.this, ExcelBackUp.class);
+            //startActivity(intent);
         } else if (id == R.id.exit) {
             MainActivity.this.finishActivity(0);
             System.exit(0);

@@ -292,6 +292,7 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
     }
 
 
+
     private void uploadImages(ArrayList<Uri> converted_imagePaths) {
         final ArrayList<Uri> uplopad_images = converted_imagePaths;
 
@@ -301,9 +302,7 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
         final String kitchen = ked.getText().toString();
         final String bathroom = baed.getText().toString();
 
-        final String phones = phone.getText().toString();
-
-        final String emails = email.getText().toString();
+        final String balcony =ved.getText().toString();
 
         final String rent = red.getText().toString();
         String houseType2;
@@ -387,7 +386,7 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
-                    downloadLinks.add(task.getResult().toString());
+                    downloadLinks.add(task.getResult().getDownloadUrl().toString());
                 } else {
                     Toast.makeText(getBaseContext(), "Image Upload Failed", Toast.LENGTH_SHORT).show();
 
@@ -411,8 +410,8 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
                     map1.put("lat", lat);
                     map1.put("lan", lan);
                     map1.put("rent", rent);
-                    map1.put("phone", phones);
-                    map1.put("email", emails);
+                    map1.put("balcony", balcony);
+
                     String id = GetFirebaseAuthInstance.getFirebaseAuthInstance().getCurrentUser().getUid();
                     map1.put("owner", id);
                     for (int looper = 0; looper <= downloadLinks.size() - 1; looper++) {
@@ -426,6 +425,7 @@ public class AddPostActivity extends AppCompatActivity implements AdapterView.On
             }
         });
     }
+
 
     private void initializePostIds() {
         postIds = new ArrayList<>();

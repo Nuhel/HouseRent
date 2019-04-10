@@ -161,7 +161,7 @@ public class AdList extends Fragment implements SearchView.OnQueryTextListener, 
 
             sheet.addCell(new Label(0, 0, "Title"));
             sheet.addCell(new Label(1, 0, "Kitchen"));
-            sheet.addCell(new Label(2, 0, "Velocony"));
+            sheet.addCell(new Label(2, 0, "Balcony"));
             sheet.addCell(new Label(3, 0, "Bedroom"));
             sheet.addCell(new Label(4, 0, "Bathroom"));
             sheet.addCell(new Label(5, 0, "Rent"));
